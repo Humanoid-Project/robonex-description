@@ -40,6 +40,7 @@ robonex_description
 ├── scripts
 │   └── robonex_common.py
 ├── requirements.txt
+├── LICENSE
 └── README.md
 ```
 
@@ -58,3 +59,8 @@ robonex_description
 - `loop_closures.yaml`: the knee four-bar, the ankle ball joints and the list of
   actuated joints, none of which URDF can express
 - `scripts`: the URDF and YAML parser shared by all three builders
+
+## License
+
+[BSD 3-Clause](LICENSE). This covers everything in the repository, the mesh
+files included.
