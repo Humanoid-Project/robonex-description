@@ -1,4 +1,4 @@
-# RoboNex MJCF
+# RoboNex Mujoco
 
 ## Build
 
@@ -6,10 +6,11 @@
 python3 mujoco/build_mjcf.py
 ```
 
-| File | Contents |
+## Options
+
+| Option | Description |
 |---|---|
-| `robonex.xml` | The robot only |
-| `scene.xml` | Includes `robonex.xml`, adds floor, light and sky. |
+| `--fixed-base` | Base welded in mid-air so the legs swing free |
 
 
 ## Run
@@ -17,9 +18,3 @@ python3 mujoco/build_mjcf.py
 ```bash
 python3 -m mujoco.viewer --mjcf=mujoco/scene.xml
 ```
-
-## Options
-
-| Option | Description |
-|---|---|
-| `--fixed-base` | Base welded in mid-air so the legs swing free |
