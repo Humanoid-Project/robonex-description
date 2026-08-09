@@ -2,10 +2,14 @@
 
 ## Setup
 ```bash
+git clone https://github.com/Humanoid-Project/robonex_description.git
+cd ~/robonex_description
+
 sudo apt install python3-venv
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
+pip install --upgrade pip
 ```
 
 ## Overview
