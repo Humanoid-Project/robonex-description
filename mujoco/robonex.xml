@@ -63,8 +63,7 @@
   </asset>
 
   <worldbody>
-    <body name="base_link" pos="0 0 1.085">
-      <freejoint name="root"/>
+    <body name="base_link" pos="0 0 1.6">
       <inertial pos="0.032843 0.000297 -0.045593" mass="6.80147" fullinertia="0.17694424 0.14872054 0.08710167 -5.475e-05 0.01914405 -0.00012648"/>
       <geom type="mesh" mesh="base_link" pos="0 0 0" class="visual"/>
       <geom type="mesh" mesh="base_link" pos="0 0 0" class="collision"/>
@@ -361,8 +360,4 @@
     <actuatorfrc name="r_ankle_lower_trq" actuator="r_ankle_lower"/>
     <actuatorfrc name="r_ankle_upper_trq" actuator="r_ankle_upper"/>
   </sensor>
-
-  <keyframe>
-    <key name="home" qpos="0 0 1.085 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0" ctrl="0 0 0 0 0 0 0 0 0 0 0 0"/>
-  </keyframe>
 </mujoco>
