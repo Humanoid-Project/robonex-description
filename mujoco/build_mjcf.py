@@ -149,18 +149,25 @@ def write_scene():
         f.write("\n".join(s) + "\n")
 
 
-def append_home_keyframe(settle=15.0):
+def append_home_keyframe():
+    # Used to settle N seconds of physics and save wherever that landed. That
+    # assumed a position-hold equilibrium worth capturing precisely - true
+    # while the servo gains were tuning parameters (kp=400), false now that
+    # they are the real RobStride bench values (kp=40): nothing holds this
+    # robot standing under its own control, so "settle and see where it ends
+    # up" reliably ends up on the floor, at some arbitrary point mid-fall.
+    #
+    # So "home" is qpos0 verbatim: the spawn pose, feet 6 mm above the floor,
+    # zero velocity - exactly what the viewer's own Reset/Reload already give
+    # you. No physics dependency, nothing to fall over during the build.
     try:
         import mujoco
     except ImportError:
         return "skipped (mujoco not installed)"
 
     model = mujoco.MjModel.from_xml_path(SCENE_OUT)
-    data = mujoco.MjData(model)
-    while data.time < settle:
-        mujoco.mj_step(model, data)
 
-    qpos = " ".join("%.6g" % v for v in data.qpos)
+    qpos = " ".join("%.6g" % v for v in model.qpos0)
     block = [
         "",
         "  <keyframe>",
@@ -174,7 +181,7 @@ def append_home_keyframe(settle=15.0):
     text = text.replace("</mujoco>", "\n".join(block) + "\n</mujoco>")
     with open(OUT, "w", encoding="utf-8") as f:
         f.write(text)
-    return "home, %d qpos values after %.0f s settle" % (model.nq, settle)
+    return "home, %d qpos values = qpos0 (spawn pose, unsettled)" % model.nq
 
 
 def main():
@@ -213,7 +220,7 @@ def main():
     out.append('      <geom group="3" contype="1" conaffinity="1" condim="3" density="0" rgba="0.6 0.6 0.6 0.4"/>')
     out.append("    </default>")
     out.append('    <default class="motor">')
-    out.append('      <position kp="400" kv="40"/>')
+    out.append('      <position kp="40" kv="2"/>')
     out.append("    </default>")
     out.append("  </default>")
     out.append("")

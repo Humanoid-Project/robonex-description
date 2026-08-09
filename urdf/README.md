@@ -63,12 +63,12 @@
 | `r_hip_pitch_joint` | RS03 | `r_hip_yaw_link` | 0 −1 0 | 60.0 | 20.9 | | |
 | `l_hip_roll_joint` | RS03 | `l_hip_pitch_link` | 1 0 0 | 60.0 | 20.9 | | |
 | `r_hip_roll_joint` | RS03 | `r_hip_pitch_link` | 1 0 0 | 60.0 | 20.9 | | |
-| `l_knee_actuator_joint` | RS03 | `l_hip_roll_link` | 0 1 0 | 60.0 | 20.9 | | |
-| `r_knee_actuator_joint` | RS03 | `r_hip_roll_link` | 0 −1 0 | 60.0 | 20.9 | | |
-| `l_ankle_actuator_joint_a` | RS02 | `l_knee_link` | 0 1 0 | 17.0 | 42.9 | | |
-| `l_ankle_actuator_joint_b` | RS02 | `l_knee_link` | 0 −1 0 | 17.0 | 42.9 | | |
-| `r_ankle_actuator_joint_a` | RS02 | `r_knee_link` | 0 1 0 | 17.0 | 42.9 | | |
-| `r_ankle_actuator_joint_b` | RS02 | `r_knee_link` | 0 −1 0 | 17.0 | 42.9 | | |
+| `l_knee_pitch_joint` | RS03 | `l_hip_roll_link` | 0 1 0 | 60.0 | 20.9 | | |
+| `r_knee_pitch_joint` | RS03 | `r_hip_roll_link` | 0 −1 0 | 60.0 | 20.9 | | |
+| `l_ankle_upper_joint` | RS02 | `l_knee_link` | 0 1 0 | 17.0 | 42.9 | | |
+| `l_ankle_lower_joint` | RS02 | `l_knee_link` | 0 −1 0 | 17.0 | 42.9 | | |
+| `r_ankle_lower_joint` | RS02 | `r_knee_link` | 0 1 0 | 17.0 | 42.9 | | |
+| `r_ankle_upper_joint` | RS02 | `r_knee_link` | 0 −1 0 | 17.0 | 42.9 | | |
 
 ## Passive joints
 
@@ -78,7 +78,7 @@
 | `r_knee_joint` | `r_hip_roll_link` → `r_knee_link` | knee four-bar |
 | `l_knee_coupler_joint_a` | `l_knee_crank_link` → `l_knee_coupler_link` | knee four-bar |
 | `r_knee_coupler_joint_a` | `r_knee_crank_link` → `r_knee_coupler_link` | knee four-bar |
-| `l_ankle_joint` | `l_knee_link` → `l_ankle_link` | ankle differential (roll) |
-| `r_ankle_joint` | `r_knee_link` → `r_ankle_link` | ankle differential (roll) |
-| `l_ankle_foot_joint` | `l_ankle_link` → `l_foot` | ankle differential (pitch) |
-| `r_ankle_foot_joint` | `r_ankle_link` → `r_foot` | ankle differential (pitch) |
+| `l_ankle_roll_joint` | `l_knee_link` → `l_ankle_link` | ankle differential (roll) |
+| `r_ankle_roll_joint` | `r_knee_link` → `r_ankle_link` | ankle differential (roll) |
+| `l_ankle_pitch_joint` | `l_ankle_link` → `l_foot` | ankle differential (pitch) |
+| `r_ankle_pitch_joint` | `r_ankle_link` → `r_foot` | ankle differential (pitch) |

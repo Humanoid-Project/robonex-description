@@ -71,12 +71,12 @@ actuated_joints:
   - l_hip_yaw_joint
   - l_hip_pitch_joint
   - l_hip_roll_joint
-  - l_knee_actuator_joint
-  - l_ankle_actuator_joint_a
-  - l_ankle_actuator_joint_b
+  - l_knee_pitch_joint
+  - l_ankle_upper_joint
+  - l_ankle_lower_joint
   - r_hip_yaw_joint
   - r_hip_pitch_joint
   - r_hip_roll_joint
-  - r_knee_actuator_joint
-  - r_ankle_actuator_joint_a
-  - r_ankle_actuator_joint_b
+  - r_knee_pitch_joint
+  - r_ankle_lower_joint
+  - r_ankle_upper_joint

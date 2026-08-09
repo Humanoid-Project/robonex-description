@@ -50,8 +50,8 @@ robonex_description
   builder reads
 - [`mujoco`](mujoco/README.md): builds the MJCF, with the loops restored as
   equality constraints
-- [`gazebo`](gazebo/README.md): builds SDF for gz-sim; DART cannot close the
-  loops, so the tree stays open
+- [`gazebo`](gazebo/README.md): builds SDF for Gazebo Fortress; DART cannot close
+  the loops, so the linkages are replaced by their serial equivalent
 - [`rviz`](rviz/README.md): ROS 2 package `robonex_description` for viewing the
   URDF; no physics, so the loops hang free
 - [`isaac`](isaac/README.md): imports into Isaac Sim and rebuilds the loops as
