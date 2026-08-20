@@ -33,12 +33,6 @@ def generate_launch_description():
             output="screen",
             parameters=[{"robot_description": description, "publish_frequency": 100.0}],
         ),
-        # robot_state_publisher only ever publishes the RELATIVE joint tree
-        # (base_link -> ... -> feet); nothing else here has an opinion on where
-        # base_link sits in the world. gazebo.launch.py gets that from the
-        # simulator (see base_pose_tf.py); here there's no physics, so identity
-        # is exactly correct - and it's what lets robonex.rviz use the same
-        # Fixed Frame ("world") in both launch files.
         Node(
             package="tf2_ros",
             executable="static_transform_publisher",

@@ -5,7 +5,7 @@ Convert ``isaac/closed_loop/robonex_closed_loop.urdf`` with fixed joints left
 unmerged, then
 run this script once.  The imported open articulation tree is completed with:
 
-* four spherical ankle crank-to-coupler joints;
+* four D6 ankle crank-to-coupler rod ends (translations locked, rotX/Y/Z +/-limit);
 * four excluded spherical ankle coupler-to-foot closures; and
 * two excluded revolute knee coupler-to-shin pin closures.
 """
@@ -29,7 +29,7 @@ app_launcher = AppLauncher(args)
 simulation_app = app_launcher.app
 
 
-from pxr import Gf, Sdf, Usd, UsdPhysics  # noqa: E402
+from pxr import Gf, Sdf, Usd, UsdPhysics
 
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -37,13 +37,10 @@ ISAAC_DIR = os.path.dirname(HERE)
 ROOT = os.path.dirname(ISAAC_DIR)
 sys.path.insert(0, os.path.join(ROOT, "scripts"))
 
-from robonex_common import load_loops  # noqa: E402
+from robonex_common import load_loops
 
 
 IDENTITY = Gf.Quatf(1.0, 0.0, 0.0, 0.0)
-# Isaac Lab's tensor API supports articulation spherical joints only with the
-# USD X axis.  Rotate the joint frame so X represents the physical Z axis used
-# by the source URDF's ankle rod ends.
 BALL_AXIS = UsdPhysics.Tokens.x
 X_TO_Z = Gf.Quatf(Gf.Rotation(Gf.Vec3d(0.0, 1.0, 0.0), -90.0).GetQuat())
 PASSIVE_MAX_VELOCITY = 1_000_000.0
@@ -83,7 +80,19 @@ def make_passive(prim: Usd.Prim, expected_type: str) -> None:
         max_velocity.Set(PASSIVE_MAX_VELOCITY)
 
 
-def upgrade_to_spherical(stage: Usd.Stage, name: str, limit_deg: float) -> None:
+def lock_limit(prim: Usd.Prim, axis: str) -> None:
+    limit = UsdPhysics.LimitAPI.Apply(prim, axis)
+    limit.CreateLowAttr(1.0)
+    limit.CreateHighAttr(-1.0)
+
+
+def range_limit(prim: Usd.Prim, axis: str, limit_deg: float) -> None:
+    limit = UsdPhysics.LimitAPI.Apply(prim, axis)
+    limit.CreateLowAttr(-limit_deg)
+    limit.CreateHighAttr(limit_deg)
+
+
+def upgrade_to_limited_ball(stage: Usd.Stage, name: str, limit_deg: float) -> None:
     prim = find_unique(stage, name)
     old_joint = UsdPhysics.Joint(prim)
     if not old_joint or prim.GetTypeName() != "PhysicsFixedJoint":
@@ -99,17 +108,19 @@ def upgrade_to_spherical(stage: Usd.Stage, name: str, limit_deg: float) -> None:
     ):
         raise RuntimeError("%s has incomplete body relationships or frames" % name)
 
-    joint = UsdPhysics.SphericalJoint.Define(stage, prim.GetPath())
+    joint = UsdPhysics.Joint.Define(stage, prim.GetPath())
     joint.CreateBody0Rel().SetTargets(body0)
     joint.CreateBody1Rel().SetTargets(body1)
     joint.CreateLocalPos0Attr().Set(pos0)
     joint.CreateLocalPos1Attr().Set(pos1)
-    joint.CreateLocalRot0Attr().Set(rot0 * X_TO_Z)
-    joint.CreateLocalRot1Attr().Set(rot1 * X_TO_Z)
-    joint.CreateAxisAttr(BALL_AXIS)
-    joint.CreateConeAngle0LimitAttr(limit_deg)
-    joint.CreateConeAngle1LimitAttr(limit_deg)
+    joint.CreateLocalRot0Attr().Set(rot0)
+    joint.CreateLocalRot1Attr().Set(rot1)
     joint.CreateCollisionEnabledAttr(False)
+    prim = joint.GetPrim()
+    for axis in ("transX", "transY", "transZ"):
+        lock_limit(prim, axis)
+    for axis in ("rotX", "rotY", "rotZ"):
+        range_limit(prim, axis, limit_deg)
 
 
 def add_spherical_closure(stage: Usd.Stage, scope: Sdf.Path, entry: dict) -> None:
@@ -190,7 +201,7 @@ def main() -> int:
     for name in KNEE_PASSIVE_JOINTS:
         make_passive(find_unique(stage, name), "PhysicsRevoluteJoint")
     for name in upgrades:
-        upgrade_to_spherical(stage, name, limit_deg)
+        upgrade_to_limited_ball(stage, name, limit_deg)
     for entry in ball_closures:
         add_spherical_closure(stage, scope, entry)
     for entry in pin_closures:
@@ -199,11 +210,11 @@ def main() -> int:
     stage.GetRootLayer().Save()
     print("saved %s" % usd_path, flush=True)
     print("  passive ankle outputs       : 4", flush=True)
-    print("  spherical articulation ends : 4", flush=True)
+    print("  D6 rod-end articulation ends: 4", flush=True)
     print("  excluded spherical closures : 4", flush=True)
     print("  passive knee tree joints    : 4", flush=True)
     print("  excluded pin closures       : 2", flush=True)
-    print("  rod-end swing limit         : +/-%.1f deg" % limit_deg, flush=True)
+    print("  rod-end 3-axis limit        : +/-%.1f deg" % limit_deg, flush=True)
     return 0
 
 

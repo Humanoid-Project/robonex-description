@@ -19,9 +19,6 @@ install(PROGRAMS ros2/scripts/bringup.py
   DESTINATION share/${PROJECT_NAME}/scripts
 )
 
-# base_pose_tf.py is launched via launch_ros's Node(), which resolves
-# package+executable through `ros2 run` - that only searches lib/<pkg>/, not
-# share/<pkg>/scripts/ (where bringup.py lives; it's run by full path instead).
 install(PROGRAMS ros2/scripts/base_pose_tf.py
   DESTINATION lib/${PROJECT_NAME}
 )

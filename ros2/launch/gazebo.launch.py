@@ -75,9 +75,6 @@ def generate_launch_description():
         ],
     )
 
-    # world -> base_link isn't in /gz_dynamic_pose's frames as such - see
-    # ros2/scripts/base_pose_tf.py for why a filter node is doing this instead
-    # of a straight bridge onto /tf.
     base_pose_tf = Node(
         package=PACKAGE,
         executable="base_pose_tf.py",

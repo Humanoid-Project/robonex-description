@@ -3,29 +3,9 @@ DEG = 3.141592653589793 / 180.0
 SPAWN_HEIGHT = 1.0789
 MUJOCO_SPAWN_HEIGHT = 1.085
 
-# What the real RobStride motors are driven with, in MIT mode, on the bench
-# (Robstride-Motor-Test/scripts/motor_run/motor_pose_run.py: HOLD_KP/HOLD_KD).
-# Their position feedback is the output shaft, so these are N.m/rad and
-# N.m.s/rad at the joint the motor turns - directly comparable to MuJoCo's
-# <position kp kv>, which sits on those same crank joints.
 MOTOR_KP = 40.0
 MOTOR_KD = 2.0
 
-# The serial-equivalent model actuates the joints the linkages DRIVE, not the
-# crank joints the motors actually turn, so the gains have to come through the
-# transmission with them. Torque divides by the ratio r = d(joint)/d(motor) and
-# so does the angle, hence stiffness scales by 1/r^2:
-#
-#     k_joint = n_motors * MOTOR_KP / r^2
-#
-# r measured off the MuJoCo model (gazebo/README.md has the sweep): knee 0.70 at
-# the home pose, each ankle motor ~1.0 into roll and pitch, and the ankle is
-# driven by two motors at once. Same convention as the effort limits below,
-# where the ankle carries 2x17 N.m and the knee 60/0.70.
-#
-# The knee ratio is only 0.70 at the home pose - it runs 0.21..1.23 across the
-# travel - so its gain is as configuration-dependent as its effort limit, and
-# just as approximate.
 SERIAL_GAINS = {
     "l_hip_yaw_joint":    (40.0, 2.00),
     "r_hip_yaw_joint":    (40.0, 2.00),
@@ -43,23 +23,49 @@ SERIAL_GAINS = {
 
 DAMPING = 0.2
 
-# effort (N.m), velocity (rad/s), lower (deg), upper (deg).
-#
-# Hips are direct drive, so they carry the motor's own numbers and the ranges
-# measured by hand on the real leg.
-#
-# Knee and ankle are outputs of a linkage, so everything comes through the
-# transmission ratio r = d(joint)/d(motor), measured off this model:
-#     effort   = n_motors * motor_peak / r
-#     velocity = motor_no_load * r
-#     range    = swept, driving the crank actuators to their own limits
-# r is 0.705 for the knee at the home pose (it runs 0.21..1.23 across the
-# travel, so knee effort/velocity are only right near home) and ~1.01 into
-# ankle roll, ~1.00 into ankle pitch, with two RS02s driving each ankle axis.
-#
-# CAVEAT: the ankle ranges below are set by the rod-end stops, because the
-# ankle CRANK limits are still the URDF's +/-180 placeholder. Once those are
-# measured they may bind first and shrink these - re-run the sweep then.
+MOTOR_PHYSICS = {
+    "rs02": {"armature": 0.0042, "frictionloss": 0.1},
+    "rs03": {"armature": 0.02,   "frictionloss": 0.2},
+}
+
+MOTOR_MODEL = {
+    "l_hip_yaw_joint":     "rs02",
+    "r_hip_yaw_joint":     "rs02",
+    "l_ankle_upper_joint": "rs02",
+    "l_ankle_lower_joint": "rs02",
+    "r_ankle_upper_joint": "rs02",
+    "r_ankle_lower_joint": "rs02",
+    "l_hip_pitch_joint":   "rs03",
+    "r_hip_pitch_joint":   "rs03",
+    "l_hip_roll_joint":    "rs03",
+    "r_hip_roll_joint":    "rs03",
+    "l_knee_pitch_joint":  "rs03",
+    "r_knee_pitch_joint":  "rs03",
+}
+
+
+def motor_physics_for(joint_name):
+    """armature/frictionloss for a crank joint, or None if it isn't motor-driven."""
+    model = MOTOR_MODEL.get(joint_name)
+    return MOTOR_PHYSICS[model] if model else None
+
+
+SERIAL_FRICTION = {
+    "l_hip_yaw_joint":     0.100,
+    "r_hip_yaw_joint":     0.100,
+    "l_hip_pitch_joint":   0.200,
+    "r_hip_pitch_joint":   0.200,
+    "l_hip_roll_joint":    0.200,
+    "r_hip_roll_joint":    0.200,
+    "l_knee_joint":        0.284,
+    "r_knee_joint":        0.284,
+    "l_ankle_roll_joint":  0.198,
+    "r_ankle_roll_joint":  0.198,
+    "l_ankle_pitch_joint": 0.200,
+    "r_ankle_pitch_joint": 0.200,
+}
+
+
 SERIAL_JOINTS = {
     "l_hip_yaw_joint":    (17.0, 42.9,  -40.0,  40.0),
     "r_hip_yaw_joint":    (17.0, 42.9,  -40.0,  40.0),
@@ -69,10 +75,10 @@ SERIAL_JOINTS = {
     "r_hip_roll_joint":   (60.0, 20.9,   -5.0,  60.0),
     "l_knee_joint":        (85.1, 14.7,  -42.0,   3.4),
     "r_knee_joint":        (85.1, 14.7,   -3.4,  42.0),
-    "l_ankle_roll_joint":  (33.5, 43.5,  -15.6,  14.8),
-    "r_ankle_roll_joint":  (33.5, 43.5,  -14.8,  15.6),
-    "l_ankle_pitch_joint": (34.0, 42.9,  -19.3,  16.3),
-    "r_ankle_pitch_joint": (34.0, 42.9,  -19.3,  16.3),
+    "l_ankle_roll_joint":  (33.5, 43.5,  -14.5,  14.0),
+    "r_ankle_roll_joint":  (33.5, 43.5,  -13.5,  14.0),
+    "l_ankle_pitch_joint": (34.0, 42.9,  -20.5,  16.0),
+    "r_ankle_pitch_joint": (34.0, 42.9,  -19.0,  15.5),
 }
 
 JOINT_ORDER = [
@@ -100,7 +106,8 @@ COLLISION_BOX = {
 
 FEET = ("l_foot", "r_foot")
 
-FOOT_FRICTION = 1.0
+FOOT_FRICTION = 0.6
+FOOT_FRICTION_RANGE = (0.4, 0.8)
 BODY_FRICTION = 1.0
 
 TIMESTEP = 0.001

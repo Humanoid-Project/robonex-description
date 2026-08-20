@@ -42,16 +42,8 @@ class BasePoseTF(Node):
             if t.child_frame_id != self.model_name:
                 continue
 
-            # ros_gz_bridge leaves the converted TFMessage's stamp at zero, so
-            # we have to supply one. use_sim_time is set, so this is the same
-            # sim clock RViz looks TF up against.
             now = self.get_clock().now().nanoseconds
 
-            # While bringup holds the world paused and steps it a few ms at a
-            # time, poses keep arriving far faster than sim time advances, so
-            # most of them would repeat a stamp we already published. tf2
-            # rejects those ("TF_OLD_DATA ... ignoring data from the past") and
-            # complains once per message, which buries the console at startup.
             if self.last_stamp is not None and now <= self.last_stamp:
                 return
             self.last_stamp = now

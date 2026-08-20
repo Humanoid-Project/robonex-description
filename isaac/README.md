@@ -1,95 +1,127 @@
-# RoboNex Isaac USD models
+# isaac
+
+## Structure
+
+```text
+isaac/
+├── README.md
+├── build_isaac_urdf.py
+├── load_robonex.py
+├── scripts/
+│   ├── apply_physical_loops.py
+│   ├── build_closed_loop_mesh.py
+│   ├── build_closed_loop_box.py
+│   ├── build_serial_mesh.py
+│   └── build_serial_box.py
+├── closed_loop_mesh/
+├── closed_loop_box/
+├── serial_mesh/
+└── serial_box/
+```
+
+| Variant | Mechanism | Collision |
+| --- | --- | --- |
+| `closed_loop_mesh` | Four-bar and differential closures kept; 12 cranks actuated | Visual meshes |
+| `closed_loop_box` | Four-bar and differential closures kept; 12 cranks actuated | Box primitives |
+| `serial_mesh` | Loops removed; linkage output joints actuated directly | Visual meshes |
+| `serial_box` | Loops removed; linkage output joints actuated directly | Box primitives |
+
+<br>
 
 ## Build
 
-This variant restores both planar knee four-bars as well as the ankle loops.
-Each knee motor crank is an actuated revolute joint.  The knee output and
-coupler joints are passive, and a revolute pin constraint closes each coupler
-back onto its shin link.  The generated assets are isolated under
-`isaac/closed_loop/`.
+### `scripts/build_<variant>.py`
 
 ```bash
+# Example
 cd ~/humanoid_project/robonex_description
-python3 isaac/build_isaac_urdf.py
-mkdir -p isaac/closed_loop
+
+python3 isaac/scripts/build_closed_loop_mesh.py
+python3 isaac/scripts/build_closed_loop_box.py
+python3 isaac/scripts/build_serial_mesh.py
+python3 isaac/scripts/build_serial_box.py
+```
+
+### `build_isaac_urdf.py`
+
+| Option | Required | Default | Description |
+| --- | :---: | --- | --- |
+| `--mechanism` | No | `closed_loop` | Keep the physical mechanisms, or drive their outputs directly (`closed_loop`, `serial`) |
+| `--collision` | No | `mesh` | Collision geometry source (`mesh`, `box`) |
+
+```bash
+# Example
+python3 isaac/build_isaac_urdf.py --mechanism closed_loop --collision mesh
+python3 isaac/build_isaac_urdf.py --mechanism serial --collision box
+```
+
+| Output | Description |
+| --- | --- |
+| `<variant>/robonex_<variant>.urdf` | URDF for the selected variant |
+
+<br>
+
+## Convert
+
+### `convert_urdf.py`
+
+```bash
+# Example
+cd ~/humanoid_project/robonex_description
 conda activate isaacsim
 
 # Free-floating
 ~/IsaacLab/isaaclab.sh -p ~/IsaacLab/scripts/tools/convert_urdf.py \
-  $PWD/isaac/closed_loop/robonex_closed_loop.urdf \
-  $PWD/isaac/closed_loop/robonex_closed_loop.usd \
+  $PWD/isaac/closed_loop_mesh/robonex_closed_loop_mesh.urdf \
+  $PWD/isaac/closed_loop_mesh/robonex_closed_loop_mesh.usd \
   --joint-stiffness 40.0 --joint-damping 2.0 --headless
-~/IsaacLab/isaaclab.sh -p isaac/scripts/apply_physical_loops.py \
-  isaac/closed_loop/robonex_closed_loop.usd --headless
 
-# Fixed-base mechanism test
+# Fixed-base
 ~/IsaacLab/isaaclab.sh -p ~/IsaacLab/scripts/tools/convert_urdf.py \
-  $PWD/isaac/closed_loop/robonex_closed_loop.urdf \
-  $PWD/isaac/closed_loop/robonex_closed_loop_fixed.usd \
+  $PWD/isaac/closed_loop_mesh/robonex_closed_loop_mesh.urdf \
+  $PWD/isaac/closed_loop_mesh/robonex_closed_loop_mesh_fixed.usd \
   --joint-stiffness 40.0 --joint-damping 2.0 --fix-base --headless
-~/IsaacLab/isaaclab.sh -p isaac/scripts/apply_physical_loops.py \
-  isaac/closed_loop/robonex_closed_loop_fixed.usd --headless
 ```
 
-Only `l_knee_pitch_joint` and `r_knee_pitch_joint` are knee drive inputs.
-`l/r_knee_joint` and `l/r_knee_coupler_joint_a` are passive mechanism joints;
-do not give them drive targets or edit their Joint State positions.  For a
-manual check, use the fixed-base command below, press **Play**, and edit the
-motor joint's **Angular > Target Position**.  Begin around 0.25 degrees and
-change the target gradually.  TGS/240 Hz/64/4 solver settings are applied
-automatically.  The ankle drive inputs are `l/r_ankle_upper_joint` and
-`l/r_ankle_lower_joint`; ankle roll/pitch and all spherical joints are passive.
-Do not edit Joint State positions on any passive or closure joint because that
-teleports a constraint-connected body and can destabilize the mechanism.
+### `scripts/apply_physical_loops.py`
 
-### Simplified tree model
+Required for `closed_loop_*` variants only.
 
-This variant deliberately removes every knee and ankle loop.  It directly
-actuates the joints that the mechanisms drive (`knee`, `ankle_roll`, and
-`ankle_pitch`) while fixing the crank and coupler joints.  Therefore it is a
-stable 12-DoF tree model for comparison or fast training; it is not a
-motor-space replica of the hardware mechanism.
+| Option | Required | Default | Description |
+| --- | :---: | --- | --- |
+| `usd_path` | Yes | - | USD to close the loops in |
 
 ```bash
-cd ~/humanoid_project/robonex_description
-python3 isaac/build_isaac_urdf.py --model simplified
-conda activate isaacsim
+# Example
+~/IsaacLab/isaaclab.sh -p isaac/scripts/apply_physical_loops.py \
+  isaac/closed_loop_mesh/robonex_closed_loop_mesh.usd --headless
 
-# Free-floating
-~/IsaacLab/isaaclab.sh -p ~/IsaacLab/scripts/tools/convert_urdf.py \
-  $PWD/isaac/simplified/robonex_simplified.urdf \
-  $PWD/isaac/simplified/robonex_simplified.usd \
-  --joint-stiffness 40.0 --joint-damping 2.0 --headless
-
-# Fixed-base mechanism/pose test
-~/IsaacLab/isaaclab.sh -p ~/IsaacLab/scripts/tools/convert_urdf.py \
-  $PWD/isaac/simplified/robonex_simplified.urdf \
-  $PWD/isaac/simplified/robonex_simplified_fixed.usd \
-  --joint-stiffness 40.0 --joint-damping 2.0 --fix-base --headless
+~/IsaacLab/isaaclab.sh -p isaac/scripts/apply_physical_loops.py \
+  isaac/closed_loop_mesh/robonex_closed_loop_mesh_fixed.usd --headless
 ```
+
+<br>
 
 ## Run
 
-```bash
-cd ~/humanoid_project/robonex_description
+### `load_robonex.py`
 
-~/IsaacLab/isaaclab.sh -p isaac/load_robonex.py
-~/IsaacLab/isaaclab.sh -p isaac/load_robonex.py --fixed-base
-~/IsaacLab/isaaclab.sh -p isaac/load_robonex.py --model simplified
-~/IsaacLab/isaaclab.sh -p isaac/load_robonex.py --model simplified --fixed-base
-~/IsaacLab/isaaclab.sh -p isaac/load_robonex.py --headless
+| Option | Required | Default | Description |
+| --- | :---: | --- | --- |
+| `--mechanism` | No | `closed_loop` | Variant mechanism (`closed_loop`, `serial`) |
+| `--collision` | No | `mesh` | Variant collision (`mesh`, `box`) |
+| `--fixed-base` | No | Off | Load the fixed-base USD (base welded in the air) |
+| `--spawn-height` | No | `1.085` free, `1.60` fixed | Spawn height (m) |
+| `--headless` | No | Off | Run without the viewport |
+
+```bash
+# Example
+cd ~/humanoid_project/robonex_description
+conda activate isaacsim
+
+~/IsaacLab/isaaclab.sh -p isaac/load_robonex.py --mechanism closed_loop --collision mesh
+~/IsaacLab/isaaclab.sh -p isaac/load_robonex.py --mechanism serial --collision box
+~/IsaacLab/isaaclab.sh -p isaac/load_robonex.py --mechanism closed_loop --collision mesh --fixed-base
 ```
 
-Press **▶ Play** in the viewport toolbar to start physics - nothing moves until then.
-
-## Notes
-
-- Both physical planar knee four-bars use excluded-from-articulation revolute
-  closure constraints.  The ankle 2-motor→roll/pitch mechanism uses physical
-  spherical joints and excluded-from-articulation closure constraints.
-- The simplified model preserves link visuals, collisions, mass, and the
-  12 output-space control joints, but it does not preserve the closed-loop
-  mechanism's configuration-dependent transmission or its internal dynamics.
-- The spherical joint frames use their X axis as the twist axis.  This is
-  geometrically equivalent to the original Z-axis frames and keeps the asset
-  compatible with Isaac Lab's articulation tensor interface.
+Press **Play** in the viewport toolbar to start physics.

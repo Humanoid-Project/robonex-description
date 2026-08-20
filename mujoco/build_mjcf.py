@@ -8,11 +8,17 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."
 from robonex_common import (
     load_urdf, load_loops, children_of, rpy_to_quat, fmt, ROOT,
 )
+from robonex_serial import motor_physics_for, COLLISION_BOX, FEET, FOOT_FRICTION
 
-OUT = os.path.join(ROOT, "mujoco", "robonex.xml")
-SCENE_OUT = os.path.join(ROOT, "mujoco", "scene.xml")
+FREE_OUT = os.path.join(ROOT, "mujoco", "robonex.xml")
+FREE_SCENE_OUT = os.path.join(ROOT, "mujoco", "scene.xml")
+FIXED_OUT = os.path.join(ROOT, "mujoco", "robonex_fixed.xml")
+FIXED_SCENE_OUT = os.path.join(ROOT, "mujoco", "scene_fixed.xml")
+FIXED_BOX_OUT = os.path.join(ROOT, "mujoco", "robonex_fixed_box.xml")
+FIXED_BOX_SCENE_OUT = os.path.join(ROOT, "mujoco", "scene_fixed_box.xml")
 
 NEIGHBOUR_DEPTH = 2
+PIN_HALF = 0.01
 
 TIMESTEP = 0.001
 SOLREF = "%g 1" % (4 * TIMESTEP)
@@ -24,7 +30,8 @@ LEG_DROP = 1.0789
 
 
 def emit_body(links, joints, kids, name, ball_set, actuated, depth, out,
-              fixed_base=False, height=SPAWN_HEIGHT, ball_limit=None):
+              fixed_base=False, height=SPAWN_HEIGHT, ball_limit=None,
+              collision_box=False):
     pad = "  " * depth
     lk = links[name]
     parent_joint = None
@@ -48,17 +55,18 @@ def emit_body(links, joints, kids, name, ball_set, actuated, depth, out,
             rng = ""
             if ball_limit is not None:
                 rng = (' range="%s" solreflimit="%s" solimplimit="%s"'
-                       % (fmt((-ball_limit, ball_limit)), SOLREF, SOLIMP))
-            for suffix, axis in (("rx", "1 0 0"), ("ry", "0 1 0")):
-                out.append('%s  <joint name="%s_%s" type="hinge" axis="%s"%s class="passive"/>'
-                           % (pad, parent_joint.name, suffix, axis, rng))
+                       % (fmt((0.0, ball_limit)), SOLREF, SOLIMP))
+            out.append('%s  <joint name="%s" type="ball"%s class="passive"/>'
+                       % (pad, parent_joint.name, rng))
         elif parent_joint.jtype in ("revolute", "continuous"):
             is_act = parent_joint.name in actuated
             cls = "act" if is_act else "passive"
             extra = ""
             if is_act:
-                arm = 0.017 if parent_joint.effort > 30.0 else 0.003
-                extra = ' armature="%g"' % arm
+                phys = motor_physics_for(parent_joint.name)
+                if phys is not None:
+                    extra = (' armature="%g" frictionloss="%g"'
+                             % (phys["armature"], phys["frictionloss"]))
             out.append(
                 '%s  <joint name="%s" type="hinge" axis="%s" range="%s"%s class="%s"/>'
                 % (pad, parent_joint.name, fmt(parent_joint.axis),
@@ -80,13 +88,43 @@ def emit_body(links, joints, kids, name, ball_set, actuated, depth, out,
         if abs(q[0] - 1.0) > 1e-9:
             attrs += ' quat="%s"' % fmt(q)
         out.append('%s  <geom %s class="visual"/>' % (pad, attrs))
-        out.append('%s  <geom %s class="collision"/>' % (pad, attrs))
+        if not collision_box:
+            fric = ""
+            if name in FEET:
+                fric = ' friction="%g %g 0.001"' % (FOOT_FRICTION, FOOT_FRICTION)
+            out.append('%s  <geom %s class="collision"%s/>' % (pad, attrs, fric))
+
+    if collision_box:
+        box = COLLISION_BOX.get(name)
+        if box is not None:
+            size, centre = box
+            half = (size[0] * 0.5, size[1] * 0.5, size[2] * 0.5)
+            fric = ""
+            if name in FEET:
+                fric = ' friction="%g %g 0.001"' % (FOOT_FRICTION, FOOT_FRICTION)
+            out.append(
+                '%s  <geom type="box" size="%s" pos="%s" class="collision"%s/>'
+                % (pad, fmt(half), fmt(centre), fric)
+            )
 
     for j in kids.get(name, []):
         emit_body(links, joints, kids, j.child, ball_set, actuated, depth + 1, out,
-                  fixed_base, height, ball_limit)
+                  fixed_base, height, ball_limit, collision_box)
 
     out.append("%s</body>" % pad)
+
+
+def pin_connect_anchors(entry):
+    axis = [float(v) for v in entry["axis"]]
+    norm = math.sqrt(sum(v * v for v in axis))
+    if norm < 1.0e-12:
+        raise ValueError("%s axis must be non-zero" % entry["name"])
+    unit = [v / norm for v in axis]
+    parent = [float(v) for v in entry["parent_xyz"]]
+    return (
+        [parent[i] - PIN_HALF * unit[i] for i in range(3)],
+        [parent[i] + PIN_HALF * unit[i] for i in range(3)],
+    )
 
 
 def build_excludes(links, joints, loops, depth=NEIGHBOUR_DEPTH):
@@ -114,11 +152,11 @@ def build_excludes(links, joints, loops, depth=NEIGHBOUR_DEPTH):
     return sorted(pairs)
 
 
-def write_scene():
+def write_scene(scene_out, robot_filename):
     s = [
         '<?xml version="1.0"?>',
         '<mujoco model="robonex scene">',
-        '  <include file="robonex.xml"/>',
+        '  <include file="%s"/>' % robot_filename,
         '',
         '  <statistic center="0 0 0.6" extent="1.2"/>',
         '',
@@ -141,31 +179,22 @@ def write_scene():
         '  <worldbody>',
         '    <light pos="0 0 3" dir="0 0 -1" directional="true"/>',
         '    <geom name="floor" size="0 0 0.05" type="plane" material="groundplane"'
-        ' condim="3" contype="1" conaffinity="1"/>',
+        ' condim="3" contype="1" conaffinity="1" friction="%g %g 0.001"/>'
+        % (FOOT_FRICTION, FOOT_FRICTION),
         '  </worldbody>',
         '</mujoco>',
     ]
-    with open(SCENE_OUT, "w", encoding="utf-8") as f:
+    with open(scene_out, "w", encoding="utf-8") as f:
         f.write("\n".join(s) + "\n")
 
 
-def append_home_keyframe():
-    # Used to settle N seconds of physics and save wherever that landed. That
-    # assumed a position-hold equilibrium worth capturing precisely - true
-    # while the servo gains were tuning parameters (kp=400), false now that
-    # they are the real RobStride bench values (kp=40): nothing holds this
-    # robot standing under its own control, so "settle and see where it ends
-    # up" reliably ends up on the floor, at some arbitrary point mid-fall.
-    #
-    # So "home" is qpos0 verbatim: the spawn pose, feet 6 mm above the floor,
-    # zero velocity - exactly what the viewer's own Reset/Reload already give
-    # you. No physics dependency, nothing to fall over during the build.
+def append_home_keyframe(out_path, scene_out):
     try:
         import mujoco
     except ImportError:
         return "skipped (mujoco not installed)"
 
-    model = mujoco.MjModel.from_xml_path(SCENE_OUT)
+    model = mujoco.MjModel.from_xml_path(scene_out)
 
     qpos = " ".join("%.6g" % v for v in model.qpos0)
     block = [
@@ -176,17 +205,29 @@ def append_home_keyframe():
         "  </keyframe>",
     ]
 
-    with open(OUT, encoding="utf-8") as f:
+    with open(out_path, encoding="utf-8") as f:
         text = f.read()
     text = text.replace("</mujoco>", "\n".join(block) + "\n</mujoco>")
-    with open(OUT, "w", encoding="utf-8") as f:
+    with open(out_path, "w", encoding="utf-8") as f:
         f.write(text)
     return "home, %d qpos values = qpos0 (spawn pose, unsettled)" % model.nq
 
 
 def main():
     fixed_base = "--fixed-base" in sys.argv
+    collision_box = "--collision-box" in sys.argv
+    if collision_box and not fixed_base:
+        raise SystemExit("--collision-box writes the fixed-base variant; also pass --fixed-base")
     height = FIXED_BASE_HEIGHT if fixed_base else SPAWN_HEIGHT
+    if collision_box:
+        out_path = FIXED_BOX_OUT
+        scene_out = FIXED_BOX_SCENE_OUT
+    elif fixed_base:
+        out_path = FIXED_OUT
+        scene_out = FIXED_SCENE_OUT
+    else:
+        out_path = FREE_OUT
+        scene_out = FREE_SCENE_OUT
 
     links, joints, base = load_urdf()
     loops = load_loops()
@@ -232,18 +273,19 @@ def main():
     out.append("")
     out.append("  <worldbody>")
     emit_body(links, joints, kids, base, ball_set, set(actuated), 2, out,
-              fixed_base, height, ball_limit)
+              fixed_base, height, ball_limit, collision_box)
     out.append("  </worldbody>")
     out.append("")
 
     out.append("  <equality>")
     for p in loops.get("pin_loops", []):
-        out.append(
-            '    <connect name="%s" body1="%s" body2="%s" anchor="%s"'
-            ' solref="%s" solimp="%s"/>'
-            % (p["name"], p["parent"], p["child"], fmt(p["parent_xyz"]),
-               SOLREF, SOLIMP)
-        )
+        for i, anchor in enumerate(pin_connect_anchors(p)):
+            out.append(
+                '    <connect name="%s_%d" body1="%s" body2="%s" anchor="%s"'
+                ' solref="%s" solimp="%s"/>'
+                % (p["name"], i, p["parent"], p["child"], fmt(anchor),
+                   SOLREF, SOLIMP)
+            )
     for b in loops.get("ball_loops", []):
         out.append(
             '    <connect name="%s" body1="%s" body2="%s" anchor="%s"'
@@ -278,21 +320,22 @@ def main():
     out.append("  </sensor>")
     out.append("</mujoco>")
 
-    with open(OUT, "w", encoding="utf-8") as f:
+    with open(out_path, "w", encoding="utf-8") as f:
         f.write("\n".join(out) + "\n")
-    write_scene()
+    write_scene(scene_out, os.path.basename(out_path))
 
     kf = ("skipped (welded base has nothing to settle onto)" if fixed_base
-          else append_home_keyframe())
+          else append_home_keyframe(out_path, scene_out))
 
-    print("wrote %s" % OUT)
-    print("wrote %s" % SCENE_OUT)
+    print("wrote %s" % out_path)
+    print("wrote %s" % scene_out)
     print("  bodies      : %d" % len(links))
     print("  hinges      : %d" % sum(
         1 for j in joints.values()
         if j.jtype in ("revolute", "continuous") and j.name not in ball_set))
     print("  ball joints : %d" % len(ball_set))
-    print("  equalities  : %d" % (len(loops.get("pin_loops", [])) + len(loops.get("ball_loops", []))))
+    print("  equalities  : %d" % (
+        2 * len(loops.get("pin_loops", [])) + len(loops.get("ball_loops", []))))
     print("  actuators   : %d" % len(actuated))
     print("  sensors     : %d torque" % len(actuated))
     print("  keyframe    : %s" % kf)
@@ -301,8 +344,10 @@ def main():
                    if (joints[n].effort, joints[n].velocity) == lim)
         print("     %2d joints at %.0f Nm / %.1f rad/s" % (n_of, lim[0], lim[1]))
     print("  self-collision: ON, %d neighbour pairs excluded" % len(excludes))
+    print("  collision   : %s" % ("boxes" if collision_box else "meshes"))
+    print("  foot mu     : %g" % FOOT_FRICTION)
     if ball_limit_deg:
-        print("  rod-end swing limit: +/-%.1f deg on %d universal joints"
+        print("  rod-end ball limit: 0..%.1f deg on %d ball joints"
               % (ball_limit_deg, len(ball_set)))
     print("  base        : %s at z = %.3f m" %
           ("WELDED" if fixed_base else "free-floating", height))

@@ -1,25 +1,17 @@
-# Python
-__pycache__/
-*.py[cod]
 .venv/
-venv/
-env/
-*.egg-info/
-
-# ROS 2 / colcon
-build/
-install/
-log/
-
-# Editors
 .vscode/
-.idea/
 *.swp
-
-# OS
 .DS_Store
 Thumbs.db
 desktop.ini
 
-# Team-internal notes, not part of the published description
-ref/
+__pycache__/
+*.py[cod]
+
+build/
+install/
+log/
+
+.claude/
+
+docs/

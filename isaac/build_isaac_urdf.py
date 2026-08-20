@@ -6,17 +6,29 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "scripts"))
 
 from robonex_common import load_urdf, fmt, ROOT
-from robonex_serial import DEG, SERIAL_JOINTS, DAMPING
+from robonex_serial import (
+    DEG, SERIAL_JOINTS, DAMPING, SERIAL_FRICTION, motor_physics_for, COLLISION_BOX,
+)
 
-CLOSED_LOOP_OUT = os.path.join(ROOT, "isaac", "closed_loop", "robonex_closed_loop.urdf")
-SIMPLIFIED_OUT = os.path.join(ROOT, "isaac", "simplified", "robonex_simplified.urdf")
+MECHANISMS = ("closed_loop", "serial")
+COLLISIONS = ("mesh", "box")
+
+
+def variant_name(mechanism, collision):
+    return "%s_%s" % (mechanism, collision)
+
+
+def output_path(mechanism, collision):
+    name = variant_name(mechanism, collision)
+    return os.path.join(ROOT, "isaac", name, "robonex_%s.urdf" % name)
+
 
 MESH_URI = "../meshes/%s"
 
 MATERIALS = (("black", "0.05 0.05 0.05 1.0"), ("gray", "0.647 0.647 0.647 1.0"))
 
 
-def emit_link(o, name, lk):
+def emit_link(o, name, lk, collision):
     o.append('  <link name="%s">' % name)
 
     if lk.mass > 0.0:
@@ -40,25 +52,28 @@ def emit_link(o, name, lk):
         o.append('      <material name="%s"/>' % colour)
         o.append("    </visual>")
 
-    # Collision stays the visual mesh here, unlike the Gazebo build's fitted
-    # boxes: Isaac's importer runs its own convex decomposition, so handing it
-    # the real shape gives a better hull than pre-approximating with a box.
-    for g in lk.visuals:
-        o.append("    <collision>")
-        o.append('      <origin xyz="%s" rpy="%s"/>' % (fmt(g.xyz), fmt(g.rpy)))
-        o.append("      <geometry>")
-        o.append('        <mesh filename="%s" scale="%s"/>'
-                 % (MESH_URI % g.mesh, fmt(g.scale)))
-        o.append("      </geometry>")
-        o.append("    </collision>")
+    if collision == "box":
+        box = COLLISION_BOX.get(name)
+        if box is not None:
+            size, centre = box
+            o.append('    <collision name="%s_collision">' % name)
+            o.append('      <origin xyz="%s" rpy="0 0 0"/>' % fmt(centre))
+            o.append('      <geometry><box size="%s"/></geometry>' % fmt(size))
+            o.append("    </collision>")
+    else:
+        for g in lk.visuals:
+            o.append("    <collision>")
+            o.append('      <origin xyz="%s" rpy="%s"/>' % (fmt(g.xyz), fmt(g.rpy)))
+            o.append("      <geometry>")
+            o.append('        <mesh filename="%s" scale="%s"/>'
+                     % (MESH_URI % g.mesh, fmt(g.scale)))
+            o.append("      </geometry>")
+            o.append("    </collision>")
 
     o.append("  </link>")
     o.append("")
 
 
-# The physical loop asset keeps every motor/input and passive linkage joint in
-# the imported tree.  The USD post-processor then closes the ankle and knee
-# mechanisms with PhysX constraints.
 ANKLE_MOTOR_JOINTS = {
     "l_ankle_upper_joint", "l_ankle_lower_joint",
     "r_ankle_upper_joint", "r_ankle_lower_joint",
@@ -74,8 +89,8 @@ KNEE_PASSIVE_JOINTS = {
 }
 
 
-def emit_joint(o, j, model):
-    if model == "simplified":
+def emit_joint(o, j, mechanism):
+    if mechanism == "serial":
         spec = SERIAL_JOINTS.get(j.name)
         passive_output = False
     else:
@@ -98,7 +113,10 @@ def emit_joint(o, j, model):
         o.append('    <axis xyz="%s"/>' % fmt(j.axis))
         o.append('    <limit lower="%.6f" upper="%.6f" effort="%g" velocity="%g"/>'
                  % (lo_deg * DEG, hi_deg * DEG, effort, velocity))
-        o.append('    <dynamics damping="%g" friction="0.0"/>' % DAMPING)
+        phys = motor_physics_for(j.name)
+        friction = (phys["frictionloss"] if phys is not None
+                    else SERIAL_FRICTION.get(j.name, 0.0))
+        o.append('    <dynamics damping="%g" friction="%g"/>' % (DAMPING, friction))
     elif passive_output:
         o.append('    <axis xyz="%s"/>' % fmt(j.axis))
         o.append('    <limit lower="%.6f" upper="%.6f" effort="0" velocity="0"/>'
@@ -108,26 +126,30 @@ def emit_joint(o, j, model):
     o.append("")
 
 
-def main():
-    parser = argparse.ArgumentParser(description="Build a RoboNex Isaac URDF variant.")
-    parser.add_argument(
-        "--model", choices=("closed_loop", "simplified"), default="closed_loop",
-        help="closed_loop keeps the physical mechanisms; simplified directly drives their outputs",
-    )
-    args = parser.parse_args()
-    out_path = CLOSED_LOOP_OUT if args.model == "closed_loop" else SIMPLIFIED_OUT
+def build(mechanism, collision):
+    if mechanism not in MECHANISMS:
+        raise ValueError("unknown mechanism %r" % mechanism)
+    if collision not in COLLISIONS:
+        raise ValueError("unknown collision %r" % collision)
+
+    out_path = output_path(mechanism, collision)
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
     links, joints, base = load_urdf()
 
     o = []
     o.append('<?xml version="1.0"?>')
     o.append("<!-- generated by isaac/build_isaac_urdf.py - do not edit by hand -->")
-    if args.model == "closed_loop":
+    o.append("<!-- variant: %s -->" % variant_name(mechanism, collision))
+    if mechanism == "closed_loop":
         o.append("<!-- physical-loop model: knee and ankle motor/output trees remain")
         o.append("     movable for USD revolute and spherical loop closures. -->")
     else:
-        o.append("<!-- simplified tree model: linkage output joints are driven directly;")
+        o.append("<!-- serial tree model: linkage output joints are driven directly;")
         o.append("     crank/coupler joints are fixed and no loop constraints are used. -->")
+    if collision == "box":
+        o.append("<!-- collision: box primitives from robonex_serial.COLLISION_BOX. -->")
+    else:
+        o.append("<!-- collision: visual meshes. -->")
     o.append('<robot name="robonex">')
     o.append("")
     for name, rgba in MATERIALS:
@@ -135,16 +157,16 @@ def main():
     o.append("")
 
     for name, lk in links.items():
-        emit_link(o, name, lk)
+        emit_link(o, name, lk, collision)
     for j in joints.values():
-        emit_joint(o, j, args.model)
+        emit_joint(o, j, mechanism)
 
     o.append("</robot>")
 
     with open(out_path, "w", encoding="utf-8") as f:
         f.write("\n".join(o) + "\n")
 
-    if args.model == "closed_loop":
+    if mechanism == "closed_loop":
         active = set(SERIAL_JOINTS)
         passive = set()
         active.difference_update(ANKLE_OUTPUT_JOINTS)
@@ -159,15 +181,37 @@ def main():
     frozen = [j.name for j in joints.values()
               if j.name not in active and j.name not in passive]
     print("wrote %s" % out_path)
+    print("  variant          : %s" % variant_name(mechanism, collision))
     print("  links            : %d  (total mass %.6f kg)"
           % (len(links), sum(lk.mass for lk in links.values())))
     print("  actuated / passive / frozen : %d / %d / %d"
           % (len(active), len(passive), len(frozen)))
+    if collision == "box":
+        boxed = sum(1 for name in links if name in COLLISION_BOX)
+        print("  collision        : %d boxes, %d links left without collision"
+              % (boxed, len(links) - boxed))
+    else:
+        print("  collision        : meshes")
     print()
-    if args.model == "closed_loop":
+    if mechanism == "closed_loop":
         print("  open tree is completed by scripts/apply_physical_loops.py.")
     else:
         print("  linkage outputs are directly actuated; no loop post-processing is needed.")
+    return out_path
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Build a RoboNex Isaac URDF variant.")
+    parser.add_argument(
+        "--mechanism", choices=MECHANISMS, default="closed_loop",
+        help="closed_loop keeps the physical mechanisms; serial directly drives their outputs",
+    )
+    parser.add_argument(
+        "--collision", choices=COLLISIONS, default="mesh",
+        help="mesh uses the visual meshes; box uses robonex_serial.COLLISION_BOX primitives",
+    )
+    args = parser.parse_args()
+    build(args.mechanism, args.collision)
 
 
 if __name__ == "__main__":

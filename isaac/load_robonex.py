@@ -18,8 +18,10 @@ parser = argparse.ArgumentParser(description="Load robonex into an empty stage."
 parser.add_argument("--fixed-base", action="store_true",
                     help="load the fixed-base variant (base welded in the air) "
                     "instead of the free-floating variant")
-parser.add_argument("--model", choices=("closed_loop", "simplified"), default="closed_loop",
-                    help="model variant to load")
+parser.add_argument("--mechanism", choices=("closed_loop", "serial"), default="closed_loop",
+                    help="closed_loop keeps the physical mechanisms; serial drives their outputs")
+parser.add_argument("--collision", choices=("mesh", "box"), default="mesh",
+                    help="collision geometry variant to load")
 parser.add_argument("--spawn-height", type=float, default=None,
                     help="spawn height in meters (default 1.085 free, 1.60 fixed, "
                     "matching mujoco/build_mjcf.py's SPAWN_HEIGHT/FIXED_BASE_HEIGHT). "
@@ -30,35 +32,31 @@ args = parser.parse_args()
 app_launcher = AppLauncher(args)
 simulation_app = app_launcher.app
 
-import omni.usd  # noqa: E402
-from isaacsim.core.api.materials.physics_material import PhysicsMaterial  # noqa: E402
-from isaacsim.core.api.objects import GroundPlane  # noqa: E402
-from isaacsim.core.utils.stage import add_reference_to_stage  # noqa: E402
-from pxr import PhysxSchema, UsdGeom, UsdLux, UsdPhysics  # noqa: E402
+import omni.usd
+from isaacsim.core.api.materials.physics_material import PhysicsMaterial
+from isaacsim.core.api.objects import GroundPlane
+from isaacsim.core.utils.stage import add_reference_to_stage
+from pxr import PhysxSchema, UsdGeom, UsdLux, UsdPhysics
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-CLOSED_LOOP_FREE_USD = os.path.join(HERE, "closed_loop", "robonex_closed_loop.usd")
-CLOSED_LOOP_FIXED_USD = os.path.join(HERE, "closed_loop", "robonex_closed_loop_fixed.usd")
-SIMPLIFIED_FREE_USD = os.path.join(HERE, "simplified", "robonex_simplified.usd")
-SIMPLIFIED_FIXED_USD = os.path.join(HERE, "simplified", "robonex_simplified_fixed.usd")
 
-SPAWN_HEIGHT = 1.085       # matches mujoco/build_mjcf.py SPAWN_HEIGHT
-FIXED_BASE_HEIGHT = 1.60   # matches mujoco/build_mjcf.py FIXED_BASE_HEIGHT
 
-# same floor friction MuJoCo/Gazebo assume (scripts/robonex_serial.py
-# FOOT_FRICTION/BODY_FRICTION = 1.0) - unmeasured, see isaac README's
-# "physical parameters are provisional" note.
-FLOOR_FRICTION = 1.0
+def usd_for(mechanism, collision, fixed_base):
+    name = "%s_%s" % (mechanism, collision)
+    suffix = "_fixed" if fixed_base else ""
+    return os.path.join(HERE, name, "robonex_%s%s.usd" % (name, suffix))
+
+SPAWN_HEIGHT = 1.085
+FIXED_BASE_HEIGHT = 1.60
+
+FLOOR_FRICTION = 0.6
 LOOP_PHYSICS_HZ = 240
 LOOP_POSITION_ITERATIONS = 64
 LOOP_VELOCITY_ITERATIONS = 4
 
 
 def main():
-    if args.model == "closed_loop":
-        usd_path = CLOSED_LOOP_FIXED_USD if args.fixed_base else CLOSED_LOOP_FREE_USD
-    else:
-        usd_path = SIMPLIFIED_FIXED_USD if args.fixed_base else SIMPLIFIED_FREE_USD
+    usd_path = usd_for(args.mechanism, args.collision, args.fixed_base)
     if not os.path.isfile(usd_path):
         raise FileNotFoundError(
             "%s not found. Build it first - see isaac/README.md for the "
@@ -70,9 +68,7 @@ def main():
 
     stage = omni.usd.get_context().get_stage()
 
-    if args.model == "closed_loop":
-        # Closed-loop constraints are sensitive to the solver and step size.
-        # Kit normally creates /physicsScene. Configure that active scene.
+    if args.mechanism == "closed_loop":
         physics_scene_prim = stage.GetPrimAtPath("/physicsScene")
         if physics_scene_prim and physics_scene_prim.IsA(UsdPhysics.Scene):
             physics_scene = UsdPhysics.Scene(physics_scene_prim)
@@ -82,8 +78,6 @@ def main():
         physx_scene.CreateSolverTypeAttr("TGS")
         physx_scene.CreateTimeStepsPerSecondAttr(LOOP_PHYSICS_HZ)
 
-    # PhysX ground planes are collision-infinite regardless of `size`; it only
-    # sets how large a tile the visual mesh draws.
     floor_material = PhysicsMaterial(
         prim_path="/World/physicsMaterials/floor",
         static_friction=FLOOR_FRICTION,
@@ -95,15 +89,11 @@ def main():
     light.CreateIntensityAttr(3000.0)
     light.AddRotateXYZOp().Set((-45.0, 30.0, 0.0))
 
-    # The referenced USD's root prim already carries a translate/orient/scale
-    # xformOpOrder from the converter, and adding a second translate op to it
-    # directly raises (USD rejects a duplicate op in the order). Simplest fix:
-    # never touch it - park the reference under a fresh Xform we own instead.
     container = UsdGeom.Xform.Define(stage, "/World/robonex")
     container.AddTranslateOp().Set((0.0, 0.0, height))
     add_reference_to_stage(usd_path, "/World/robonex/asset")
 
-    if args.model == "closed_loop":
+    if args.mechanism == "closed_loop":
         articulation_roots = [
             prim for prim in stage.Traverse()
             if prim.HasAPI(UsdPhysics.ArticulationRootAPI)
@@ -116,14 +106,12 @@ def main():
         articulation.CreateSolverPositionIterationCountAttr(LOOP_POSITION_ITERATIONS)
         articulation.CreateSolverVelocityIterationCountAttr(LOOP_VELOCITY_ITERATIONS)
 
-    # flush explicitly: Kit's shutdown on simulation_app.close() tears the
-    # process down hard enough that ordinary buffered stdout can be lost.
-    print("[load_robonex] loaded %s at z=%.3f m (%s, %s base)"
+    print("[load_robonex] loaded %s at z=%.3f m (%s, %s collision, %s base)"
           % (os.path.basename(usd_path), height,
-             args.model.replace("_", " "),
+             args.mechanism.replace("_", " "), args.collision,
              "fixed" if args.fixed_base else "free"),
           flush=True)
-    if args.model == "closed_loop":
+    if args.mechanism == "closed_loop":
         print("[load_robonex] closed-loop physics: TGS, %d Hz, %d/%d solver iterations"
               % (LOOP_PHYSICS_HZ, LOOP_POSITION_ITERATIONS,
                  LOOP_VELOCITY_ITERATIONS), flush=True)

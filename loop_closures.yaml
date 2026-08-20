@@ -1,26 +1,22 @@
 ball_loops:
-  # left foot to left ankle coupler a (short)
   - name: l_ankle_ball_c
     parent: l_ankle_coupler_link_a
     child: l_foot
     parent_xyz: [0.0, 0.0, -0.147]
     child_xyz: [0.05, -0.0292, -0.026]
 
-  # left foot to right ankle coupler (long)
   - name: l_ankle_ball_d
     parent: l_ankle_coupler_link_b
     child: l_foot
     parent_xyz: [0.0, 0.0, -0.258]
     child_xyz: [0.05, 0.0692, -0.026]
 
-  # right foot to right ankle coupler a (short)
   - name: r_ankle_ball_c
     parent: r_ankle_coupler_link_a
     child: r_foot
     parent_xyz: [0.0, 0.0, -0.147]
     child_xyz: [0.05, 0.0707, -0.026]
 
-  # right foot to right ankle coupler (long)
   - name: r_ankle_ball_d
     parent: r_ankle_coupler_link_b
     child: r_foot
@@ -29,7 +25,6 @@ ball_loops:
 
 
 pin_loops:
-  # left knee coupler to left knee link
   - name: l_knee_coupler_joint_b
     parent: l_knee_coupler_link
     child: l_knee_link
@@ -37,7 +32,6 @@ pin_loops:
     child_xyz: [0.089846, 0.0145, 0.050364]
     axis: [0.0, 1.0, 0.0]
 
-  # right knee coupler to right knee link
   - name: r_knee_coupler_joint_b
     parent: r_knee_coupler_link
     child: r_knee_link
@@ -52,18 +46,6 @@ ball_upgrades:
   - r_ankle_coupler_joint_a
   - r_ankle_coupler_joint_b
 
-#    Mechanical swing limit of the rod-end bearings, in degrees, measured from
-#    the rod axis. Applied to every joint listed in ball_upgrades.
-#
-#    Caveat: MuJoCo models these as a universal joint (two perpendicular hinges),
-#    so the limit becomes a square rather than a cone. Straight along either
-#    hinge the limit is exact; on the 45 deg diagonal the rod can reach
-#    sqrt(2) * 15 = 21.2 deg before both hinges stop it. For this mechanism the
-#    rod swings almost entirely in one plane, so the error is small.
-#
-#    The four coupler-to-foot balls cannot carry a limit: MuJoCo closes those
-#    loops with <equality><connect>, which constrains position only. In practice
-#    the crank-side limit reaches its stop first, so the pair is still bounded.
 ball_limit_deg: 15.0
 
 
