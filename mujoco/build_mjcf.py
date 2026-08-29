@@ -5,7 +5,7 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "scripts"))
 
-from robonex_common import (
+from model_io import (
     load_urdf, load_loops, children_of, rpy_to_quat, fmt, ROOT,
 )
 from robonex_data import motor_physics_for, COLLISION_BOX, FEET, FOOT_FRICTION

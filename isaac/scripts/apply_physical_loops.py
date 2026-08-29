@@ -37,7 +37,7 @@ ISAAC_DIR = os.path.dirname(HERE)
 ROOT = os.path.dirname(ISAAC_DIR)
 sys.path.insert(0, os.path.join(ROOT, "scripts"))
 
-from robonex_common import load_loops
+from model_io import load_loops
 
 
 IDENTITY = Gf.Quatf(1.0, 0.0, 0.0, 0.0)

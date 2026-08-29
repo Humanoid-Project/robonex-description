@@ -5,7 +5,7 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "scripts"))
 
-from robonex_common import load_urdf, fmt, ROOT
+from model_io import load_urdf, fmt, ROOT
 from robonex_data import DEG, DAMPING, motor_physics_for, COLLISION_BOX
 
 COLLISIONS = ("mesh", "box")

@@ -5,7 +5,7 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "scripts"))
 
-from robonex_common import load_urdf, fmt, ROOT
+from model_io import load_urdf, fmt, ROOT
 from robonex_data import (
     DEG, JOINT_ORDER, DAMPING, COLLISION_BOX, FEET,
     FOOT_FRICTION, BODY_FRICTION, PACKAGE,
