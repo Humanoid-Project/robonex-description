@@ -99,7 +99,9 @@
                 <inertial pos="0.021493 0.024513 0.00427" mass="0.08456" fullinertia="1.958e-05 5.234e-05 5.951e-05 -3.25e-06 -6.24e-06 -6.5e-07"/>
                 <geom type="mesh" mesh="l_ankle_crank_link_a" pos="0.026 0.0234 0" quat="0.707107 0 0 0.707107" class="visual"/>
                 <body name="l_ankle_coupler_link_b" pos="0.05 0.0263 0">
-                  <joint name="l_ankle_coupler_joint_b" type="ball" range="0 0.261799" solreflimit="0.004 1" solimplimit="0.99 0.9999 0.0001" class="passive"/>
+                  <joint name="l_ankle_coupler_joint_b_x" type="hinge" axis="1 0 0" range="-0.261799 0.261799" limited="true" solreflimit="0.004 1" solimplimit="0.99 0.9999 0.0001" class="passive"/>
+                  <joint name="l_ankle_coupler_joint_b_y" type="hinge" axis="0 1 0" class="passive"/>
+                  <joint name="l_ankle_coupler_joint_b_z" type="hinge" axis="0 0 1" range="-0.261799 0.261799" limited="true" solreflimit="0.004 1" solimplimit="0.99 0.9999 0.0001" class="passive"/>
                   <inertial pos="0 0 -0.129" mass="0.08512" fullinertia="0.00066004 0.00065964 7.38e-06 0 0 0"/>
                   <geom type="mesh" mesh="l_ankle_coupler_link_b" pos="0 0 -0.129" class="visual"/>
                 </body>
@@ -109,7 +111,9 @@
                 <inertial pos="0.021493 -0.024513 0.00427" mass="0.08456" fullinertia="1.958e-05 5.234e-05 5.951e-05 3.25e-06 -6.24e-06 6.5e-07"/>
                 <geom type="mesh" mesh="l_ankle_crank_link_b" pos="0.026 -0.0224 -1e-06" quat="0.707107 0 0 0.707107" class="visual"/>
                 <body name="l_ankle_coupler_link_a" pos="0.05 -0.0263 0">
-                  <joint name="l_ankle_coupler_joint_a" type="ball" range="0 0.261799" solreflimit="0.004 1" solimplimit="0.99 0.9999 0.0001" class="passive"/>
+                  <joint name="l_ankle_coupler_joint_a_x" type="hinge" axis="1 0 0" range="-0.261799 0.261799" limited="true" solreflimit="0.004 1" solimplimit="0.99 0.9999 0.0001" class="passive"/>
+                  <joint name="l_ankle_coupler_joint_a_y" type="hinge" axis="0 1 0" class="passive"/>
+                  <joint name="l_ankle_coupler_joint_a_z" type="hinge" axis="0 0 1" range="-0.261799 0.261799" limited="true" solreflimit="0.004 1" solimplimit="0.99 0.9999 0.0001" class="passive"/>
                   <inertial pos="0 0 -0.0735" mass="0.0741" fullinertia="0.0001211 0.00012069 6.8e-06 0 0 0"/>
                   <geom type="mesh" mesh="l_ankle_coupler_link_a" pos="0 0 -0.0735" class="visual"/>
                 </body>
@@ -170,7 +174,9 @@
                 <inertial pos="0.021493 0.024513 0.00427" mass="0.08456" fullinertia="1.958e-05 5.234e-05 5.951e-05 -3.25e-06 -6.24e-06 -6.5e-07"/>
                 <geom type="mesh" mesh="r_ankle_crank_link_a" pos="0.026 0.0234 0" quat="0.707107 0 0 0.707107" class="visual"/>
                 <body name="r_ankle_coupler_link_a" pos="0.05 0.0263 0">
-                  <joint name="r_ankle_coupler_joint_a" type="ball" range="0 0.261799" solreflimit="0.004 1" solimplimit="0.99 0.9999 0.0001" class="passive"/>
+                  <joint name="r_ankle_coupler_joint_a_x" type="hinge" axis="1 0 0" range="-0.261799 0.261799" limited="true" solreflimit="0.004 1" solimplimit="0.99 0.9999 0.0001" class="passive"/>
+                  <joint name="r_ankle_coupler_joint_a_y" type="hinge" axis="0 1 0" class="passive"/>
+                  <joint name="r_ankle_coupler_joint_a_z" type="hinge" axis="0 0 1" range="-0.261799 0.261799" limited="true" solreflimit="0.004 1" solimplimit="0.99 0.9999 0.0001" class="passive"/>
                   <inertial pos="0 0 -0.0735" mass="0.0741" fullinertia="0.0001211 0.00012069 6.8e-06 0 0 0"/>
                   <geom type="mesh" mesh="r_ankle_coupler_link_a" pos="0 0 -0.0735" class="visual"/>
                 </body>
@@ -180,7 +186,9 @@
                 <inertial pos="0.021493 -0.024513 0.00427" mass="0.08456" fullinertia="1.958e-05 5.234e-05 5.951e-05 3.25e-06 -6.24e-06 6.5e-07"/>
                 <geom type="mesh" mesh="r_ankle_crank_link_b" pos="0.026 -0.0224 -1e-06" quat="0.707107 0 0 0.707107" class="visual"/>
                 <body name="r_ankle_coupler_link_b" pos="0.05 -0.0263 0">
-                  <joint name="r_ankle_coupler_joint_b" type="ball" range="0 0.261799" solreflimit="0.004 1" solimplimit="0.99 0.9999 0.0001" class="passive"/>
+                  <joint name="r_ankle_coupler_joint_b_x" type="hinge" axis="1 0 0" range="-0.261799 0.261799" limited="true" solreflimit="0.004 1" solimplimit="0.99 0.9999 0.0001" class="passive"/>
+                  <joint name="r_ankle_coupler_joint_b_y" type="hinge" axis="0 1 0" class="passive"/>
+                  <joint name="r_ankle_coupler_joint_b_z" type="hinge" axis="0 0 1" range="-0.261799 0.261799" limited="true" solreflimit="0.004 1" solimplimit="0.99 0.9999 0.0001" class="passive"/>
                   <inertial pos="0 0 -0.129" mass="0.08512" fullinertia="0.00066004 0.00065964 7.38e-06 0 0 0"/>
                   <geom type="mesh" mesh="r_ankle_coupler_link_b" pos="0 0 -0.129" class="visual"/>
                 </body>
