@@ -19,6 +19,7 @@ class Geom:
     xyz: tuple
     rpy: tuple
     scale: tuple
+    material: str = ""
 
 
 @dataclass
@@ -60,11 +61,13 @@ def _parse_geoms(link_el, tag):
         if mesh is None:
             continue
         origin = el.find("origin")
+        mat = el.find("material")
         out.append(Geom(
             mesh=os.path.basename(mesh.get("filename")),
             xyz=_triple(origin, "xyz"),
             rpy=_triple(origin, "rpy"),
             scale=_triple(mesh, "scale", (1.0, 1.0, 1.0)),
+            material=(mat.get("name") or "") if mat is not None else "",
         ))
     return out
 

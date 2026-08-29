@@ -23,6 +23,11 @@
           <uri>../meshes/base_link.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.025 0.025 0.025 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
       <visual name="base_link_visual_1">
         <pose>0.060424 -0.05 -0.17975 -3.14159 0 -1.65806</pose>
@@ -30,6 +35,11 @@
           <uri>../meshes/rs02_r_hip_yaw.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.3235 0.3235 0.3235 1</ambient>
+          <diffuse>0.647 0.647 0.647 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
       <visual name="base_link_visual_2">
         <pose>0.060424 0.05 -0.17975 -3.14159 0 -1.65806</pose>
@@ -37,6 +47,11 @@
           <uri>../meshes/rs02_l_hip_yaw.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.3235 0.3235 0.3235 1</ambient>
+          <diffuse>0.647 0.647 0.647 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
       <collision name="base_link_collision">
         <pose>0 0 -0.0005 0 0 0</pose>
@@ -73,6 +88,11 @@
           <uri>../meshes/l_hip_yaw_link.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.025 0.025 0.025 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
       <visual name="l_hip_yaw_link_visual_1">
         <pose>2e-06 0.0194 -0.06001 0 -1.5708 -1.5708</pose>
@@ -80,6 +100,11 @@
           <uri>../meshes/rs03_l_hip_pitch.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.3235 0.3235 0.3235 1</ambient>
+          <diffuse>0.647 0.647 0.647 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
       <collision name="l_hip_yaw_link_collision">
         <pose>0 0.0013 -0.059 0 0 0</pose>
@@ -110,6 +135,11 @@
           <uri>../meshes/r_hip_yaw_link.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.025 0.025 0.025 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
       <visual name="r_hip_yaw_link_visual_1">
         <pose>-2e-06 -0.0194 -0.06001 0 -1.5708 1.5708</pose>
@@ -117,6 +147,11 @@
           <uri>../meshes/rs03_r_hip_pitch.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.3235 0.3235 0.3235 1</ambient>
+          <diffuse>0.647 0.647 0.647 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
       <collision name="r_hip_yaw_link_collision">
         <pose>0 -0.0013 -0.059 0 0 0</pose>
@@ -147,6 +182,11 @@
           <uri>../meshes/l_hip_pitch_link.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.025 0.025 0.025 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
       <visual name="l_hip_pitch_link_visual_1">
         <pose>-0.0058 0.0623 -0.03351 0 -1.5708 -3.14159</pose>
@@ -154,6 +194,11 @@
           <uri>../meshes/rs03_l_hip_roll.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.3235 0.3235 0.3235 1</ambient>
+          <diffuse>0.647 0.647 0.647 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
       <collision name="l_hip_pitch_link_collision">
         <pose>-0.0046 0.0599 -0.0258 0 0 0</pose>
@@ -184,6 +229,11 @@
           <uri>../meshes/r_hip_pitch_link.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.025 0.025 0.025 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
       <visual name="r_hip_pitch_link_visual_1">
         <pose>-0.0058 -0.0627 -0.03351 0 -1.5708 -3.14159</pose>
@@ -191,6 +241,11 @@
           <uri>../meshes/rs03_r_hip_roll.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.3235 0.3235 0.3235 1</ambient>
+          <diffuse>0.647 0.647 0.647 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
       <collision name="r_hip_pitch_link_collision">
         <pose>-0.0046 -0.0601 -0.0257 0 0 0</pose>
@@ -221,6 +276,11 @@
           <uri>../meshes/l_hip_roll_link.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.025 0.025 0.025 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
       <visual name="l_hip_roll_link_visual_1">
         <pose>-0.03431 -0.0603 -0.255 -1.5708 0 0</pose>
@@ -228,6 +288,11 @@
           <uri>../meshes/rs03_l_knee.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.3235 0.3235 0.3235 1</ambient>
+          <diffuse>0.647 0.647 0.647 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
       <collision name="l_hip_roll_link_collision">
         <pose>-0.0348 -0.011 -0.16 0 0 0</pose>
@@ -258,6 +323,11 @@
           <uri>../meshes/r_hip_roll_link.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.025 0.025 0.025 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
       <visual name="r_hip_roll_link_visual_1">
         <pose>-0.03431 0.0603 -0.255 1.5708 0 0</pose>
@@ -265,6 +335,11 @@
           <uri>../meshes/rs03_r_knee.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.3235 0.3235 0.3235 1</ambient>
+          <diffuse>0.647 0.647 0.647 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
       <collision name="r_hip_roll_link_collision">
         <pose>-0.0348 0.011 -0.16 0 0 0</pose>
@@ -295,6 +370,11 @@
           <uri>../meshes/l_knee_crank_link.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.025 0.025 0.025 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
     </link>
 
@@ -318,6 +398,11 @@
           <uri>../meshes/r_knee_crank_link.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.025 0.025 0.025 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
     </link>
 
@@ -341,6 +426,11 @@
           <uri>../meshes/l_knee_coupler_link.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.025 0.025 0.025 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
     </link>
 
@@ -364,6 +454,11 @@
           <uri>../meshes/r_knee_coupler_link.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.025 0.025 0.025 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
     </link>
 
@@ -387,6 +482,11 @@
           <uri>../meshes/l_knee_link.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.025 0.025 0.025 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
       <visual name="l_knee_link_visual_1">
         <pose>0 0.0252 -0.1445 -1.5708 0 0</pose>
@@ -394,6 +494,11 @@
           <uri>../meshes/rs02_l_ankle_a.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.3235 0.3235 0.3235 1</ambient>
+          <diffuse>0.647 0.647 0.647 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
       <visual name="l_knee_link_visual_2">
         <pose>0 0.0248 -0.2555 1.5708 0 0</pose>
@@ -401,6 +506,11 @@
           <uri>../meshes/rs02_l_ankle_b.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.3235 0.3235 0.3235 1</ambient>
+          <diffuse>0.647 0.647 0.647 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
       <collision name="l_knee_link_collision">
         <pose>0.0027 0.025 -0.1525 0 0 0</pose>
@@ -431,6 +541,11 @@
           <uri>../meshes/r_knee_link.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.025 0.025 0.025 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
       <visual name="r_knee_link_visual_1">
         <pose>0 -0.0252 -0.1445 1.5708 0 0</pose>
@@ -438,6 +553,11 @@
           <uri>../meshes/rs02_r_ankle_a.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.3235 0.3235 0.3235 1</ambient>
+          <diffuse>0.647 0.647 0.647 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
       <visual name="r_knee_link_visual_2">
         <pose>0 -0.0248 -0.2555 -1.5708 0 0</pose>
@@ -445,6 +565,11 @@
           <uri>../meshes/rs02_r_ankle_b.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.3235 0.3235 0.3235 1</ambient>
+          <diffuse>0.647 0.647 0.647 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
       <collision name="r_knee_link_collision">
         <pose>0.0027 -0.025 -0.1525 0 0 0</pose>
@@ -475,6 +600,11 @@
           <uri>../meshes/l_ankle_crank_link_a.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.025 0.025 0.025 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
     </link>
 
@@ -498,6 +628,11 @@
           <uri>../meshes/l_ankle_crank_link_b.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.025 0.025 0.025 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
     </link>
 
@@ -521,6 +656,11 @@
           <uri>../meshes/r_ankle_crank_link_a.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.025 0.025 0.025 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
     </link>
 
@@ -544,6 +684,11 @@
           <uri>../meshes/r_ankle_crank_link_b.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.025 0.025 0.025 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
     </link>
 
@@ -567,6 +712,11 @@
           <uri>../meshes/l_ankle_coupler_link_a.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.025 0.025 0.025 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
     </link>
 
@@ -590,6 +740,11 @@
           <uri>../meshes/l_ankle_coupler_link_b.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.025 0.025 0.025 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
     </link>
 
@@ -613,6 +768,11 @@
           <uri>../meshes/r_ankle_coupler_link_a.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.025 0.025 0.025 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
     </link>
 
@@ -636,6 +796,11 @@
           <uri>../meshes/r_ankle_coupler_link_b.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.025 0.025 0.025 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
     </link>
 
@@ -659,6 +824,11 @@
           <uri>../meshes/l_ankle_link.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.025 0.025 0.025 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
       <collision name="l_ankle_link_collision">
         <pose>-0.02 0 -0.025 0 0 0</pose>
@@ -689,6 +859,11 @@
           <uri>../meshes/r_ankle_link.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.025 0.025 0.025 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
       <collision name="r_ankle_link_collision">
         <pose>-0.02 0 -0.025 0 0 0</pose>
@@ -719,6 +894,11 @@
           <uri>../meshes/l_foot.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.025 0.025 0.025 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
       <collision name="l_foot_collision">
         <pose>0.0416 0.02 -0.0554 0 0 0</pose>
@@ -756,6 +936,11 @@
           <uri>../meshes/r_foot.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh></geometry>
+        <material>
+          <ambient>0.025 0.025 0.025 1</ambient>
+          <diffuse>0.05 0.05 0.05 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
       </visual>
       <collision name="r_foot_collision">
         <pose>0.0416 0.0215 -0.0554 0 0 0</pose>

@@ -18,6 +18,11 @@ EMPTY_OUT = os.path.join(ROOT, "gazebo", "empty_world.sdf")
 
 MESH_URI = "../meshes/%s"
 
+MATERIAL_RGB = {
+    "black": (0.05, 0.05, 0.05),
+    "gray": (0.647, 0.647, 0.647),
+}
+
 PLUGIN = 'ignition-gazebo-%s-system'
 KLASS = 'ignition::gazebo::systems::%s'
 
@@ -51,6 +56,14 @@ def emit_link(o, name, lk, parent_joint):
         o.append("          <uri>%s</uri>" % (MESH_URI % g.mesh))
         o.append("          <scale>%s</scale>" % fmt(g.scale))
         o.append("        </mesh></geometry>")
+        rgb = MATERIAL_RGB.get(g.material)
+        if rgb is not None:
+            r, gr, b = rgb
+            o.append("        <material>")
+            o.append("          <ambient>%g %g %g 1</ambient>" % (r * 0.5, gr * 0.5, b * 0.5))
+            o.append("          <diffuse>%g %g %g 1</diffuse>" % (r, gr, b))
+            o.append("          <specular>0.1 0.1 0.1 1</specular>")
+            o.append("        </material>")
         o.append("      </visual>")
 
     box = COLLISION_BOX.get(name)
