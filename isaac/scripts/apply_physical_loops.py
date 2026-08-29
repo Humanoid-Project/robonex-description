@@ -43,16 +43,9 @@ from robonex_common import load_loops
 IDENTITY = Gf.Quatf(1.0, 0.0, 0.0, 0.0)
 BALL_AXIS = UsdPhysics.Tokens.x
 X_TO_Z = Gf.Quatf(Gf.Rotation(Gf.Vec3d(0.0, 1.0, 0.0), -90.0).GetQuat())
-PASSIVE_MAX_VELOCITIES_RAD_S = {
-    "l_knee_joint": 22.5,
-    "r_knee_joint": 22.5,
-    "l_knee_coupler_joint_a": 15.0,
-    "r_knee_coupler_joint_a": 15.0,
-    "l_ankle_roll_joint": 50.0,
-    "r_ankle_roll_joint": 50.0,
-    "l_ankle_pitch_joint": 55.0,
-    "r_ankle_pitch_joint": 55.0,
-}
+ROD_END_BOLT_AXIS = "rotY"
+ROD_END_TILT_AXES = ("rotX", "rotZ")
+
 ANKLE_PASSIVE_JOINTS = {
     "l_ankle_roll_joint", "l_ankle_pitch_joint",
     "r_ankle_roll_joint", "r_ankle_pitch_joint",
@@ -79,19 +72,11 @@ def vec3(values, label: str) -> Gf.Vec3f:
 def make_passive(prim: Usd.Prim, expected_type: str) -> None:
     if prim.GetTypeName() != expected_type:
         raise RuntimeError("%s must be an imported %s" % (prim.GetName(), expected_type))
-    if prim.GetName() not in PASSIVE_MAX_VELOCITIES_RAD_S:
-        raise RuntimeError("missing passive max velocity for %s" % prim.GetName())
     drive = UsdPhysics.DriveAPI.Get(prim, UsdPhysics.Tokens.angular)
     if drive:
         drive.CreateStiffnessAttr(0.0)
         drive.CreateDampingAttr(0.0)
         drive.CreateMaxForceAttr(0.0)
-    max_velocity = prim.GetAttribute("physxJoint:maxJointVelocity")
-    if not max_velocity:
-        raise RuntimeError(
-            "%s has no physxJoint:maxJointVelocity attribute" % prim.GetName()
-        )
-    max_velocity.Set(math.degrees(PASSIVE_MAX_VELOCITIES_RAD_S[prim.GetName()]))
 
 
 def lock_limit(prim: Usd.Prim, axis: str) -> None:
@@ -133,7 +118,7 @@ def upgrade_to_limited_ball(stage: Usd.Stage, name: str, limit_deg: float) -> No
     prim = joint.GetPrim()
     for axis in ("transX", "transY", "transZ"):
         lock_limit(prim, axis)
-    for axis in ("rotX", "rotY", "rotZ"):
+    for axis in ROD_END_TILT_AXES:
         range_limit(prim, axis, limit_deg)
 
 
@@ -228,7 +213,9 @@ def main() -> int:
     print("  excluded spherical closures : 4", flush=True)
     print("  passive knee tree joints    : 4", flush=True)
     print("  excluded pin closures       : 2", flush=True)
-    print("  rod-end 3-axis limit        : +/-%.1f deg" % limit_deg, flush=True)
+    print("  rod-end tilt limit %s   : +/-%.1f deg (%s free: bolt axis)"
+          % ("/".join(ROD_END_TILT_AXES), limit_deg, ROD_END_BOLT_AXIS), flush=True)
+    print("  passive position/velocity limits: none (loop closure determines them)", flush=True)
     return 0
 
 

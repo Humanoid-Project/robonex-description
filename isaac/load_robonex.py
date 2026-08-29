@@ -18,8 +18,6 @@ parser = argparse.ArgumentParser(description="Load robonex into an empty stage."
 parser.add_argument("--fixed-base", action="store_true",
                     help="load the fixed-base variant (base welded in the air) "
                     "instead of the free-floating variant")
-parser.add_argument("--mechanism", choices=("closed_loop", "serial"), default="closed_loop",
-                    help="closed_loop keeps the physical mechanisms; serial drives their outputs")
 parser.add_argument("--collision", choices=("mesh", "box"), default="mesh",
                     help="collision geometry variant to load")
 parser.add_argument("--spawn-height", type=float, default=None,
@@ -41,8 +39,8 @@ from pxr import PhysxSchema, UsdGeom, UsdLux, UsdPhysics
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 
-def usd_for(mechanism, collision, fixed_base):
-    name = "%s_%s" % (mechanism, collision)
+def usd_for(collision, fixed_base):
+    name = "closed_loop_%s" % collision
     suffix = "_fixed" if fixed_base else ""
     return os.path.join(HERE, name, "robonex_%s%s.usd" % (name, suffix))
 
@@ -56,7 +54,7 @@ LOOP_VELOCITY_ITERATIONS = 4
 
 
 def main():
-    usd_path = usd_for(args.mechanism, args.collision, args.fixed_base)
+    usd_path = usd_for(args.collision, args.fixed_base)
     if not os.path.isfile(usd_path):
         raise FileNotFoundError(
             "%s not found. Build it first - see isaac/README.md for the "
@@ -68,15 +66,14 @@ def main():
 
     stage = omni.usd.get_context().get_stage()
 
-    if args.mechanism == "closed_loop":
-        physics_scene_prim = stage.GetPrimAtPath("/physicsScene")
-        if physics_scene_prim and physics_scene_prim.IsA(UsdPhysics.Scene):
-            physics_scene = UsdPhysics.Scene(physics_scene_prim)
-        else:
-            physics_scene = UsdPhysics.Scene.Define(stage, "/physicsScene")
-        physx_scene = PhysxSchema.PhysxSceneAPI.Apply(physics_scene.GetPrim())
-        physx_scene.CreateSolverTypeAttr("TGS")
-        physx_scene.CreateTimeStepsPerSecondAttr(LOOP_PHYSICS_HZ)
+    physics_scene_prim = stage.GetPrimAtPath("/physicsScene")
+    if physics_scene_prim and physics_scene_prim.IsA(UsdPhysics.Scene):
+        physics_scene = UsdPhysics.Scene(physics_scene_prim)
+    else:
+        physics_scene = UsdPhysics.Scene.Define(stage, "/physicsScene")
+    physx_scene = PhysxSchema.PhysxSceneAPI.Apply(physics_scene.GetPrim())
+    physx_scene.CreateSolverTypeAttr("TGS")
+    physx_scene.CreateTimeStepsPerSecondAttr(LOOP_PHYSICS_HZ)
 
     floor_material = PhysicsMaterial(
         prim_path="/World/physicsMaterials/floor",
@@ -93,28 +90,25 @@ def main():
     container.AddTranslateOp().Set((0.0, 0.0, height))
     add_reference_to_stage(usd_path, "/World/robonex/asset")
 
-    if args.mechanism == "closed_loop":
-        articulation_roots = [
-            prim for prim in stage.Traverse()
-            if prim.HasAPI(UsdPhysics.ArticulationRootAPI)
-        ]
-        if len(articulation_roots) != 1:
-            raise RuntimeError(
-                "expected one closed-loop articulation root, found %d" % len(articulation_roots)
-            )
-        articulation = PhysxSchema.PhysxArticulationAPI.Apply(articulation_roots[0])
-        articulation.CreateSolverPositionIterationCountAttr(LOOP_POSITION_ITERATIONS)
-        articulation.CreateSolverVelocityIterationCountAttr(LOOP_VELOCITY_ITERATIONS)
+    articulation_roots = [
+        prim for prim in stage.Traverse()
+        if prim.HasAPI(UsdPhysics.ArticulationRootAPI)
+    ]
+    if len(articulation_roots) != 1:
+        raise RuntimeError(
+            "expected one closed-loop articulation root, found %d" % len(articulation_roots)
+        )
+    articulation = PhysxSchema.PhysxArticulationAPI.Apply(articulation_roots[0])
+    articulation.CreateSolverPositionIterationCountAttr(LOOP_POSITION_ITERATIONS)
+    articulation.CreateSolverVelocityIterationCountAttr(LOOP_VELOCITY_ITERATIONS)
 
-    print("[load_robonex] loaded %s at z=%.3f m (%s, %s collision, %s base)"
-          % (os.path.basename(usd_path), height,
-             args.mechanism.replace("_", " "), args.collision,
+    print("[load_robonex] loaded %s at z=%.3f m (closed loop, %s collision, %s base)"
+          % (os.path.basename(usd_path), height, args.collision,
              "fixed" if args.fixed_base else "free"),
           flush=True)
-    if args.mechanism == "closed_loop":
-        print("[load_robonex] closed-loop physics: TGS, %d Hz, %d/%d solver iterations"
-              % (LOOP_PHYSICS_HZ, LOOP_POSITION_ITERATIONS,
-                 LOOP_VELOCITY_ITERATIONS), flush=True)
+    print("[load_robonex] closed-loop physics: TGS, %d Hz, %d/%d solver iterations"
+          % (LOOP_PHYSICS_HZ, LOOP_POSITION_ITERATIONS,
+             LOOP_VELOCITY_ITERATIONS), flush=True)
     if args.fixed_base:
         print("[load_robonex] press Play to start physics; the base remains welded",
               flush=True)

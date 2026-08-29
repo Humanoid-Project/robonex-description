@@ -3,7 +3,7 @@
 <!-- variant: closed_loop_box -->
 <!-- physical-loop model: knee and ankle motor/output trees remain
      movable for USD revolute and spherical loop closures. -->
-<!-- collision: box primitives from robonex_serial.COLLISION_BOX. -->
+<!-- collision: box primitives from robonex_data.COLLISION_BOX. -->
 <robot name="robonex">
 
   <material name="black"><color rgba="0.05 0.05 0.05 1.0"/></material>
@@ -574,21 +574,21 @@
     <dynamics damping="0.2" friction="0.2"/>
   </joint>
 
-  <joint name="l_knee_joint" type="revolute">
+  <joint name="l_knee_joint" type="continuous">
     <parent link="l_hip_roll_link"/>
     <child link="l_knee_link"/>
     <origin xyz="-0.0348 -0.0255 -0.34" rpy="0 0 0"/>
     <axis xyz="0 -1 0"/>
-    <limit lower="-3.141593" upper="3.141593" effort="0" velocity="0"/>
+    <limit effort="0" velocity="0"/>
     <dynamics damping="0" friction="0.0"/>
   </joint>
 
-  <joint name="r_knee_joint" type="revolute">
+  <joint name="r_knee_joint" type="continuous">
     <parent link="r_hip_roll_link"/>
     <child link="r_knee_link"/>
     <origin xyz="-0.0348 0.0255 -0.34" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
-    <limit lower="-3.141593" upper="3.141593" effort="0" velocity="0"/>
+    <limit effort="0" velocity="0"/>
     <dynamics damping="0" friction="0.0"/>
   </joint>
 
@@ -610,21 +610,21 @@
     <dynamics damping="0.2" friction="0.2"/>
   </joint>
 
-  <joint name="l_knee_coupler_joint_a" type="revolute">
+  <joint name="l_knee_coupler_joint_a" type="continuous">
     <parent link="l_knee_crank_link"/>
     <child link="l_knee_coupler_link"/>
     <origin xyz="0.042262 0.021 0.090631" rpy="0 0 0"/>
     <axis xyz="0 -1 0"/>
-    <limit lower="-3.141593" upper="3.141593" effort="0" velocity="0"/>
+    <limit effort="0" velocity="0"/>
     <dynamics damping="0" friction="0.0"/>
   </joint>
 
-  <joint name="r_knee_coupler_joint_a" type="revolute">
+  <joint name="r_knee_coupler_joint_a" type="continuous">
     <parent link="r_knee_crank_link"/>
     <child link="r_knee_coupler_link"/>
     <origin xyz="0.042262 -0.021 0.090631" rpy="0 0 0"/>
     <axis xyz="0 -1 0"/>
-    <limit lower="-3.141593" upper="3.141593" effort="0" velocity="0"/>
+    <limit effort="0" velocity="0"/>
     <dynamics damping="0" friction="0.0"/>
   </joint>
 
@@ -688,39 +688,39 @@
     <origin xyz="0.05 -0.0263 0" rpy="0 0 0"/>
   </joint>
 
-  <joint name="l_ankle_roll_joint" type="revolute">
+  <joint name="l_ankle_roll_joint" type="continuous">
     <parent link="l_knee_link"/>
     <child link="l_ankle_link"/>
     <origin xyz="0.02 0.025 -0.3265" rpy="0 0 0"/>
     <axis xyz="1 0 0"/>
-    <limit lower="-3.141593" upper="3.141593" effort="0" velocity="0"/>
+    <limit effort="0" velocity="0"/>
     <dynamics damping="0" friction="0.0"/>
   </joint>
 
-  <joint name="r_ankle_roll_joint" type="revolute">
+  <joint name="r_ankle_roll_joint" type="continuous">
     <parent link="r_knee_link"/>
     <child link="r_ankle_link"/>
     <origin xyz="0.02 -0.025 -0.3265" rpy="0 0 0"/>
     <axis xyz="1 0 0"/>
-    <limit lower="-3.141593" upper="3.141593" effort="0" velocity="0"/>
+    <limit effort="0" velocity="0"/>
     <dynamics damping="0" friction="0.0"/>
   </joint>
 
-  <joint name="l_ankle_pitch_joint" type="revolute">
+  <joint name="l_ankle_pitch_joint" type="continuous">
     <parent link="l_ankle_link"/>
     <child link="l_foot"/>
     <origin xyz="-0.02 -0.02 -0.05" rpy="0 0 0"/>
     <axis xyz="0 -1 0"/>
-    <limit lower="-3.141593" upper="3.141593" effort="0" velocity="0"/>
+    <limit effort="0" velocity="0"/>
     <dynamics damping="0" friction="0.0"/>
   </joint>
 
-  <joint name="r_ankle_pitch_joint" type="revolute">
+  <joint name="r_ankle_pitch_joint" type="continuous">
     <parent link="r_ankle_link"/>
     <child link="r_foot"/>
     <origin xyz="-0.02 -0.0215 -0.05" rpy="0 0 0"/>
     <axis xyz="0 -1 0"/>
-    <limit lower="-3.141593" upper="3.141593" effort="0" velocity="0"/>
+    <limit effort="0" velocity="0"/>
     <dynamics damping="0" friction="0.0"/>
   </joint>
 

@@ -10,21 +10,15 @@ isaac/
 ├── scripts/
 │   ├── apply_physical_loops.py
 │   ├── build_closed_loop_mesh.py
-│   ├── build_closed_loop_box.py
-│   ├── build_serial_mesh.py
-│   └── build_serial_box.py
+│   └── build_closed_loop_box.py
 ├── closed_loop_mesh/
-├── closed_loop_box/
-├── serial_mesh/
-└── serial_box/
+└── closed_loop_box/
 ```
 
 | Variant | Mechanism | Collision |
 | --- | --- | --- |
 | `closed_loop_mesh` | Four-bar and differential closures kept; 12 cranks actuated | Visual meshes |
 | `closed_loop_box` | Four-bar and differential closures kept; 12 cranks actuated | Box primitives |
-| `serial_mesh` | Loops removed; linkage output joints actuated directly | Visual meshes |
-| `serial_box` | Loops removed; linkage output joints actuated directly | Box primitives |
 
 <br>
 
@@ -38,21 +32,18 @@ cd ~/humanoid_project/robonex_description
 
 python3 isaac/scripts/build_closed_loop_mesh.py
 python3 isaac/scripts/build_closed_loop_box.py
-python3 isaac/scripts/build_serial_mesh.py
-python3 isaac/scripts/build_serial_box.py
 ```
 
 ### `build_isaac_urdf.py`
 
 | Option | Required | Default | Description |
 | --- | :---: | --- | --- |
-| `--mechanism` | No | `closed_loop` | Keep the physical mechanisms, or drive their outputs directly (`closed_loop`, `serial`) |
 | `--collision` | No | `mesh` | Collision geometry source (`mesh`, `box`) |
 
 ```bash
 # Example
-python3 isaac/build_isaac_urdf.py --mechanism closed_loop --collision mesh
-python3 isaac/build_isaac_urdf.py --mechanism serial --collision box
+python3 isaac/build_isaac_urdf.py --collision mesh
+python3 isaac/build_isaac_urdf.py --collision box
 ```
 
 | Output | Description |
@@ -85,8 +76,6 @@ conda activate isaacsim
 
 ### `scripts/apply_physical_loops.py`
 
-Required for `closed_loop_*` variants only.
-
 | Option | Required | Default | Description |
 | --- | :---: | --- | --- |
 | `usd_path` | Yes | - | USD to close the loops in |
@@ -108,7 +97,6 @@ Required for `closed_loop_*` variants only.
 
 | Option | Required | Default | Description |
 | --- | :---: | --- | --- |
-| `--mechanism` | No | `closed_loop` | Variant mechanism (`closed_loop`, `serial`) |
 | `--collision` | No | `mesh` | Variant collision (`mesh`, `box`) |
 | `--fixed-base` | No | Off | Load the fixed-base USD (base welded in the air) |
 | `--spawn-height` | No | `1.085` free, `1.60` fixed | Spawn height (m) |
@@ -119,9 +107,9 @@ Required for `closed_loop_*` variants only.
 cd ~/humanoid_project/robonex_description
 conda activate isaacsim
 
-~/IsaacLab/isaaclab.sh -p isaac/load_robonex.py --mechanism closed_loop --collision mesh
-~/IsaacLab/isaaclab.sh -p isaac/load_robonex.py --mechanism serial --collision box
-~/IsaacLab/isaaclab.sh -p isaac/load_robonex.py --mechanism closed_loop --collision mesh --fixed-base
+~/IsaacLab/isaaclab.sh -p isaac/load_robonex.py --collision mesh
+~/IsaacLab/isaaclab.sh -p isaac/load_robonex.py --collision box
+~/IsaacLab/isaaclab.sh -p isaac/load_robonex.py --collision mesh --fixed-base
 ```
 
 Press **Play** in the viewport toolbar to start physics.

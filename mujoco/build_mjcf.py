@@ -8,7 +8,14 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."
 from robonex_common import (
     load_urdf, load_loops, children_of, rpy_to_quat, fmt, ROOT,
 )
-from robonex_serial import motor_physics_for, COLLISION_BOX, FEET, FOOT_FRICTION
+from robonex_data import motor_physics_for, COLLISION_BOX, FEET, FOOT_FRICTION
+
+ROD_END_BOLT_AXIS = "y"
+ROD_END_AXES = (
+    ("x", (1.0, 0.0, 0.0)),
+    ("y", (0.0, 1.0, 0.0)),
+    ("z", (0.0, 0.0, 1.0)),
+)
 
 FREE_OUT = os.path.join(ROOT, "mujoco", "robonex.xml")
 FREE_SCENE_OUT = os.path.join(ROOT, "mujoco", "scene.xml")
@@ -52,12 +59,17 @@ def emit_body(links, joints, kids, name, ball_set, actuated, depth, out,
         out.append('%s<body name="%s" %s>' % (pad, name, attrs))
 
         if parent_joint.name in ball_set:
-            rng = ""
-            if ball_limit is not None:
-                rng = (' range="%s" solreflimit="%s" solimplimit="%s"'
-                       % (fmt((0.0, ball_limit)), SOLREF, SOLIMP))
-            out.append('%s  <joint name="%s" type="ball"%s class="passive"/>'
-                       % (pad, parent_joint.name, rng))
+            for axis_name, axis_vec in ROD_END_AXES:
+                jname = "%s_%s" % (parent_joint.name, axis_name)
+                if axis_name == ROD_END_BOLT_AXIS or ball_limit is None:
+                    lim = ""
+                else:
+                    lim = (' range="%s" limited="true"'
+                           ' solreflimit="%s" solimplimit="%s"'
+                           % (fmt((-ball_limit, ball_limit)), SOLREF, SOLIMP))
+                out.append(
+                    '%s  <joint name="%s" type="hinge" axis="%s"%s class="passive"/>'
+                    % (pad, jname, fmt(axis_vec), lim))
         elif parent_joint.jtype in ("revolute", "continuous"):
             is_act = parent_joint.name in actuated
             cls = "act" if is_act else "passive"
@@ -347,8 +359,10 @@ def main():
     print("  collision   : %s" % ("boxes" if collision_box else "meshes"))
     print("  foot mu     : %g" % FOOT_FRICTION)
     if ball_limit_deg:
-        print("  rod-end ball limit: 0..%.1f deg on %d ball joints"
-              % (ball_limit_deg, len(ball_set)))
+        tilt = [a for a, _ in ROD_END_AXES if a != ROD_END_BOLT_AXIS]
+        print("  rod-end tilt limit: +/-%.1f deg on %s of %d rod ends "
+              "(%s free: bolt axis)"
+              % (ball_limit_deg, "/".join(tilt), len(ball_set), ROD_END_BOLT_AXIS))
     print("  base        : %s at z = %.3f m" %
           ("WELDED" if fixed_base else "free-floating", height))
     print("  foot clearance: %.3f m" % (height - LEG_DROP))

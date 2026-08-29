@@ -6,11 +6,11 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "scripts"))
 
 from robonex_common import load_urdf, load_loops, fmt, ROOT
-from robonex_serial import (
-    DEG, SPAWN_HEIGHT, MUJOCO_SPAWN_HEIGHT, SERIAL_GAINS, DAMPING, TIMESTEP,
-    SERIAL_JOINTS, SERIAL_FRICTION, JOINT_ORDER, COLLISION_BOX, FEET,
-    FOOT_FRICTION, BODY_FRICTION,
+from robonex_data import (
+    DEG, SPAWN_HEIGHT, MUJOCO_SPAWN_HEIGHT, DAMPING, TIMESTEP,
+    JOINT_ORDER, COLLISION_BOX, FEET, FOOT_FRICTION, BODY_FRICTION,
 )
+from serial_model import SERIAL_GAINS, SERIAL_JOINTS, SERIAL_FRICTION
 
 MODEL_OUT = os.path.join(ROOT, "gazebo", "robonex.sdf")
 WORLD_OUT = os.path.join(ROOT, "gazebo", "robonex_world.sdf")

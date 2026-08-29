@@ -17,7 +17,7 @@ pip install -r requirements.txt
 | `ros2` | Xacro, RViz, Gazebo launch, and controller configuration | [📖](ros2/) |
 | `gazebo` | SDF generator and Gazebo Fortress scenes | [📖](gazebo/) |
 | `mujoco` | Closed-loop MJCF models and fixed/free-base scenes | [📖](mujoco/) |
-| `isaac` | Simplified and closed-loop URDF/USD models for Isaac Sim | [📖](isaac/) |
+| `isaac` | Closed-loop URDF/USD models for Isaac Sim (mesh and box collision) | [📖](isaac/) |
 
 ## License
 [BSD 3-Clause](LICENSE), including the mesh files in this repository.
