@@ -1,38 +1,18 @@
+from robonex_common.joints import JOINT_BY_MODEL_NAME
+from robonex_common.motors import MOTOR_PHYSICS
+
+
 DEG = 3.141592653589793 / 180.0
 
 SPAWN_HEIGHT = 1.0789
 MUJOCO_SPAWN_HEIGHT = 1.085
 
-MOTOR_KP = 40.0
-MOTOR_KD = 2.0
-
 DAMPING = 0.2
-
-MOTOR_PHYSICS = {
-    "rs02": {"armature": 0.0042, "frictionloss": 0.1},
-    "rs03": {"armature": 0.02,   "frictionloss": 0.2},
-}
-
-MOTOR_MODEL = {
-    "l_hip_yaw_joint":     "rs02",
-    "r_hip_yaw_joint":     "rs02",
-    "l_ankle_upper_joint": "rs02",
-    "l_ankle_lower_joint": "rs02",
-    "r_ankle_upper_joint": "rs02",
-    "r_ankle_lower_joint": "rs02",
-    "l_hip_pitch_joint":   "rs03",
-    "r_hip_pitch_joint":   "rs03",
-    "l_hip_roll_joint":    "rs03",
-    "r_hip_roll_joint":    "rs03",
-    "l_knee_pitch_joint":  "rs03",
-    "r_knee_pitch_joint":  "rs03",
-}
 
 
 def motor_physics_for(joint_name):
-    """armature/frictionloss for a crank joint, or None if it isn't motor-driven."""
-    model = MOTOR_MODEL.get(joint_name)
-    return MOTOR_PHYSICS[model] if model else None
+    joint = JOINT_BY_MODEL_NAME.get(joint_name)
+    return MOTOR_PHYSICS[joint.motor_model] if joint else None
 
 
 JOINT_ORDER = [
