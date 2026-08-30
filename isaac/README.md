@@ -1,5 +1,7 @@
 # isaac
 
+`conda activate isaacsim` below assumes the env exists — see [`robonex-common/setup/SETUP.md`](https://github.com/Humanoid-Project/robonex-common/blob/main/setup/SETUP.md) (`setup_isaacsim.sh`) to create it.
+
 ## Structure
 
 ```text
