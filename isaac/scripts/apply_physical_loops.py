@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Add RoboNex's physical ankle and knee closed-loop constraints to a USD.
 
-Convert ``isaac/closed_loop/robonex_closed_loop.urdf`` with fixed joints left
-unmerged, then
+Convert ``isaac/closed_loop_mesh/robonex_closed_loop_mesh.urdf`` (or the
+``closed_loop_box`` counterpart) with fixed joints left unmerged, then
 run this script once.  The imported open articulation tree is completed with:
 
-* four D6 ankle crank-to-coupler rod ends (translations locked, rotX/Y/Z +/-limit);
+* four D6 ankle crank-to-coupler rod ends (translations locked, rotX/rotZ
+  +/-limit, rotY free — the ZBS6 bolt axis spins unrestricted);
 * four excluded spherical ankle coupler-to-foot closures; and
 * two excluded revolute knee coupler-to-shin pin closures.
 """

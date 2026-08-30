@@ -6,11 +6,10 @@ cd ~/humanoid_project
 git clone https://github.com/Humanoid-Project/robonex-common.git
 git clone https://github.com/Humanoid-Project/robonex_description.git
 cd robonex_description
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install -e ../robonex-common
-pip install -r requirements.txt
+source ../robonex-common/setup/setup.sh
 ```
+
+Shared across repos — see [`robonex-common/setup/SETUP.md`](https://github.com/Humanoid-Project/robonex-common/blob/main/setup/SETUP.md).
 
 <br>
 

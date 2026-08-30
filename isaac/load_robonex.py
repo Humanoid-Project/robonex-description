@@ -6,7 +6,8 @@
     ~/IsaacLab/isaaclab.sh -p isaac/load_robonex.py --fixed-base
     ~/IsaacLab/isaaclab.sh -p isaac/load_robonex.py --headless
 
-Uses the generated USD under isaac/closed_loop/ and does not run conversion.
+Uses the generated USD under isaac/closed_loop_mesh/ or isaac/closed_loop_box/
+and does not run conversion.
 Build it first with the command in README.md.
 """
 import argparse

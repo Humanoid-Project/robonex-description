@@ -13,6 +13,9 @@ install/
 log/
 
 .claude/
+.codex/
+.grok/
+.agents/
 
 /AGENTS.md
 
