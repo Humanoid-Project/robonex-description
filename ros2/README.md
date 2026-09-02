@@ -26,7 +26,7 @@ ros2/
 
 ```bash
 # Example
-cd ~/humanoid_project/robonex_description
+cd ~/humanoid_project/robonex-description
 source /opt/ros/humble/setup.bash
 
 python3 ros2/build_ros_urdf.py

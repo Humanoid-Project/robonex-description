@@ -4,8 +4,8 @@
 ```bash
 cd ~/humanoid_project
 git clone https://github.com/Humanoid-Project/robonex-common.git
-git clone https://github.com/Humanoid-Project/robonex_description.git
-cd robonex_description
+git clone https://github.com/Humanoid-Project/robonex-description.git
+cd robonex-description
 source ../robonex-common/setup/setup.sh
 ```
 

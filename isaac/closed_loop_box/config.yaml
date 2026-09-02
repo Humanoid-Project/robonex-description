@@ -1,5 +1,5 @@
-asset_path: /home/polygon/humanoid_project/robonex_description/isaac/closed_loop_box/robonex_closed_loop_box.urdf
-usd_dir: /home/polygon/humanoid_project/robonex_description/isaac/closed_loop_box
+asset_path: /home/polygon/humanoid_project/robonex-description/isaac/closed_loop_box/robonex_closed_loop_box.urdf
+usd_dir: /home/polygon/humanoid_project/robonex-description/isaac/closed_loop_box
 usd_file_name: robonex_closed_loop_box_fixed.usd
 force_usd_conversion: true
 make_instanceable: true

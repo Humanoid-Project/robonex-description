@@ -30,7 +30,7 @@ isaac/
 
 ```bash
 # Example
-cd ~/humanoid_project/robonex_description
+cd ~/humanoid_project/robonex-description
 
 python3 isaac/scripts/build_closed_loop_mesh.py
 python3 isaac/scripts/build_closed_loop_box.py
@@ -60,7 +60,7 @@ python3 isaac/build_isaac_urdf.py --collision box
 
 ```bash
 # Example
-cd ~/humanoid_project/robonex_description
+cd ~/humanoid_project/robonex-description
 conda activate isaacsim
 
 # Free-floating
@@ -106,7 +106,7 @@ conda activate isaacsim
 
 ```bash
 # Example
-cd ~/humanoid_project/robonex_description
+cd ~/humanoid_project/robonex-description
 conda activate isaacsim
 
 ~/IsaacLab/isaaclab.sh -p isaac/load_robonex.py --collision mesh
