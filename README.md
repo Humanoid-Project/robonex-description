@@ -22,8 +22,3 @@ Shared across repos — see [`robonex-common/setup/SETUP.md`](https://github.com
 | `gazebo` | SDF generator and Gazebo Fortress scenes | [📖](gazebo/) |
 | `mujoco` | Closed-loop MJCF models and fixed/free-base scenes | [📖](mujoco/) |
 | `isaac` | Closed-loop URDF/USD models for Isaac Sim | [📖](isaac/) |
-
-<br>
-
-## License
-[BSD 3-Clause](LICENSE), including the mesh files in this repository.
