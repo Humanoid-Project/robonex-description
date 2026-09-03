@@ -1,4 +1,5 @@
 .venv/
+.venv*/
 .vscode/
 *.swp
 .DS_Store
