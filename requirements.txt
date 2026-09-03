@@ -1,2 +1,3 @@
+robonex-common @ git+https://github.com/Humanoid-Project/robonex-common.git@v0.1.0
 mujoco>=3.2
 PyYAML>=6.0
