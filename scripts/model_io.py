@@ -155,6 +155,10 @@ def _mini_yaml(text):
             cur_list = []
             data[cur_key] = cur_list
             cur_item = None
+        elif indent == 0 and ":" in s:
+            k, v = s.split(":", 1)
+            data[k.strip()] = coerce(v)
+            cur_key, cur_list, cur_item = None, None, None
         elif s.startswith("- "):
             body = s[2:]
             if ":" in body:
@@ -176,9 +180,9 @@ def load_loops(path=LOOPS_PATH):
         text = f.read()
     try:
         import yaml
-        return yaml.safe_load(text)
-    except Exception:
+    except ImportError:
         return _mini_yaml(text)
+    return yaml.safe_load(text)
 
 
 

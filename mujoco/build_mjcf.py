@@ -17,12 +17,12 @@ ROD_END_AXES = (
     ("z", (0.0, 0.0, 1.0)),
 )
 
-FREE_OUT = os.path.join(ROOT, "mujoco", "robonex.xml")
-FREE_SCENE_OUT = os.path.join(ROOT, "mujoco", "scene.xml")
-FIXED_OUT = os.path.join(ROOT, "mujoco", "robonex_fixed.xml")
-FIXED_SCENE_OUT = os.path.join(ROOT, "mujoco", "scene_fixed.xml")
-FIXED_BOX_OUT = os.path.join(ROOT, "mujoco", "robonex_fixed_box.xml")
-FIXED_BOX_SCENE_OUT = os.path.join(ROOT, "mujoco", "scene_fixed_box.xml")
+FREE_OUT = os.path.join(ROOT, "mujoco", "basic", "robonex.xml")
+FREE_SCENE_OUT = os.path.join(ROOT, "mujoco", "basic", "scene.xml")
+FIXED_OUT = os.path.join(ROOT, "mujoco", "basic", "robonex_fixed.xml")
+FIXED_SCENE_OUT = os.path.join(ROOT, "mujoco", "basic", "scene_fixed.xml")
+FIXED_BOX_OUT = os.path.join(ROOT, "mujoco", "basic", "box", "robonex_fixed.xml")
+FIXED_BOX_SCENE_OUT = os.path.join(ROOT, "mujoco", "basic", "box", "scene_fixed.xml")
 
 NEIGHBOUR_DEPTH = 2
 PIN_HALF = 0.01
@@ -251,10 +251,12 @@ def main():
 
     meshes = sorted({g.mesh for lk in links.values() for g in lk.visuals})
 
+    meshdir = os.path.relpath(os.path.join(ROOT, "meshes"), os.path.dirname(out_path))
+
     out = []
     out.append('<?xml version="1.0"?>')
     out.append('<mujoco model="robonex">')
-    out.append('  <compiler angle="radian" meshdir="../meshes" autolimits="true"/>')
+    out.append('  <compiler angle="radian" meshdir="%s" autolimits="true"/>' % meshdir)
     out.append('  <option timestep="%g" integrator="implicitfast" cone="elliptic"/>'
                % TIMESTEP)
     out.append("")

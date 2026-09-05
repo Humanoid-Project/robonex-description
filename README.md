@@ -2,6 +2,7 @@
 
 ## Setup
 ```bash
+# Example
 cd ~/humanoid_project
 git clone https://github.com/Humanoid-Project/robonex-description.git
 cd robonex-description

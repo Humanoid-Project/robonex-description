@@ -6,13 +6,17 @@
 mujoco/
 ├── README.md
 ├── build_mjcf.py
-├── robonex.xml              free base, mesh collision
-├── scene.xml
-├── robonex_fixed.xml        base welded in mid-air
-├── scene_fixed.xml
-├── robonex_fixed_box.xml    fixed base, box collision
-├── scene_fixed_box.xml
-└── full_limit/              kinematic-maximum joint ranges
+├── basic/
+│   ├── robonex.xml
+│   ├── scene.xml
+│   ├── robonex_fixed.xml
+│   ├── scene_fixed.xml
+│   └── box/
+│       ├── robonex_fixed.xml
+│       └── scene_fixed.xml
+└── full_limit/
+    ├── robonex_fixed.xml
+    └── scene_fixed.xml
 ```
 
 <br>
@@ -35,9 +39,9 @@ python3 mujoco/build_mjcf.py --fixed-base --collision-box
 
 | Output | Description |
 | --- | --- |
-| `robonex.xml`, `scene.xml` | No option |
-| `robonex_fixed.xml`, `scene_fixed.xml` | `--fixed-base` |
-| `robonex_fixed_box.xml`, `scene_fixed_box.xml` | `--fixed-base --collision-box` |
+| `basic/robonex.xml`, `basic/scene.xml` | No option |
+| `basic/robonex_fixed.xml`, `basic/scene_fixed.xml` | `--fixed-base` |
+| `basic/box/robonex_fixed.xml`, `basic/box/scene_fixed.xml` | `--fixed-base --collision-box` |
 
 <br>
 
@@ -45,7 +49,7 @@ python3 mujoco/build_mjcf.py --fixed-base --collision-box
 
 ```bash
 # Example
-python3 -m mujoco.viewer --mjcf=mujoco/scene.xml
-python3 -m mujoco.viewer --mjcf=mujoco/scene_fixed.xml
-python3 -m mujoco.viewer --mjcf=mujoco/scene_fixed_box.xml
+python3 -m mujoco.viewer --mjcf=mujoco/basic/scene.xml
+python3 -m mujoco.viewer --mjcf=mujoco/basic/scene_fixed.xml
+python3 -m mujoco.viewer --mjcf=mujoco/basic/box/scene_fixed.xml
 ```
