@@ -66,8 +66,8 @@
         <child link="l_hip_yaw_link"/>
         <origin xyz="0.060424 0.050000 -0.202450" rpy="0 0 0"/>
         <axis xyz="0 0 1"/>
-        <!-- RS02 ID1 : limit -40 ~ +40 deg -->
-        <limit lower="-0.698132" upper="0.698132" effort="17.0" velocity="42.9"/>
+        <!-- RS02 ID1 : limit -95 ~ +95 deg -->
+        <limit lower="-1.658063" upper="1.658063" effort="17.0" velocity="42.9"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
 
@@ -78,8 +78,8 @@
         <child link="r_hip_yaw_link"/>
         <origin xyz="0.060424 -0.050000 -0.202450" rpy="0 0 0"/>
         <axis xyz="0 0 1"/>
-        <!-- RS02 ID7 : limit -40 ~ +40 deg -->
-        <limit lower="-0.698132" upper="0.698132" effort="17.0" velocity="42.9"/>
+        <!-- RS02 ID7 : limit -95 ~ +95 deg -->
+        <limit lower="-1.658063" upper="1.658063" effort="17.0" velocity="42.9"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
 
@@ -166,8 +166,8 @@
         <child link="l_hip_pitch_link"/>
         <origin xyz="0.000001 0.047700 -0.060500" rpy="0 0 0"/>
         <axis xyz="0 -1 0"/>
-        <!-- RS03 ID2 : limit -50 ~ +50 deg -->
-        <limit lower="-0.872665" upper="0.872665" effort="60.0" velocity="20.9"/>
+        <!-- RS03 ID2 : limit -100 ~ +100 deg -->
+        <limit lower="-1.745329" upper="1.745329" effort="60.0" velocity="20.9"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
 
@@ -178,8 +178,8 @@
         <child link="r_hip_pitch_link"/>
         <origin xyz="-0.000001 -0.047700 -0.060500" rpy="0 0 0"/>
         <axis xyz="0 1 0"/>
-        <!-- RS03 ID8 : limit -50 ~ +50 deg -->
-        <limit lower="-0.872665" upper="0.872665" effort="60.0" velocity="20.9"/>
+        <!-- RS03 ID8 : limit -100 ~ +100 deg -->
+        <limit lower="-1.745329" upper="1.745329" effort="60.0" velocity="20.9"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
 
@@ -266,8 +266,8 @@
         <child link="l_hip_roll_link"/>
         <origin xyz="0.022500 0.062300 -0.034000" rpy="0 0 0"/>
         <axis xyz="-1 0 0"/>
-        <!-- RS03 ID3 : limit -60 ~ +5 deg -->
-        <limit lower="-1.047198" upper="0.087266" effort="60.0" velocity="20.9"/>
+        <!-- RS03 ID3 : limit -123 ~ +26 deg -->
+        <limit lower="-2.146755" upper="0.453786" effort="60.0" velocity="20.9"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
 
@@ -278,8 +278,8 @@
         <child link="r_hip_roll_link"/>
         <origin xyz="0.022500 -0.062700 -0.034000" rpy="0 0 0"/>
         <axis xyz="-1 0 0"/>
-        <!-- RS03 ID9 : limit -5 ~ +60 deg -->
-        <limit lower="-0.087266" upper="1.047198" effort="60.0" velocity="20.9"/>
+        <!-- RS03 ID9 : limit -26 ~ +123 deg -->
+        <limit lower="-0.453786" upper="2.146755" effort="60.0" velocity="20.9"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
 
@@ -388,8 +388,8 @@
         <child link="l_knee_crank_link"/>
         <origin xyz="-0.034800 -0.032000 -0.255000" rpy="0 0 0"/>
         <axis xyz="0 -1 0"/>
-        <!-- RS03 ID4 : limit -50 ~ +5 deg -->
-        <limit lower="-0.872665" upper="0.087266" effort="60.0" velocity="20.9"/>
+        <!-- RS03 ID4 : limit -86 ~ +54 deg -->
+        <limit lower="-1.500983" upper="0.942478" effort="60.0" velocity="20.9"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
 
@@ -400,8 +400,8 @@
         <child link="r_knee_crank_link"/>
         <origin xyz="-0.034800 0.032000 -0.255000" rpy="0 0 0"/>
         <axis xyz="0 1 0"/>
-        <!-- RS03 ID10 : limit -5 ~ +50 deg -->
-        <limit lower="-0.087266" upper="0.872665" effort="60.0" velocity="20.9"/>
+        <!-- RS03 ID10 : limit -54 ~ +86 deg -->
+        <limit lower="-0.942478" upper="1.500983" effort="60.0" velocity="20.9"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
 
@@ -635,8 +635,8 @@
         <child link="l_ankle_crank_link_a"/>
         <origin xyz="0.000000 0.047900 -0.144500" rpy="0 0 0"/>
         <axis xyz="0 -1 0"/>
-        <!-- RS02 ID5 : limit -35 ~ +25 deg -->
-        <limit lower="-0.610865" upper="0.436332" effort="17.0" velocity="42.9"/>
+        <!-- RS02 ID5 : limit -35 ~ +33 deg -->
+        <limit lower="-0.610865" upper="0.575959" effort="17.0" velocity="42.9"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
 
@@ -647,8 +647,8 @@
         <child link="l_ankle_crank_link_b"/>
         <origin xyz="0.000000 0.002100 -0.255500" rpy="0 0 0"/>
         <axis xyz="0 1 0"/>
-        <!-- RS02 ID6 : limit -25 ~ +35 deg -->
-        <limit lower="-0.436332" upper="0.610865" effort="17.0" velocity="42.9"/>
+        <!-- RS02 ID6 : limit -35 ~ +33 deg -->
+        <limit lower="-0.610865" upper="0.575959" effort="17.0" velocity="42.9"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
 
@@ -659,8 +659,8 @@
         <child link="r_ankle_crank_link_a"/>
         <origin xyz="0.000000 -0.002100 -0.255500" rpy="0 0 0"/>
         <axis xyz="0 -1 0"/>
-        <!-- RS02 ID12 : limit -35 ~ +25 deg -->
-        <limit lower="-0.610865" upper="0.436332" effort="17.0" velocity="42.9"/>
+        <!-- RS02 ID12 : limit -33 ~ +35 deg (mirror of ID6) -->
+        <limit lower="-0.575959" upper="0.610865" effort="17.0" velocity="42.9"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
 
@@ -671,8 +671,8 @@
         <child link="r_ankle_crank_link_b"/>
         <origin xyz="0.000000 -0.047900 -0.144500" rpy="0 0 0"/>
         <axis xyz="0 1 0"/>
-        <!-- RS02 ID11 : limit -25 ~ +35 deg -->
-        <limit lower="-0.436332" upper="0.610865" effort="17.0" velocity="42.9"/>
+        <!-- RS02 ID11 : limit -33 ~ +35 deg (mirror of ID5) -->
+        <limit lower="-0.575959" upper="0.610865" effort="17.0" velocity="42.9"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
 

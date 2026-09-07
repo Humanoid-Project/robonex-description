@@ -964,7 +964,7 @@
       <axis>
         <xyz>0 0 1</xyz>
         <limit>
-          <lower>-0.698132</lower><upper>0.698132</upper>
+          <lower>-1.658063</lower><upper>1.658063</upper>
           <effort>17</effort><velocity>42.9</velocity>
         </limit>
         <dynamics><damping>0.2</damping><friction>0.1</friction></dynamics>
@@ -976,7 +976,7 @@
       <axis>
         <xyz>0 0 1</xyz>
         <limit>
-          <lower>-0.698132</lower><upper>0.698132</upper>
+          <lower>-1.658063</lower><upper>1.658063</upper>
           <effort>17</effort><velocity>42.9</velocity>
         </limit>
         <dynamics><damping>0.2</damping><friction>0.1</friction></dynamics>
@@ -988,7 +988,7 @@
       <axis>
         <xyz>0 -1 0</xyz>
         <limit>
-          <lower>-0.872665</lower><upper>0.872665</upper>
+          <lower>-1.745329</lower><upper>1.745329</upper>
           <effort>60</effort><velocity>20.9</velocity>
         </limit>
         <dynamics><damping>0.2</damping><friction>0.2</friction></dynamics>
@@ -1000,7 +1000,7 @@
       <axis>
         <xyz>0 1 0</xyz>
         <limit>
-          <lower>-0.872665</lower><upper>0.872665</upper>
+          <lower>-1.745329</lower><upper>1.745329</upper>
           <effort>60</effort><velocity>20.9</velocity>
         </limit>
         <dynamics><damping>0.2</damping><friction>0.2</friction></dynamics>
@@ -1012,7 +1012,7 @@
       <axis>
         <xyz>-1 0 0</xyz>
         <limit>
-          <lower>-1.047198</lower><upper>0.087266</upper>
+          <lower>-2.146755</lower><upper>0.453786</upper>
           <effort>60</effort><velocity>20.9</velocity>
         </limit>
         <dynamics><damping>0.2</damping><friction>0.2</friction></dynamics>
@@ -1024,7 +1024,7 @@
       <axis>
         <xyz>-1 0 0</xyz>
         <limit>
-          <lower>-0.087266</lower><upper>1.047198</upper>
+          <lower>-0.453786</lower><upper>2.146755</upper>
           <effort>60</effort><velocity>20.9</velocity>
         </limit>
         <dynamics><damping>0.2</damping><friction>0.2</friction></dynamics>
@@ -1036,7 +1036,7 @@
       <axis>
         <xyz>0 -1 0</xyz>
         <limit>
-          <lower>-0.733038</lower><upper>0.059341</upper>
+          <lower>-1.242674</lower><upper>0.485202</upper>
           <effort>85.1</effort><velocity>14.7</velocity>
         </limit>
         <dynamics><damping>0.2</damping><friction>0.284</friction></dynamics>
@@ -1048,7 +1048,7 @@
       <axis>
         <xyz>0 1 0</xyz>
         <limit>
-          <lower>-0.059341</lower><upper>0.733038</upper>
+          <lower>-0.485202</lower><upper>1.242674</upper>
           <effort>85.1</effort><velocity>14.7</velocity>
         </limit>
         <dynamics><damping>0.2</damping><friction>0.284</friction></dynamics>
@@ -1108,7 +1108,7 @@
       <axis>
         <xyz>1 0 0</xyz>
         <limit>
-          <lower>-0.253073</lower><upper>0.244346</upper>
+          <lower>-0.520108</lower><upper>0.427606</upper>
           <effort>33.5</effort><velocity>43.5</velocity>
         </limit>
         <dynamics><damping>0.2</damping><friction>0.198</friction></dynamics>
@@ -1120,7 +1120,7 @@
       <axis>
         <xyz>1 0 0</xyz>
         <limit>
-          <lower>-0.235619</lower><upper>0.244346</upper>
+          <lower>-0.427606</lower><upper>0.520108</upper>
           <effort>33.5</effort><velocity>43.5</velocity>
         </limit>
         <dynamics><damping>0.2</damping><friction>0.198</friction></dynamics>
@@ -1132,7 +1132,7 @@
       <axis>
         <xyz>0 -1 0</xyz>
         <limit>
-          <lower>-0.357792</lower><upper>0.279253</upper>
+          <lower>-0.729548</lower><upper>0.520108</upper>
           <effort>34</effort><velocity>42.9</velocity>
         </limit>
         <dynamics><damping>0.2</damping><friction>0.2</friction></dynamics>
@@ -1144,7 +1144,7 @@
       <axis>
         <xyz>0 -1 0</xyz>
         <limit>
-          <lower>-0.331613</lower><upper>0.270526</upper>
+          <lower>-0.729548</lower><upper>0.520108</upper>
           <effort>34</effort><velocity>42.9</velocity>
         </limit>
         <dynamics><damping>0.2</damping><friction>0.2</friction></dynamics>

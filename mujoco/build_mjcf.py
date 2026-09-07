@@ -30,6 +30,9 @@ PIN_HALF = 0.01
 TIMESTEP = 0.001
 SOLREF = "%g 1" % (4 * TIMESTEP)
 SOLIMP = "0.99 0.9999 0.0001"
+CONTACT_SOLREF = "%g 1" % (2 * TIMESTEP)
+CONTACT_SOLIMP = "0.99 0.9999 0.0001"
+IMPRATIO = 10
 
 SPAWN_HEIGHT = 1.085
 FIXED_BASE_HEIGHT = 1.60
@@ -191,8 +194,9 @@ def write_scene(scene_out, robot_filename):
         '  <worldbody>',
         '    <light pos="0 0 3" dir="0 0 -1" directional="true"/>',
         '    <geom name="floor" size="0 0 0.05" type="plane" material="groundplane"'
-        ' condim="3" contype="1" conaffinity="1" friction="%g %g 0.001"/>'
-        % (FOOT_FRICTION, FOOT_FRICTION),
+        ' condim="3" contype="1" conaffinity="1" friction="%g %g 0.001"'
+        ' solref="%s" solimp="%s"/>'
+        % (FOOT_FRICTION, FOOT_FRICTION, CONTACT_SOLREF, CONTACT_SOLIMP),
         '  </worldbody>',
         '</mujoco>',
     ]
@@ -257,8 +261,8 @@ def main():
     out.append('<?xml version="1.0"?>')
     out.append('<mujoco model="robonex">')
     out.append('  <compiler angle="radian" meshdir="%s" autolimits="true"/>' % meshdir)
-    out.append('  <option timestep="%g" integrator="implicitfast" cone="elliptic"/>'
-               % TIMESTEP)
+    out.append('  <option timestep="%g" integrator="implicitfast" cone="elliptic"'
+               ' impratio="%g"/>' % (TIMESTEP, IMPRATIO))
     out.append("")
     out.append("  <default>")
     out.append('    <joint damping="0.01" armature="0"/>')
@@ -272,7 +276,9 @@ def main():
     out.append('      <geom group="2" contype="0" conaffinity="0" density="0"/>')
     out.append("    </default>")
     out.append('    <default class="collision">')
-    out.append('      <geom group="3" contype="1" conaffinity="1" condim="3" density="0" rgba="0.6 0.6 0.6 0.4"/>')
+    out.append('      <geom group="3" contype="1" conaffinity="1" condim="3" density="0"'
+               ' rgba="0.6 0.6 0.6 0.4" solref="%s" solimp="%s"/>'
+               % (CONTACT_SOLREF, CONTACT_SOLIMP))
     out.append("    </default>")
     out.append('    <default class="motor">')
     out.append('      <position kp="40" kv="2"/>')
@@ -360,6 +366,8 @@ def main():
     print("  self-collision: ON, %d neighbour pairs excluded" % len(excludes))
     print("  collision   : %s" % ("boxes" if collision_box else "meshes"))
     print("  foot mu     : %g" % FOOT_FRICTION)
+    print("  contact     : solref %s, solimp %s, impratio %g"
+          % (CONTACT_SOLREF, CONTACT_SOLIMP, IMPRATIO))
     if ball_limit_deg:
         tilt = [a for a, _ in ROD_END_AXES if a != ROD_END_BOLT_AXIS]
         print("  rod-end tilt limit: +/-%.1f deg on %s of %d rod ends "
