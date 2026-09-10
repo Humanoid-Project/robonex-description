@@ -9,6 +9,7 @@ from model_io import (
     load_urdf, load_loops, children_of, rpy_to_quat, fmt, ROOT,
 )
 from robonex_data import motor_physics_for, COLLISION_BOX, FEET, FOOT_FRICTION
+from robonex_common.joints import DEFAULT_JOINT_POS
 
 ROD_END_BOLT_AXIS = "y"
 ROD_END_AXES = (
@@ -37,6 +38,29 @@ IMPRATIO = 10
 SPAWN_HEIGHT = 1.085
 FIXED_BASE_HEIGHT = 1.60
 LEG_DROP = 1.0789
+HOME_HEIGHT = 1.0710
+HOME_PASSIVE_JOINT_POS = {
+    "l_knee_joint": -0.29669690697178175,
+    "l_knee_coupler_joint_a": 0.22857922748055304,
+    "r_knee_joint": 0.2966969070362342,
+    "r_knee_coupler_joint_a": 0.22857922749663748,
+    "l_ankle_roll_joint": -0.00039827559348155157,
+    "l_ankle_pitch_joint": 0.19686707888571855,
+    "r_ankle_roll_joint": 0.00039827559356127827,
+    "r_ankle_pitch_joint": 0.1968670788838191,
+    "l_ankle_coupler_joint_a_x": -0.0001806448180792951,
+    "l_ankle_coupler_joint_a_y": 0.17045883823718327,
+    "l_ankle_coupler_joint_a_z": 0.0,
+    "l_ankle_coupler_joint_b_x": -0.00010323723148808417,
+    "l_ankle_coupler_joint_b_y": 0.18560610755019352,
+    "l_ankle_coupler_joint_b_z": 0.0,
+    "r_ankle_coupler_joint_a_x": 0.0001806448180893788,
+    "r_ankle_coupler_joint_a_y": 0.1704588382352967,
+    "r_ankle_coupler_joint_a_z": 0.0,
+    "r_ankle_coupler_joint_b_x": 0.00010323723147981379,
+    "r_ankle_coupler_joint_b_y": 0.18560610754814208,
+    "r_ankle_coupler_joint_b_z": 0.0,
+}
 
 
 def emit_body(links, joints, kids, name, ball_set, actuated, depth, out,
@@ -211,13 +235,26 @@ def append_home_keyframe(out_path, scene_out):
         return "skipped (mujoco not installed)"
 
     model = mujoco.MjModel.from_xml_path(scene_out)
+    data = mujoco.MjData(model)
+    root_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, "root")
+    data.qpos[model.jnt_qposadr[root_id] + 2] = HOME_HEIGHT
+    for name, value in {**DEFAULT_JOINT_POS, **HOME_PASSIVE_JOINT_POS}.items():
+        joint_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, name)
+        if joint_id < 0:
+            raise ValueError("home pose joint not found: %s" % name)
+        data.qpos[model.jnt_qposadr[joint_id]] = value
+    for actuator_id in range(model.nu):
+        joint_id = int(model.actuator_trnid[actuator_id, 0])
+        joint_name = mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_JOINT, joint_id)
+        data.ctrl[actuator_id] = DEFAULT_JOINT_POS[joint_name]
+    mujoco.mj_forward(model, data)
 
-    qpos = " ".join("%.6g" % v for v in model.qpos0)
+    qpos = " ".join("%.9g" % v for v in data.qpos)
     block = [
         "",
         "  <keyframe>",
         '    <key name="home" qpos="%s" ctrl="%s"/>'
-        % (qpos, " ".join("0" for _ in range(model.nu))),
+        % (qpos, " ".join("%.9g" % v for v in data.ctrl)),
         "  </keyframe>",
     ]
 
@@ -226,7 +263,7 @@ def append_home_keyframe(out_path, scene_out):
     text = text.replace("</mujoco>", "\n".join(block) + "\n</mujoco>")
     with open(out_path, "w", encoding="utf-8") as f:
         f.write(text)
-    return "home, %d qpos values = qpos0 (spawn pose, unsettled)" % model.nq
+    return "home, %d qpos values = bent closed-loop pose" % model.nq
 
 
 def main():
