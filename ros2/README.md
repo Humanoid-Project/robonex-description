@@ -40,10 +40,10 @@ source install/setup.bash
 
 ### `display.launch.py`
 
-| Option | Required | Default | Description |
-| --- | :---: | --- | --- |
-| `gui` | No | `true` | Run `joint_state_publisher_gui` |
-| `rviz` | No | `true` | Run RViz |
+| Command | Option | Default | Description |
+| --- | --- | --- | --- |
+| - | `gui` | `true` | Run `joint_state_publisher_gui` |
+| - | `rviz` | `true` | Run RViz |
 
 ```bash
 # Example
@@ -57,11 +57,11 @@ ros2 launch robonex_description display.launch.py gui:=false
 
 ### `gazebo.launch.py`
 
-| Option | Required | Default | Description |
-| --- | :---: | --- | --- |
-| `rviz` | No | `false` | Run RViz with Gazebo |
-| `headless` | No | Empty | Pass `-s` to run the server without the GUI |
-| `world` | No | `gazebo/empty_world.sdf` | World file to load |
+| Command | Option | Default | Description |
+| --- | --- | --- | --- |
+| - | `rviz` | `false` | Run RViz with Gazebo |
+| - | `headless` | Empty | Pass `-s` to run the server without the GUI |
+| - | `world` | `gazebo/empty_world.sdf` | World file to load |
 
 ```bash
 # Example

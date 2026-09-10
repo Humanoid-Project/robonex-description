@@ -17,12 +17,12 @@ ROD_END_AXES = (
     ("z", (0.0, 0.0, 1.0)),
 )
 
-FREE_OUT = os.path.join(ROOT, "mujoco", "basic", "robonex.xml")
-FREE_SCENE_OUT = os.path.join(ROOT, "mujoco", "basic", "scene.xml")
-FIXED_OUT = os.path.join(ROOT, "mujoco", "basic", "robonex_fixed.xml")
-FIXED_SCENE_OUT = os.path.join(ROOT, "mujoco", "basic", "scene_fixed.xml")
-FIXED_BOX_OUT = os.path.join(ROOT, "mujoco", "basic", "box", "robonex_fixed.xml")
-FIXED_BOX_SCENE_OUT = os.path.join(ROOT, "mujoco", "basic", "box", "scene_fixed.xml")
+FREE_OUT = os.path.join(ROOT, "mujoco", "robot", "robonex.xml")
+FREE_SCENE_OUT = os.path.join(ROOT, "mujoco", "robot", "scene.xml")
+FIXED_OUT = os.path.join(ROOT, "mujoco", "robot", "robonex_fixed.xml")
+FIXED_SCENE_OUT = os.path.join(ROOT, "mujoco", "robot", "scene_fixed.xml")
+FIXED_BOX_OUT = os.path.join(ROOT, "mujoco", "robot", "box", "robonex_fixed.xml")
+FIXED_BOX_SCENE_OUT = os.path.join(ROOT, "mujoco", "robot", "box", "scene_fixed.xml")
 
 NEIGHBOUR_DEPTH = 2
 PIN_HALF = 0.01

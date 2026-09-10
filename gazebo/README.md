@@ -17,9 +17,9 @@ gazebo/
 
 ### `build_sdf.py`
 
-| Option | Required | Default | Description |
-| --- | :---: | --- | --- |
-| `--drop` | No | Off | Spawn at the MuJoCo height (`1.085 m`) instead of the ground pose (`1.0789 m`) |
+| Command | Option | Default | Description |
+| --- | --- | --- | --- |
+| - | `--drop` | Off | Spawn at the MuJoCo height (`1.085 m`) instead of the ground pose (`1.0789 m`) |
 
 ```bash
 # Example

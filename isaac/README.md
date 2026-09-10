@@ -36,11 +36,13 @@ python3 isaac/scripts/build_closed_loop_mesh.py
 python3 isaac/scripts/build_closed_loop_box.py
 ```
 
+<br>
+
 ### `build_isaac_urdf.py`
 
-| Option | Required | Default | Description |
-| --- | :---: | --- | --- |
-| `--collision` | No | `mesh` | Collision geometry source (`mesh`, `box`) |
+| Command | Option | Default | Description |
+| --- | --- | --- | --- |
+| - | `--collision` | `mesh` | Collision geometry source (`mesh`, `box`) |
 
 ```bash
 # Example
@@ -76,11 +78,13 @@ conda activate isaacsim
   --joint-stiffness 40.0 --joint-damping 2.0 --fix-base --headless
 ```
 
+<br>
+
 ### `scripts/apply_physical_loops.py`
 
-| Option | Required | Default | Description |
-| --- | :---: | --- | --- |
-| `usd_path` | Yes | - | USD to close the loops in |
+| Command | Option | Default | Description |
+| --- | --- | --- | --- |
+| - | `usd_path` | `Required` | USD to close the loops in |
 
 ```bash
 # Example
@@ -97,12 +101,12 @@ conda activate isaacsim
 
 ### `load_robonex.py`
 
-| Option | Required | Default | Description |
-| --- | :---: | --- | --- |
-| `--collision` | No | `mesh` | Variant collision (`mesh`, `box`) |
-| `--fixed-base` | No | Off | Load the fixed-base USD (base welded in the air) |
-| `--spawn-height` | No | `1.085` free, `1.60` fixed | Spawn height (m) |
-| `--headless` | No | Off | Run without the viewport |
+| Command | Option | Default | Description |
+| --- | --- | --- | --- |
+| - | `--collision` | `mesh` | Variant collision (`mesh`, `box`) |
+| - | `--fixed-base` | Off | Load the fixed-base USD (base welded in the air) |
+| - | `--spawn-height` | `1.085` free, `1.60` fixed | Spawn height (m) |
+| - | `--headless` | Off | Run without the viewport |
 
 ```bash
 # Example
