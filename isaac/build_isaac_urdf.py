@@ -6,7 +6,7 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "scripts"))
 
 from model_io import load_urdf, fmt, ROOT
-from robonex_data import DEG, DAMPING, motor_physics_for, COLLISION_BOX
+from robonex_data import DEG, motor_physics_for, COLLISION_BOX
 
 COLLISIONS = ("mesh", "box")
 
@@ -115,7 +115,7 @@ def emit_joint(o, j):
                  % (lo_deg * DEG, hi_deg * DEG, effort, velocity))
         phys = motor_physics_for(j.name)
         o.append('    <dynamics damping="%g" friction="%g"/>'
-                 % (DAMPING, phys["frictionloss"]))
+                 % (phys["viscous_friction"], phys["frictionloss"]))
     elif passive_output:
         o.append('    <axis xyz="%s"/>' % fmt(j.axis))
         o.append('    <limit effort="0" velocity="0"/>')
