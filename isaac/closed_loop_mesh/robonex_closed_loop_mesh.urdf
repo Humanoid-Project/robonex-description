@@ -696,7 +696,7 @@
     <origin xyz="0.060424 0.05 -0.20245" rpy="0 0 0"/>
     <axis xyz="0 0 1"/>
     <limit lower="-1.658063" upper="1.658063" effort="17" velocity="42.9"/>
-    <dynamics damping="0.2" friction="0.1"/>
+    <dynamics damping="0" friction="0"/>
   </joint>
 
   <joint name="r_hip_yaw_joint" type="revolute">
@@ -705,7 +705,7 @@
     <origin xyz="0.060424 -0.05 -0.20245" rpy="0 0 0"/>
     <axis xyz="0 0 1"/>
     <limit lower="-1.658063" upper="1.658063" effort="17" velocity="42.9"/>
-    <dynamics damping="0.2" friction="0.1"/>
+    <dynamics damping="0" friction="0"/>
   </joint>
 
   <joint name="l_hip_pitch_joint" type="revolute">
@@ -714,7 +714,7 @@
     <origin xyz="1e-06 0.0477 -0.0605" rpy="0 0 0"/>
     <axis xyz="0 -1 0"/>
     <limit lower="-1.745329" upper="1.745329" effort="60" velocity="20.9"/>
-    <dynamics damping="0.2" friction="0.2"/>
+    <dynamics damping="0" friction="0"/>
   </joint>
 
   <joint name="r_hip_pitch_joint" type="revolute">
@@ -723,7 +723,7 @@
     <origin xyz="-1e-06 -0.0477 -0.0605" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
     <limit lower="-1.745329" upper="1.745329" effort="60" velocity="20.9"/>
-    <dynamics damping="0.2" friction="0.2"/>
+    <dynamics damping="0" friction="0"/>
   </joint>
 
   <joint name="l_hip_roll_joint" type="revolute">
@@ -732,7 +732,7 @@
     <origin xyz="0.0225 0.0623 -0.034" rpy="0 0 0"/>
     <axis xyz="-1 0 0"/>
     <limit lower="-2.146755" upper="0.453786" effort="60" velocity="20.9"/>
-    <dynamics damping="0.2" friction="0.2"/>
+    <dynamics damping="0" friction="0"/>
   </joint>
 
   <joint name="r_hip_roll_joint" type="revolute">
@@ -741,7 +741,7 @@
     <origin xyz="0.0225 -0.0627 -0.034" rpy="0 0 0"/>
     <axis xyz="-1 0 0"/>
     <limit lower="-0.453786" upper="2.146755" effort="60" velocity="20.9"/>
-    <dynamics damping="0.2" friction="0.2"/>
+    <dynamics damping="0" friction="0"/>
   </joint>
 
   <joint name="l_knee_joint" type="continuous">
@@ -768,7 +768,7 @@
     <origin xyz="-0.0348 -0.032 -0.255" rpy="0 0 0"/>
     <axis xyz="0 -1 0"/>
     <limit lower="-1.500983" upper="0.942478" effort="60" velocity="20.9"/>
-    <dynamics damping="0.2" friction="0.2"/>
+    <dynamics damping="0" friction="0"/>
   </joint>
 
   <joint name="r_knee_pitch_joint" type="revolute">
@@ -777,7 +777,7 @@
     <origin xyz="-0.0348 0.032 -0.255" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
     <limit lower="-0.942478" upper="1.500983" effort="60" velocity="20.9"/>
-    <dynamics damping="0.2" friction="0.2"/>
+    <dynamics damping="0" friction="0"/>
   </joint>
 
   <joint name="l_knee_coupler_joint_a" type="continuous">
@@ -804,7 +804,7 @@
     <origin xyz="0 0.0479 -0.1445" rpy="0 0 0"/>
     <axis xyz="0 -1 0"/>
     <limit lower="-0.610865" upper="0.575959" effort="17" velocity="42.9"/>
-    <dynamics damping="0.2" friction="0.1"/>
+    <dynamics damping="0" friction="0"/>
   </joint>
 
   <joint name="l_ankle_lower_joint" type="revolute">
@@ -813,7 +813,7 @@
     <origin xyz="0 0.0021 -0.2555" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
     <limit lower="-0.610865" upper="0.575959" effort="17" velocity="42.9"/>
-    <dynamics damping="0.2" friction="0.1"/>
+    <dynamics damping="0" friction="0"/>
   </joint>
 
   <joint name="r_ankle_lower_joint" type="revolute">
@@ -822,7 +822,7 @@
     <origin xyz="0 -0.0021 -0.2555" rpy="0 0 0"/>
     <axis xyz="0 -1 0"/>
     <limit lower="-0.575959" upper="0.610865" effort="17" velocity="42.9"/>
-    <dynamics damping="0.2" friction="0.1"/>
+    <dynamics damping="0" friction="0"/>
   </joint>
 
   <joint name="r_ankle_upper_joint" type="revolute">
@@ -831,7 +831,7 @@
     <origin xyz="0 -0.0479 -0.1445" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
     <limit lower="-0.575959" upper="0.610865" effort="17" velocity="42.9"/>
-    <dynamics damping="0.2" friction="0.1"/>
+    <dynamics damping="0" friction="0"/>
   </joint>
 
   <joint name="l_ankle_coupler_joint_a" type="fixed">

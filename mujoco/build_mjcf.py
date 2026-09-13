@@ -9,6 +9,7 @@ from model_io import (
     load_urdf, load_loops, children_of, rpy_to_quat, fmt, ROOT,
 )
 from robonex_data import motor_physics_for, COLLISION_BOX, FEET, FOOT_FRICTION
+from robonex_common.actuators import CONTROL_GAINS_BY_JOINT
 from robonex_common.joints import DEFAULT_JOINT_POS
 
 ROD_END_BOLT_AXIS = "y"
@@ -22,8 +23,6 @@ FREE_OUT = os.path.join(ROOT, "mujoco", "robot", "robonex.xml")
 FREE_SCENE_OUT = os.path.join(ROOT, "mujoco", "robot", "scene.xml")
 FIXED_OUT = os.path.join(ROOT, "mujoco", "robot", "robonex_fixed.xml")
 FIXED_SCENE_OUT = os.path.join(ROOT, "mujoco", "robot", "scene_fixed.xml")
-FIXED_BOX_OUT = os.path.join(ROOT, "mujoco", "robot", "box", "robonex_fixed.xml")
-FIXED_BOX_SCENE_OUT = os.path.join(ROOT, "mujoco", "robot", "box", "scene_fixed.xml")
 
 NEIGHBOUR_DEPTH = 2
 PIN_HALF = 0.01
@@ -104,8 +103,9 @@ def emit_body(links, joints, kids, name, ball_set, actuated, depth, out,
             if is_act:
                 phys = motor_physics_for(parent_joint.name)
                 if phys is not None:
-                    extra = (' armature="%g" frictionloss="%g"'
-                             % (phys["armature"], phys["frictionloss"]))
+                    extra = (' armature="%g" frictionloss="%g" damping="%g"'
+                             % (phys["armature"], phys["frictionloss"],
+                                phys["viscous_friction"]))
             out.append(
                 '%s  <joint name="%s" type="hinge" axis="%s" range="%s"%s class="%s"/>'
                 % (pad, parent_joint.name, fmt(parent_joint.axis),
@@ -268,14 +268,9 @@ def append_home_keyframe(out_path, scene_out):
 
 def main():
     fixed_base = "--fixed-base" in sys.argv
-    collision_box = "--collision-box" in sys.argv
-    if collision_box and not fixed_base:
-        raise SystemExit("--collision-box writes the fixed-base variant; also pass --fixed-base")
+    collision_box = False
     height = FIXED_BASE_HEIGHT if fixed_base else SPAWN_HEIGHT
-    if collision_box:
-        out_path = FIXED_BOX_OUT
-        scene_out = FIXED_BOX_SCENE_OUT
-    elif fixed_base:
+    if fixed_base:
         out_path = FIXED_OUT
         scene_out = FIXED_SCENE_OUT
     else:
@@ -307,7 +302,7 @@ def main():
     out.append('      <joint damping="0.01" armature="0"/>')
     out.append("    </default>")
     out.append('    <default class="act">')
-    out.append('      <joint damping="0.2"/>')
+    out.append('      <joint armature="0"/>')
     out.append("    </default>")
     out.append('    <default class="visual">')
     out.append('      <geom group="2" contype="0" conaffinity="0" density="0"/>')
@@ -363,10 +358,11 @@ def main():
     out.append("  <actuator>")
     for name in actuated:
         j = joints[name]
+        kp, kv = CONTROL_GAINS_BY_JOINT[name]
         out.append('    <position name="%s" joint="%s" ctrlrange="%s"'
-                   ' forcerange="%s" class="motor"/>'
+                   ' forcerange="%s" kp="%g" kv="%g" class="motor"/>'
                    % (name.replace("_joint", ""), name, fmt((j.lower, j.upper)),
-                      fmt((-j.effort, j.effort))))
+                      fmt((-j.effort, j.effort)), kp, kv))
     out.append("  </actuator>")
     out.append("")
 
