@@ -248,7 +248,7 @@ def main():
     print("wrote %s  (no robot, for the ROS 2 launch)" % EMPTY_OUT)
     print("  links          : %d  (total mass %.6f kg)" % (len(links), total_mass))
     print("  revolute       : %d  serial-equivalent, one per motor" % len(SERIAL_JOINTS))
-    print("  fixed          : %d  crank/coupler links frozen at the home pose" % len(frozen))
+    print("  fixed          : %d  crank/coupler links frozen at the URDF zero pose" % len(frozen))
     print("  collision      : %d boxes, %d links left without collision"
           % (len(COLLISION_BOX), len(links) - len(COLLISION_BOX)))
     print("  controllers    : %d position, RobStride MIT gains through the linkage"

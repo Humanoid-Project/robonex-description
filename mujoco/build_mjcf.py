@@ -248,6 +248,15 @@ def append_home_keyframe(out_path, scene_out):
         joint_name = mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_JOINT, joint_id)
         data.ctrl[actuator_id] = DEFAULT_JOINT_POS[joint_name]
     mujoco.mj_forward(model, data)
+    residual = max(
+        (abs(float(data.efc_pos[row])) for row in range(data.nefc)
+         if data.efc_type[row] == mujoco.mjtConstraint.mjCNSTR_EQUALITY),
+        default=0.0,
+    )
+    if residual > 1.0e-6:
+        raise ValueError(
+            "home keyframe leaves a loop closure open by %.3g m; "
+            "re-derive HOME_PASSIVE_JOINT_POS for the current DEFAULT_JOINT_POS" % residual)
 
     qpos = " ".join("%.9g" % v for v in data.qpos)
     block = [
@@ -383,10 +392,11 @@ def main():
     print("wrote %s" % out_path)
     print("wrote %s" % scene_out)
     print("  bodies      : %d" % len(links))
-    print("  hinges      : %d" % sum(
+    print("  hinges      : %d" % (sum(
         1 for j in joints.values()
-        if j.jtype in ("revolute", "continuous") and j.name not in ball_set))
-    print("  ball joints : %d" % len(ball_set))
+        if j.jtype in ("revolute", "continuous") and j.name not in ball_set)
+        + len(ROD_END_AXES) * len(ball_set)))
+    print("  rod ends    : %d (%d hinges each)" % (len(ball_set), len(ROD_END_AXES)))
     print("  equalities  : %d" % (
         2 * len(loops.get("pin_loops", [])) + len(loops.get("ball_loops", []))))
     print("  actuators   : %d" % len(actuated))
