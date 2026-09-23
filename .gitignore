@@ -1,23 +1,7 @@
-.venv/
-.venv*/
-.vscode/
-*.swp
-.DS_Store
-Thumbs.db
-desktop.ini
-
-__pycache__/
-*.py[cod]
-
-build/
-install/
-log/
-
+# Agent and editor settings
 .claude/
-.codex/
-.grok/
-.agents/
+.vscode/
 
-/AGENTS.md
-
-docs/
+# Python
+.venv*/
+__pycache__/
