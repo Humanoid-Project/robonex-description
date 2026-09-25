@@ -1,0 +1,198 @@
+#!/usr/bin/env python3
+import argparse
+import os
+import sys
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "scripts"))
+
+from model_io import load_urdf, fmt, ROOT, VARIANT
+from robonex_data import DEG, motor_physics_for, COLLISION_BOX, CONSTANTS
+
+PROVISIONAL_LIMITS = CONSTANTS["provisional_limits"]
+
+COLLISIONS = ("mesh", "box")
+
+
+def variant_name(collision):
+    return "closed_loop_%s" % collision
+
+
+def output_path(collision):
+    name = variant_name(collision)
+    return os.path.join(ROOT, "isaac", VARIANT, name, "robonex_%s_%s.urdf" % (VARIANT, name))
+
+
+MESH_URI = "../../../meshes/%s"
+
+MATERIALS = (("black", "0.05 0.05 0.05 1.0"), ("gray", "0.647 0.647 0.647 1.0"))
+
+
+def emit_link(o, name, lk, collision):
+    o.append('  <link name="%s">' % name)
+
+    if lk.mass > 0.0:
+        ixx, ixy, ixz, iyy, iyz, izz = lk.inertia
+        o.append("    <inertial>")
+        o.append('      <origin xyz="%s" rpy="0 0 0"/>' % fmt(lk.com))
+        o.append('      <mass value="%.6f"/>' % lk.mass)
+        o.append('      <inertia ixx="%.8f" ixy="%.8f" ixz="%.8f"'
+                 ' iyy="%.8f" iyz="%.8f" izz="%.8f"/>'
+                 % (ixx, ixy, ixz, iyy, iyz, izz))
+        o.append("    </inertial>")
+
+    for g in lk.visuals:
+        colour = "gray" if g.mesh.startswith("rs0") else "black"
+        o.append("    <visual>")
+        o.append('      <origin xyz="%s" rpy="%s"/>' % (fmt(g.xyz), fmt(g.rpy)))
+        o.append("      <geometry>")
+        o.append('        <mesh filename="%s" scale="%s"/>'
+                 % (MESH_URI % g.mesh, fmt(g.scale)))
+        o.append("      </geometry>")
+        o.append('      <material name="%s"/>' % colour)
+        o.append("    </visual>")
+
+    if collision == "box":
+        box = COLLISION_BOX.get(name)
+        if box is not None:
+            size, centre = box
+            o.append('    <collision name="%s_collision">' % name)
+            o.append('      <origin xyz="%s" rpy="0 0 0"/>' % fmt(centre))
+            o.append('      <geometry><box size="%s"/></geometry>' % fmt(size))
+            o.append("    </collision>")
+    else:
+        for g in lk.visuals:
+            o.append("    <collision>")
+            o.append('      <origin xyz="%s" rpy="%s"/>' % (fmt(g.xyz), fmt(g.rpy)))
+            o.append("      <geometry>")
+            o.append('        <mesh filename="%s" scale="%s"/>'
+                     % (MESH_URI % g.mesh, fmt(g.scale)))
+            o.append("      </geometry>")
+            o.append("    </collision>")
+
+    o.append("  </link>")
+    o.append("")
+
+
+ANKLE_MOTOR_JOINTS = {
+    "l_ankle_upper_joint", "l_ankle_lower_joint",
+    "r_ankle_upper_joint", "r_ankle_lower_joint",
+}
+ANKLE_OUTPUT_JOINTS = {
+    "l_ankle_roll_joint", "l_ankle_pitch_joint",
+    "r_ankle_roll_joint", "r_ankle_pitch_joint",
+}
+KNEE_MOTOR_JOINTS = {"l_knee_pitch_joint", "r_knee_pitch_joint"}
+KNEE_PASSIVE_JOINTS = {
+    "l_knee_joint", "r_knee_joint",
+    "l_knee_coupler_joint_a", "r_knee_coupler_joint_a",
+}
+HIP_MOTOR_JOINTS = {
+    "l_hip_yaw_joint", "r_hip_yaw_joint",
+    "l_hip_pitch_joint", "r_hip_pitch_joint",
+    "l_hip_roll_joint", "r_hip_roll_joint",
+}
+MOTOR_JOINTS = HIP_MOTOR_JOINTS | KNEE_MOTOR_JOINTS | ANKLE_MOTOR_JOINTS
+
+
+def emit_joint(o, j):
+    if j.name in MOTOR_JOINTS:
+        lower, upper = PROVISIONAL_LIMITS[j.name]
+        spec = (j.effort, j.velocity, lower / DEG, upper / DEG)
+    else:
+        spec = None
+    passive_output = j.name in ANKLE_OUTPUT_JOINTS or j.name in KNEE_PASSIVE_JOINTS
+    if spec:
+        kind = "revolute"
+    elif passive_output:
+        kind = "continuous"
+    else:
+        kind = "fixed"
+    o.append('  <joint name="%s" type="%s">' % (j.name, kind))
+    o.append('    <parent link="%s"/>' % j.parent)
+    o.append('    <child link="%s"/>' % j.child)
+    o.append('    <origin xyz="%s" rpy="%s"/>' % (fmt(j.xyz), fmt(j.rpy)))
+    if spec:
+        effort, velocity, lo_deg, hi_deg = spec
+        o.append('    <axis xyz="%s"/>' % fmt(j.axis))
+        o.append('    <limit lower="%.6f" upper="%.6f" effort="%g" velocity="%g"/>'
+                 % (lo_deg * DEG, hi_deg * DEG, effort, velocity))
+        phys = motor_physics_for(j.name)
+        o.append('    <dynamics damping="%g" friction="%g"/>'
+                 % (phys["viscous_friction"], phys["frictionloss"]))
+    elif passive_output:
+        o.append('    <axis xyz="%s"/>' % fmt(j.axis))
+        o.append('    <limit effort="0" velocity="0"/>')
+        o.append('    <dynamics damping="0" friction="0.0"/>')
+    o.append("  </joint>")
+    o.append("")
+
+
+def build(collision):
+    if collision not in COLLISIONS:
+        raise ValueError("unknown collision %r" % collision)
+
+    out_path = output_path(collision)
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    links, joints, base = load_urdf()
+
+    o = []
+    o.append('<?xml version="1.0"?>')
+    o.append("<!-- generated by isaac/build_isaac_urdf.py - do not edit by hand -->")
+    o.append("<!-- model: robonex_%s, variant: %s -->" % (VARIANT, variant_name(collision)))
+    o.append("<!-- actuated limits: %s -->" % CONSTANTS["provisional_limits_note"])
+    o.append("<!-- physical-loop model: knee and ankle motor/output trees remain")
+    o.append("     movable for USD revolute and spherical loop closures. -->")
+    if collision == "box":
+        o.append("<!-- collision: box primitives from robonex_data.COLLISION_BOX. -->")
+    else:
+        o.append("<!-- collision: visual meshes. -->")
+    o.append('<robot name="robonex_%s">' % VARIANT)
+    o.append("")
+    for name, rgba in MATERIALS:
+        o.append('  <material name="%s"><color rgba="%s"/></material>' % (name, rgba))
+    o.append("")
+
+    for name, lk in links.items():
+        emit_link(o, name, lk, collision)
+    for j in joints.values():
+        emit_joint(o, j)
+
+    o.append("</robot>")
+
+    with open(out_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(o) + "\n")
+
+    active = set(MOTOR_JOINTS)
+    passive = set(ANKLE_OUTPUT_JOINTS) | set(KNEE_PASSIVE_JOINTS)
+    frozen = [j.name for j in joints.values()
+              if j.name not in active and j.name not in passive]
+    print("wrote %s" % out_path)
+    print("  variant          : %s" % variant_name(collision))
+    print("  links            : %d  (total mass %.6f kg)"
+          % (len(links), sum(lk.mass for lk in links.values())))
+    print("  actuated / passive / frozen : %d / %d / %d"
+          % (len(active), len(passive), len(frozen)))
+    if collision == "box":
+        boxed = sum(1 for name in links if name in COLLISION_BOX)
+        print("  collision        : %d boxes, %d links left without collision"
+              % (boxed, len(links) - boxed))
+    else:
+        print("  collision        : meshes")
+    print()
+    print("  open tree is completed by scripts/apply_physical_loops.py.")
+    return out_path
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Build a RoboNex Isaac URDF variant.")
+    parser.add_argument("--variant", choices=("edu", "pro", "max"), default="edu")
+    parser.add_argument(
+        "--collision", choices=COLLISIONS, default="mesh",
+        help="mesh uses the visual meshes; box uses robonex_data.COLLISION_BOX primitives",
+    )
+    args = parser.parse_args()
+    build(args.collision)
+
+
+if __name__ == "__main__":
+    main()

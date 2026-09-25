@@ -5,3 +5,10 @@
 # Python
 .venv*/
 __pycache__/
+
+# Ver.2 staging: user-provided source files and regenerable Isaac USD
+new_urdf/*.f3z
+new_urdf/*.docx
+new_urdf/isaac/*/*/*.usd
+new_urdf/isaac/*/*/configuration/
+new_urdf/verify/logs/

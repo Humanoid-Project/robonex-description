@@ -1,0 +1,416 @@
+#!/usr/bin/env python3
+import math
+import os
+import sys
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "scripts"))
+
+from model_io import (
+    load_urdf, load_loops, children_of, rpy_to_quat, fmt, ROOT, VARIANT,
+)
+from robonex_data import (
+    motor_physics_for, COLLISION_BOX, FEET, FOOT_FRICTION, HELD_JOINTS, DEFAULT_JOINT_POS,
+    HOME_HEIGHT, HOME_PASSIVE_JOINT_POS, MUJOCO_SPAWN_HEIGHT, SPAWN_HEIGHT as SPAWN_HEIGHT_ZERO,
+)
+from robonex_common.actuators import CONTROL_GAINS_BY_JOINT
+
+ROD_END_BOLT_AXIS = "y"
+ROD_END_AXES = (
+    ("x", (1.0, 0.0, 0.0)),
+    ("y", (0.0, 1.0, 0.0)),
+    ("z", (0.0, 0.0, 1.0)),
+)
+
+OUT_DIR = os.path.join(ROOT, "mujoco", "robot", VARIANT)
+FREE_OUT = os.path.join(OUT_DIR, "robonex.xml")
+FREE_SCENE_OUT = os.path.join(OUT_DIR, "scene.xml")
+FIXED_OUT = os.path.join(OUT_DIR, "robonex_fixed.xml")
+FIXED_SCENE_OUT = os.path.join(OUT_DIR, "scene_fixed.xml")
+
+NEIGHBOUR_DEPTH = 2
+PIN_HALF = 0.01
+
+TIMESTEP = 0.001
+SOLREF = "%g 1" % (4 * TIMESTEP)
+SOLIMP = "0.99 0.9999 0.0001"
+CONTACT_SOLREF = "%g 1" % (2 * TIMESTEP)
+CONTACT_SOLIMP = "0.99 0.9999 0.0001"
+IMPRATIO = 10
+
+SPAWN_HEIGHT = MUJOCO_SPAWN_HEIGHT
+LEG_DROP_V2 = SPAWN_HEIGHT_ZERO
+FIXED_BASE_HEIGHT = 1.60
+
+
+def emit_body(links, joints, kids, name, ball_set, actuated, depth, out,
+              fixed_base=False, height=SPAWN_HEIGHT, ball_limit=None,
+              collision_box=False):
+    pad = "  " * depth
+    lk = links[name]
+    parent_joint = None
+    for j in joints.values():
+        if j.child == name:
+            parent_joint = j
+            break
+
+    if parent_joint is None:
+        out.append('%s<body name="%s" pos="0 0 %g">' % (pad, name, height))
+        if not fixed_base:
+            out.append('%s  <freejoint name="root"/>' % pad)
+    else:
+        q = rpy_to_quat(parent_joint.rpy)
+        attrs = 'pos="%s"' % fmt(parent_joint.xyz)
+        if abs(q[0] - 1.0) > 1e-9:
+            attrs += ' quat="%s"' % fmt(q)
+        out.append('%s<body name="%s" %s>' % (pad, name, attrs))
+
+        if parent_joint.name in ball_set:
+            for axis_name, axis_vec in ROD_END_AXES:
+                jname = "%s_%s" % (parent_joint.name, axis_name)
+                if axis_name == ROD_END_BOLT_AXIS or ball_limit is None:
+                    lim = ""
+                else:
+                    lim = (' range="%s" limited="true"'
+                           ' solreflimit="%s" solimplimit="%s"'
+                           % (fmt((-ball_limit, ball_limit)), SOLREF, SOLIMP))
+                out.append(
+                    '%s  <joint name="%s" type="hinge" axis="%s"%s class="passive"/>'
+                    % (pad, jname, fmt(axis_vec), lim))
+        elif parent_joint.name in HELD_JOINTS:
+            pass
+        elif parent_joint.jtype in ("revolute", "continuous"):
+            is_act = parent_joint.name in actuated
+            cls = "act" if is_act else "passive"
+            extra = ""
+            if is_act:
+                phys = motor_physics_for(parent_joint.name)
+                if phys is not None:
+                    extra = (' armature="%g" frictionloss="%g" damping="%g"'
+                             % (phys["armature"], phys["frictionloss"],
+                                phys["viscous_friction"]))
+            out.append(
+                '%s  <joint name="%s" type="hinge" axis="%s" range="%s"%s class="%s"/>'
+                % (pad, parent_joint.name, fmt(parent_joint.axis),
+                   fmt((parent_joint.lower, parent_joint.upper)), extra, cls)
+            )
+
+    ixx, ixy, ixz, iyy, iyz, izz = lk.inertia
+    if lk.mass > 0.0:
+        out.append(
+            '%s  <inertial pos="%s" mass="%.6g" fullinertia="%s"/>'
+            % (pad, fmt(lk.com), lk.mass,
+               fmt((ixx, iyy, izz, ixy, ixz, iyz), 8))
+        )
+
+    for g in lk.visuals:
+        mesh = os.path.splitext(g.mesh)[0]
+        q = rpy_to_quat(g.rpy)
+        attrs = 'type="mesh" mesh="%s" pos="%s"' % (mesh, fmt(g.xyz))
+        if abs(q[0] - 1.0) > 1e-9:
+            attrs += ' quat="%s"' % fmt(q)
+        out.append('%s  <geom %s class="visual"/>' % (pad, attrs))
+        if not collision_box:
+            fric = ""
+            if name in FEET:
+                fric = ' friction="%g %g 0.001"' % (FOOT_FRICTION, FOOT_FRICTION)
+            out.append('%s  <geom %s class="collision"%s/>' % (pad, attrs, fric))
+
+    if collision_box:
+        box = COLLISION_BOX.get(name)
+        if box is not None:
+            size, centre = box
+            half = (size[0] * 0.5, size[1] * 0.5, size[2] * 0.5)
+            fric = ""
+            if name in FEET:
+                fric = ' friction="%g %g 0.001"' % (FOOT_FRICTION, FOOT_FRICTION)
+            out.append(
+                '%s  <geom type="box" size="%s" pos="%s" class="collision"%s/>'
+                % (pad, fmt(half), fmt(centre), fric)
+            )
+
+    for j in kids.get(name, []):
+        emit_body(links, joints, kids, j.child, ball_set, actuated, depth + 1, out,
+                  fixed_base, height, ball_limit, collision_box)
+
+    out.append("%s</body>" % pad)
+
+
+def pin_connect_anchors(entry):
+    axis = [float(v) for v in entry["axis"]]
+    norm = math.sqrt(sum(v * v for v in axis))
+    if norm < 1.0e-12:
+        raise ValueError("%s axis must be non-zero" % entry["name"])
+    unit = [v / norm for v in axis]
+    parent = [float(v) for v in entry["parent_xyz"]]
+    return (
+        [parent[i] - PIN_HALF * unit[i] for i in range(3)],
+        [parent[i] + PIN_HALF * unit[i] for i in range(3)],
+    )
+
+
+def build_excludes(links, joints, loops, depth=NEIGHBOUR_DEPTH):
+    adj = {n: set() for n in links}
+    for j in joints.values():
+        adj[j.parent].add(j.child)
+        adj[j.child].add(j.parent)
+    for key in ("pin_loops", "ball_loops"):
+        for e in loops.get(key, []):
+            adj[e["parent"]].add(e["child"])
+            adj[e["child"]].add(e["parent"])
+
+    pairs = set()
+    for start in links:
+        frontier, seen = {start}, {start}
+        for _ in range(depth):
+            nxt = set()
+            for n in frontier:
+                nxt |= adj[n] - seen
+            seen |= nxt
+            frontier = nxt
+        for other in seen:
+            if other != start:
+                pairs.add(tuple(sorted((start, other))))
+    return sorted(pairs)
+
+
+def write_scene(scene_out, robot_filename):
+    s = [
+        '<?xml version="1.0"?>',
+        '<mujoco model="robonex_%s scene">' % VARIANT,
+        '  <include file="%s"/>' % robot_filename,
+        '',
+        '  <statistic center="0 0 0.6" extent="1.2"/>',
+        '',
+        '  <visual>',
+        '    <headlight diffuse="0.6 0.6 0.6" ambient="0.3 0.3 0.3" specular="0 0 0"/>',
+        '    <rgba haze="0.15 0.25 0.35 1"/>',
+        '    <global azimuth="140" elevation="-20"/>',
+        '  </visual>',
+        '',
+        '  <asset>',
+        '    <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0"'
+        ' width="512" height="3072"/>',
+        '    <texture type="2d" name="groundplane" builtin="checker" mark="edge"'
+        ' rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3"',
+        '      markrgb="0.8 0.8 0.8" width="300" height="300"/>',
+        '    <material name="groundplane" texture="groundplane" texuniform="true"'
+        ' texrepeat="5 5" reflectance="0.2"/>',
+        '  </asset>',
+        '',
+        '  <worldbody>',
+        '    <light pos="0 0 3" dir="0 0 -1" directional="true"/>',
+        '    <geom name="floor" size="0 0 0.05" type="plane" material="groundplane"'
+        ' condim="3" contype="1" conaffinity="1" friction="%g %g 0.001"'
+        ' solref="%s" solimp="%s"/>'
+        % (FOOT_FRICTION, FOOT_FRICTION, CONTACT_SOLREF, CONTACT_SOLIMP),
+        '  </worldbody>',
+        '</mujoco>',
+    ]
+    with open(scene_out, "w", encoding="utf-8") as f:
+        f.write("\n".join(s) + "\n")
+
+
+def append_home_keyframe(out_path, scene_out):
+    try:
+        import mujoco
+    except ImportError:
+        return "skipped (mujoco not installed)"
+
+    model = mujoco.MjModel.from_xml_path(scene_out)
+    data = mujoco.MjData(model)
+    root_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, "root")
+    data.qpos[model.jnt_qposadr[root_id] + 2] = HOME_HEIGHT
+    for name, value in {**DEFAULT_JOINT_POS, **HOME_PASSIVE_JOINT_POS}.items():
+        joint_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, name)
+        if joint_id < 0:
+            raise ValueError("home pose joint not found: %s" % name)
+        data.qpos[model.jnt_qposadr[joint_id]] = value
+    for actuator_id in range(model.nu):
+        joint_id = int(model.actuator_trnid[actuator_id, 0])
+        joint_name = mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_JOINT, joint_id)
+        data.ctrl[actuator_id] = DEFAULT_JOINT_POS[joint_name]
+    mujoco.mj_forward(model, data)
+    residual = max(
+        (abs(float(data.efc_pos[row])) for row in range(data.nefc)
+         if data.efc_type[row] == mujoco.mjtConstraint.mjCNSTR_EQUALITY),
+        default=0.0,
+    )
+    if residual > 1.0e-6:
+        raise ValueError(
+            "home keyframe leaves a loop closure open by %.3g m; "
+            "re-derive HOME_PASSIVE_JOINT_POS for the current DEFAULT_JOINT_POS" % residual)
+
+    qpos = " ".join("%.9g" % v for v in data.qpos)
+    block = [
+        "",
+        "  <keyframe>",
+        '    <key name="home" qpos="%s" ctrl="%s"/>'
+        % (qpos, " ".join("%.9g" % v for v in data.ctrl)),
+        "  </keyframe>",
+    ]
+
+    with open(out_path, encoding="utf-8") as f:
+        text = f.read()
+    text = text.replace("</mujoco>", "\n".join(block) + "\n</mujoco>")
+    with open(out_path, "w", encoding="utf-8") as f:
+        f.write(text)
+    return "home, %d qpos values = bent closed-loop pose" % model.nq
+
+
+def main():
+    fixed_base = "--fixed-base" in sys.argv
+    os.makedirs(OUT_DIR, exist_ok=True)
+    if not fixed_base and (HOME_HEIGHT is None or not HOME_PASSIVE_JOINT_POS):
+        raise SystemExit("free-base build needs home constants: build --fixed-base, run build/solve_constants.py first")
+    collision_box = False
+    height = FIXED_BASE_HEIGHT if fixed_base else SPAWN_HEIGHT
+    if fixed_base:
+        out_path = FIXED_OUT
+        scene_out = FIXED_SCENE_OUT
+    else:
+        out_path = FREE_OUT
+        scene_out = FREE_SCENE_OUT
+
+    links, joints, base = load_urdf()
+    loops = load_loops()
+    kids = children_of(joints)
+    ball_set = set(loops.get("ball_upgrades", []))
+    actuated = list(loops.get("actuated_joints", []))
+    ball_limit_deg = loops.get("ball_limit_deg")
+    ball_limit = math.radians(ball_limit_deg) if ball_limit_deg else None
+
+    meshes = sorted({g.mesh for lk in links.values() for g in lk.visuals})
+
+    meshdir = os.path.relpath(os.path.join(ROOT, "meshes"), os.path.dirname(out_path))
+
+    out = []
+    out.append('<?xml version="1.0"?>')
+    out.append('<mujoco model="robonex_%s">' % VARIANT)
+    out.append('  <compiler angle="radian" meshdir="%s" autolimits="true"/>' % meshdir)
+    out.append('  <option timestep="%g" integrator="implicitfast" cone="elliptic"'
+               ' impratio="%g"/>' % (TIMESTEP, IMPRATIO))
+    out.append("")
+    out.append("  <default>")
+    out.append('    <joint damping="0.01" armature="0"/>')
+    out.append('    <default class="passive">')
+    out.append('      <joint damping="0.01" armature="0"/>')
+    out.append("    </default>")
+    out.append('    <default class="act">')
+    out.append('      <joint armature="0"/>')
+    out.append("    </default>")
+    out.append('    <default class="visual">')
+    out.append('      <geom group="2" contype="0" conaffinity="0" density="0"/>')
+    out.append("    </default>")
+    out.append('    <default class="collision">')
+    out.append('      <geom group="3" contype="1" conaffinity="1" condim="3" density="0"'
+               ' rgba="0.6 0.6 0.6 0.4" solref="%s" solimp="%s"/>'
+               % (CONTACT_SOLREF, CONTACT_SOLIMP))
+    out.append("    </default>")
+    out.append('    <default class="motor">')
+    out.append('      <position kp="40" kv="2"/>')
+    out.append("    </default>")
+    out.append("  </default>")
+    out.append("")
+    out.append("  <asset>")
+    for m in meshes:
+        out.append('    <mesh name="%s" file="%s" scale="0.001 0.001 0.001"/>'
+                   % (os.path.splitext(m)[0], m))
+    out.append("  </asset>")
+    out.append("")
+    out.append("  <worldbody>")
+    emit_body(links, joints, kids, base, ball_set, set(actuated), 2, out,
+              fixed_base, height, ball_limit, collision_box)
+    out.append("  </worldbody>")
+    out.append("")
+
+    out.append("  <equality>")
+    for p in loops.get("pin_loops", []):
+        for i, anchor in enumerate(pin_connect_anchors(p)):
+            out.append(
+                '    <connect name="%s_%d" body1="%s" body2="%s" anchor="%s"'
+                ' solref="%s" solimp="%s"/>'
+                % (p["name"], i, p["parent"], p["child"], fmt(anchor),
+                   SOLREF, SOLIMP)
+            )
+    for b in loops.get("ball_loops", []):
+        out.append(
+            '    <connect name="%s" body1="%s" body2="%s" anchor="%s"'
+            ' solref="%s" solimp="%s"/>'
+            % (b["name"], b["parent"], b["child"], fmt(b["parent_xyz"]),
+               SOLREF, SOLIMP)
+        )
+    out.append("  </equality>")
+    out.append("")
+
+    excludes = build_excludes(links, joints, loops)
+    out.append("  <contact>")
+    for a, b in excludes:
+        out.append('    <exclude body1="%s" body2="%s"/>' % (a, b))
+    out.append("  </contact>")
+    out.append("")
+
+    out.append("  <actuator>")
+    for name in actuated:
+        j = joints[name]
+        kp, kv = CONTROL_GAINS_BY_JOINT[name]
+        out.append('    <position name="%s" joint="%s" ctrlrange="%s"'
+                   ' forcerange="%s" kp="%g" kv="%g" class="motor"/>'
+                   % (name.replace("_joint", ""), name, fmt((j.lower, j.upper)),
+                      fmt((-j.effort, j.effort)), kp, kv))
+    out.append("  </actuator>")
+    out.append("")
+
+    out.append("  <sensor>")
+    for name in actuated:
+        out.append('    <actuatorfrc name="%s_trq" actuator="%s"/>'
+                   % (name.replace("_joint", ""), name.replace("_joint", "")))
+    out.append("  </sensor>")
+    out.append("</mujoco>")
+
+    with open(out_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(out) + "\n")
+    write_scene(scene_out, os.path.basename(out_path))
+
+    kf = ("skipped (welded base has nothing to settle onto)" if fixed_base
+          else append_home_keyframe(out_path, scene_out))
+
+    print("wrote %s" % out_path)
+    print("wrote %s" % scene_out)
+    print("  variant     : %s" % VARIANT)
+    print("  bodies      : %d" % len(links))
+    print("  held rigid  : %s" % (", ".join(sorted(n for n in joints if n in HELD_JOINTS)) or "none"))
+    print("  hinges      : %d" % (sum(
+        1 for j in joints.values()
+        if j.jtype in ("revolute", "continuous") and j.name not in ball_set and j.name not in HELD_JOINTS)
+        + len(ROD_END_AXES) * len(ball_set)))
+    print("  rod ends    : %d (%d hinges each)" % (len(ball_set), len(ROD_END_AXES)))
+    print("  equalities  : %d" % (
+        2 * len(loops.get("pin_loops", [])) + len(loops.get("ball_loops", []))))
+    print("  actuators   : %d" % len(actuated))
+    print("  sensors     : %d torque" % len(actuated))
+    print("  keyframe    : %s" % kf)
+    for lim in sorted({(joints[n].effort, joints[n].velocity) for n in actuated}):
+        n_of = sum(1 for n in actuated
+                   if (joints[n].effort, joints[n].velocity) == lim)
+        print("     %2d joints at %.0f Nm / %.1f rad/s" % (n_of, lim[0], lim[1]))
+    print("  self-collision: ON, %d neighbour pairs excluded" % len(excludes))
+    print("  collision   : %s" % ("boxes" if collision_box else "meshes"))
+    print("  foot mu     : %g" % FOOT_FRICTION)
+    print("  contact     : solref %s, solimp %s, impratio %g"
+          % (CONTACT_SOLREF, CONTACT_SOLIMP, IMPRATIO))
+    if ball_limit_deg:
+        tilt = [a for a, _ in ROD_END_AXES if a != ROD_END_BOLT_AXIS]
+        print("  rod-end tilt limit: +/-%.1f deg on %s of %d rod ends "
+              "(%s free: bolt axis)"
+              % (ball_limit_deg, "/".join(tilt), len(ball_set), ROD_END_BOLT_AXIS))
+    print("  base        : %s at z = %.3f m" %
+          ("WELDED" if fixed_base else "free-floating", height))
+    print("  foot clearance: %.3f m" % (height - LEG_DROP_V2))
+    print()
+    print("  NOTE: the viewer's Joint panel writes qpos directly and bypasses the")
+    print("  equality constraints, so dragging it WILL pull the linkages apart.")
+    print("  Use the Control panel with the simulation running instead.")
+
+
+if __name__ == "__main__":
+    main()
