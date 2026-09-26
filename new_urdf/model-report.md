@@ -125,6 +125,12 @@ covers normal walking with almost no margin, and near full flexion the knee can 
 ≈ −45°). The crank must be limited to about [−80°, +15°] (monotonic region, clear of the +19° linkage limit) once
 limits are set; the hardware sweep decides the final values.
 
+Independent check (Codex `gpt-6-sol`, analytical, given only the four pivot points; `robonex-walking/etc/delegates/
+2026-09-26_0402_sol_fourbar.txt`): links 70.00 / 134.00 / 92.43 / 175.00 mm, **non-Grashof** (245.00 > 226.43, no link
+can rotate fully); maximum flexion **48.97° at crank −83.14°** (crank and coupler collinear, AC = 204.00 mm);
+opposite limit at crank +20.00° (coupler and rocker collinear), knee +31.67° there; ratio at zero 1.00. Matches the
+MuJoCo solve. (A Grok headless run of the same brief was cancelled before answering.)
+
 ## 8. Ankle differential (`verify/ankle_sweep.py`, crank grid 2°, ±60°)
 
 | within crank box ±34° | Ver.1 | Ver.2 |
@@ -175,3 +181,95 @@ The COM is mid-support in every variant (≈ 100 mm to toe and heel). Falling at
 inverted-pendulum limit, not a model error: ankle stiffness ≈ 160 N·m/rad (two cranks per foot) against
 m·g·h ≈ 130 (edu), 173 (pro), 180 (max) N·m/rad. The trained policy balances actively; the ankle gain is a
 candidate to revisit if the heavier variants train badly.
+
+## 11. Isaac assets (`isaac/build_isaac_urdf.py --variant`, Isaac Lab `convert_urdf.py`, `apply_physical_loops.py`)
+
+Per variant: `isaac/<variant>/closed_loop_mesh/robonex_<variant>_closed_loop_mesh{,_fixed}.usd` (and `closed_loop_box`
+URDFs). 12 actuated, 8 passive (continuous), rod-end joints fixed then D6 (rotX/rotZ ±15°, rotY free), 4 excluded
+spherical foot closures, 2 excluded knee pins. Arm and neck joints are exported as fixed. **Actuated limits in the
+Isaac assets are training-only placeholders** (`ver2_constants.json` `provisional_limits`): Ver.1 measured values,
+except the knee crank [−78°, +15°] (left sign), inside the four-bar's monotonic range. The canonical URDFs keep ±π.
+USDs are regenerable and not committed (`.gitignore`).
+
+Self-collision sweep of each leg joint over those limits from the default pose (`verify/limit_collisions.py`, MuJoCo
+convex hulls): the feet touch at hip roll +12° inward (Ver.1 limit +26°) and hip yaw ±83–93°; thigh–torso at hip pitch
+−92° backward. No arm–leg contact in pro.
+
+## 12. Physics settings re-checked on Ver.2 (policy-free, `robonex-walking/etc/delegates/2026-09-24_physopt`, `po/runs_v2edu`)
+
+| edu | 250/64 | 400/16 | 400/32 | 400/64 | 500/32 | 4000/255 ref |
+|---|---|---|---|---|---|---|
+| M1 saturated drive error (mrad) | 8.74 | 5.00 | 4.87 | 5.08 | 3.81 | 0 |
+| M3 strong-excitation closure p99 (mm) | 1.42 | 0.55 | 0.52 | 0.52 | 0.34 | 0.015 |
+| X battery closure max (mm) / envs > 1 mm | 6.1 / 11 | — | 1.7 / 4 | — | — | 0.03 / 0 |
+| X battery rod-end overshoot beyond ±15° | 0.44° | — | 2.13° | — | — | 0.01° |
+| D stress (random actions, pushes) closure max / envs > 1 mm | 3.45 / 128 | — | 1.46 / 3 | — | — | — |
+
+Same ranking as Ver.1: 400/32 is kept. The one worse number is the X-battery rod-end overshoot at 400/32 (2.1° vs
+0.14° on Ver.1); under D stress it is 0.12°.
+
+## 13. Walking tasks for Ver.2 (`robonex-walking` `bfea927`)
+
+`RoboNex-Walking-V2-{Edu,Pro,Max}-v0` (`robonex_walking_v2_env_cfg.py`, `robot_contract_v2.py`) reuse the Ver.1 MDP
+and change only what the model changes (memory `journal/2026-09-26_W70-W72_prereg.md` has the table): init height
+and `base_height` target 0.94226, default pose from the loop solve (left/right symmetrised ≤ 7e-5 rad for the
+symmetry augmentation), provisional limits → action scale/clip, stance width 0.269 / 0.303, clearance 0.053, fall
+height 0.528, 400 Hz / dec 8 / 32 it, contact-sensor history 8, and the contact-force penalty on the **20 ms mean
+force** at 1.49 × weight (edu 312.6 N, pro 375.0 N, max 383.9 N). Runs W70 (edu), W71 (pro), W72 (max), seed 43,
+1000 iterations, launched 2026-09-26 03:53 KST.
+
+## 14. Joint axes vs CAD bores and motor axes (`verify/axis_bores.py`, as-is geometry)
+
+Every passive leg joint and both knee pins: the URDF axis coincides with the bore centre line in **both** the parent
+and the child part within 0.005 mm (Fusion B-rep cylinders in `_extract/geom`), except `l_ankle_pitch_joint` vs the
+left foot bore at 0.12 mm (the as-is 0.2° roll of that foot part). Every actuated joint (12 legs, 8 arms, neck): the
+motor output axis matches the URDF axis within 0.0012 mm and 0.0000°. Hip axes: yaw and pitch intersect (x 9.6 mm);
+the roll axis runs 34 mm below the pitch axis and 88 mm lateral of the yaw axis (same layout as Ver.1).
+
+## 15. Ankle part interference over the crank box (`verify/ankle_mesh_collisions.py`, exact meshes with python-fcl)
+
+MuJoCo's own contact check cannot see this (neighbour pairs excluded, convex hulls), so exact mesh–mesh penetration was
+computed at loop-solved poses on a 4° grid over ±34° for both cranks, relative to the contact already present at
+zero (bolted interfaces 0.01–0.27 mm).
+
+| pair (left leg; right mirrored) | Ver.1 points / deepest | Ver.2 points / deepest |
+|---|---|---|
+| shin (`knee_link`) – long rod b | 60 / 20.9 mm | 53 / 18.4 mm |
+| shin – short rod a | 40 / 16.1 mm | 23 / 7.8 mm |
+| shin – foot | 32 / 20.0 mm | 5 / 7.4 mm |
+| long rod b – foot | 38 / 8.2 mm | 32 / 8.4 mm |
+| crank – rod end (same-sign corners, with the rod-end tilt) | ~110 / 1.5 mm | ~110 / 2.1 mm |
+
+Not a Ver.2 regression (Ver.2 is equal or better), but a shared constraint: the per-joint box limits admit ankle
+poses the parts cannot reach, and the Isaac assets have self-collision off, so simulation lets a rod pass through the
+shin. The ankle needs a coupled (2-D) limit rather than a box; this belongs to the joint-limit work.
+
+## 16. Knee transmission: torque and speed capacity (`verify/loops.py` sweep, RS03 13 N·m rated, 60 peak, 20.9 rad/s)
+
+Knee torque = crank torque / r, knee speed = crank speed × r, r = d(knee)/d(crank) (left leg):
+
+| knee flexion | Ver.1 r | Ver.1 peak torque / max speed | Ver.2 r | Ver.2 peak torque / max speed |
+|---|---|---|---|---|
+| 0° | 0.71 | 85 N·m / 14.8 rad/s | 0.99 | 60 / 20.8 |
+| 17° (default) | 0.83 | 72 / 17.4 | 0.82 | 73 / 17.1 |
+| 30° | 0.91 | 66 / 19.0 | 0.69 | 87 / 14.3 |
+| 40° | 0.97 | 62 / 20.2 | 0.52 | 115 / 10.9 |
+| 45° | 0.99 | 60 / 20.7 | 0.37 | 161 / 7.8 |
+
+At the default pose the two knees are equivalent; the trend is opposite. Ver.2 gains torque and loses speed with flexion
+(good for carrying weight in a crouch, limiting for fast swing flexion near 45°). With the same crank gains
+(kp 150) the knee output stiffness at the default is also the same (150 / r² ≈ 223 vs 218 N·m/rad).
+
+## 17. Static standing torques (MuJoCo, home pose, ankle kp raised to 160 so it stands, |actuator force|, N·m)
+
+| joint (rated) | Ver.1 | edu | pro | max |
+|---|---|---|---|---|
+| hip yaw (6) | 0.06 | 0.47 | 0.63 | 0.66 |
+| hip pitch (13) | 0.99 | 0.62 | 0.71 | 0.55 |
+| hip roll (13) | 0.04 | 0.13 | 0.11 | 0.17 |
+| knee crank (13) | 2.22 | 1.50 | 2.02 | 1.82 |
+| ankle upper (6) | 1.94 | 1.88 | 2.33 | 2.01 |
+| ankle lower (6) | 1.54 | 1.97 | 2.46 | 2.53 |
+
+Standing needs at most 42 % of any rated torque in every variant; walking loads are measured next (MuJoCo sim-to-sim
+with the trained policies).

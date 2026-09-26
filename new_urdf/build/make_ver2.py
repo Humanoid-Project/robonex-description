@@ -1,3 +1,4 @@
+import math
 import os
 import sys
 
@@ -29,6 +30,12 @@ BASE_MESHES = {
 }
 DROP = {"edu": set(ARM_LINKS) | set(HEAD_LINKS), "pro": set(HEAD_LINKS), "max": set()}
 TITLE = {"edu": "lower body", "pro": "lower body + arms", "max": "lower body + arms + head"}
+D = math.pi / 180.0
+MEASURED_LIMITS = {
+    "l_hip_yaw_joint": (-90 * D, 90 * D), "r_hip_yaw_joint": (-90 * D, 90 * D),
+    "l_hip_pitch_joint": (-100 * D, 100 * D), "r_hip_pitch_joint": (-100 * D, 100 * D),
+    "l_hip_roll_joint": (-120 * D, 10 * D), "r_hip_roll_joint": (-10 * D, 120 * D),
+}
 ACTUATED = ["l_hip_yaw_joint", "l_hip_pitch_joint", "l_hip_roll_joint", "l_knee_pitch_joint",
             "l_ankle_upper_joint", "l_ankle_lower_joint",
             "r_hip_yaw_joint", "r_hip_pitch_joint", "r_hip_roll_joint", "r_knee_pitch_joint",
@@ -135,7 +142,9 @@ def main():
                   '        <parent link="%s"/>' % j["parent"], '        <child link="%s"/>' % j["child"],
                   '        <origin xyz="%s" rpy="0 0 0"/>' % f6(j["xyz"])]
             if j["type"] == "revolute":
-                lim = j["limit"]
+                lim = dict(j["limit"])
+                if name in MEASURED_LIMITS:
+                    lim["lower"], lim["upper"] = MEASURED_LIMITS[name]
                 o += ['        <axis xyz="%s"/>' % " ".join("%d" % int(round(a)) for a in j["axis"]),
                       '        <limit lower="%.6f" upper="%.6f" effort="%.1f" velocity="%.1f"/>'
                       % (lim["lower"], lim["upper"], lim["effort"], lim["velocity"]),

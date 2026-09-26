@@ -18,11 +18,11 @@ ANKLE_PITCH = KNEE_OUT - HIP_PITCH
 FIXED_BASE_HEIGHT = 1.60
 SPAWN_MARGIN = 0.006
 PROVISIONAL_LIMITS = {
-    "l_hip_yaw_joint": [-1.658063, 1.658063], "l_hip_pitch_joint": [-1.745329, 1.745329],
-    "l_hip_roll_joint": [-2.146755, 0.453786], "l_knee_pitch_joint": [-1.361357, 0.261799],
+    "l_hip_yaw_joint": [-1.570796, 1.570796], "l_hip_pitch_joint": [-1.745329, 1.745329],
+    "l_hip_roll_joint": [-2.094395, 0.174533], "l_knee_pitch_joint": [-1.361357, 0.261799],
     "l_ankle_upper_joint": [-0.610865, 0.575959], "l_ankle_lower_joint": [-0.610865, 0.575959],
-    "r_hip_yaw_joint": [-1.658063, 1.658063], "r_hip_pitch_joint": [-1.745329, 1.745329],
-    "r_hip_roll_joint": [-0.453786, 2.146755], "r_knee_pitch_joint": [-0.261799, 1.361357],
+    "r_hip_yaw_joint": [-1.570796, 1.570796], "r_hip_pitch_joint": [-1.745329, 1.745329],
+    "r_hip_roll_joint": [-0.174533, 2.094395], "r_knee_pitch_joint": [-0.261799, 1.361357],
     "r_ankle_upper_joint": [-0.575959, 0.610865], "r_ankle_lower_joint": [-0.575959, 0.610865],
 }
 COLLISION_LINKS = ["base_link"] + ["%s_%s" % (s, n) for s in "lr" for n in (
@@ -118,9 +118,9 @@ def main():
         "sole_tilt_deg_default": sole_level,
         "variant_mass_kg": variant_masses(),
         "provisional_limits": PROVISIONAL_LIMITS,
-        "provisional_limits_note": "training-only placeholders until the Ver.2 hardware sweep: Ver.1 measured "
-                                   "limits except the knee crank [-78, +15] deg (left sign), inside the four-bar's "
-                                   "monotonic range (max flexion at -83 deg, linkage limit at +19 deg)",
+        "provisional_limits_note": "hips: Ver.2 limits set by the user in the viewer (2026-09-26): yaw +-90, pitch +-100, roll "
+                                   "-120..+10 (left, mirrored right); knee crank [-78, +15] deg from the four-bar; ankle cranks "
+                                   "still the Ver.1 measured values (placeholder until measured in MuJoCo)",
     }
     with open(OUT, "w") as f:
         json.dump(const, f, indent=2)
