@@ -32,7 +32,7 @@ DROP = {"edu": set(ARM_LINKS) | set(HEAD_LINKS), "pro": set(HEAD_LINKS), "max": 
 TITLE = {"edu": "lower body", "pro": "lower body + arms", "max": "lower body + arms + head"}
 D = math.pi / 180.0
 MEASURED_LIMITS = {
-    "l_hip_yaw_joint": (-90 * D, 90 * D), "r_hip_yaw_joint": (-90 * D, 90 * D),
+    "l_hip_yaw_joint": (-48 * D, 48 * D), "r_hip_yaw_joint": (-48 * D, 48 * D),
     "l_hip_pitch_joint": (-100 * D, 100 * D), "r_hip_pitch_joint": (-100 * D, 100 * D),
     "l_hip_roll_joint": (-120 * D, 10 * D), "r_hip_roll_joint": (-10 * D, 120 * D),
 }
