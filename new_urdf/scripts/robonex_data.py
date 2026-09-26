@@ -25,7 +25,11 @@ DAMPING = 0.2
 
 def motor_physics_for(joint_name):
     joint = JOINT_BY_MODEL_NAME.get(joint_name)
-    return MOTOR_PHYSICS[joint.motor_model] if joint else None
+    if joint:
+        return MOTOR_PHYSICS[joint.motor_model]
+    if joint_name in HELD_JOINTS and joint_name != "neck_pitch_joint":
+        return MOTOR_PHYSICS["rs02"]
+    return None
 
 
 JOINT_ORDER = [

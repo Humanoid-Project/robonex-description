@@ -1,0 +1,504 @@
+<?xml version="1.0"?>
+<mujoco model="robonex_max">
+  <compiler angle="radian" meshdir="../../../meshes" autolimits="true"/>
+  <option timestep="0.001" integrator="implicitfast" cone="elliptic" impratio="10"/>
+
+  <default>
+    <joint damping="0.01" armature="0"/>
+    <default class="passive">
+      <joint damping="0.01" armature="0"/>
+    </default>
+    <default class="act">
+      <joint armature="0"/>
+    </default>
+    <default class="visual">
+      <geom group="2" contype="0" conaffinity="0" density="0"/>
+    </default>
+    <default class="collision">
+      <geom group="3" contype="1" conaffinity="1" condim="3" density="0" rgba="0.6 0.6 0.6 0.4" solref="0.002 1" solimp="0.99 0.9999 0.0001"/>
+    </default>
+    <default class="motor">
+      <position kp="40" kv="2"/>
+    </default>
+  </default>
+
+  <asset>
+    <mesh name="base_link" file="base_link.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="head_link" file="head_link.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="l_ankle_coupler_link_a" file="l_ankle_coupler_link_a.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="l_ankle_coupler_link_b" file="l_ankle_coupler_link_b.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="l_ankle_crank_link_a" file="l_ankle_crank_link_a.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="l_ankle_crank_link_b" file="l_ankle_crank_link_b.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="l_ankle_link" file="l_ankle_link.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="l_elbow_link" file="l_elbow_link.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="l_foot" file="l_foot.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="l_hip_pitch_link" file="l_hip_pitch_link.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="l_hip_roll_link" file="l_hip_roll_link.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="l_hip_yaw_link" file="l_hip_yaw_link.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="l_knee_coupler_link" file="l_knee_coupler_link.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="l_knee_crank_link" file="l_knee_crank_link.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="l_knee_link" file="l_knee_link.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="l_shoulder_pitch_link" file="l_shoulder_pitch_link.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="l_shoulder_roll_link" file="l_shoulder_roll_link.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="l_shoulder_yaw_link" file="l_shoulder_yaw_link.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="neck_mount" file="neck_mount.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="r_ankle_coupler_link_a" file="r_ankle_coupler_link_a.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="r_ankle_coupler_link_b" file="r_ankle_coupler_link_b.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="r_ankle_crank_link_a" file="r_ankle_crank_link_a.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="r_ankle_crank_link_b" file="r_ankle_crank_link_b.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="r_ankle_link" file="r_ankle_link.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="r_elbow_link" file="r_elbow_link.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="r_foot" file="r_foot.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="r_hip_pitch_link" file="r_hip_pitch_link.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="r_hip_roll_link" file="r_hip_roll_link.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="r_hip_yaw_link" file="r_hip_yaw_link.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="r_knee_coupler_link" file="r_knee_coupler_link.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="r_knee_crank_link" file="r_knee_crank_link.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="r_knee_link" file="r_knee_link.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="r_shoulder_pitch_link" file="r_shoulder_pitch_link.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="r_shoulder_roll_link" file="r_shoulder_roll_link.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="r_shoulder_yaw_link" file="r_shoulder_yaw_link.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="rs02_l_ankle_a" file="rs02_l_ankle_a.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="rs02_l_ankle_b" file="rs02_l_ankle_b.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="rs02_l_elbow" file="rs02_l_elbow.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="rs02_l_hip_yaw" file="rs02_l_hip_yaw.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="rs02_l_shoulder_pitch" file="rs02_l_shoulder_pitch.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="rs02_l_shoulder_roll" file="rs02_l_shoulder_roll.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="rs02_l_shoulder_yaw" file="rs02_l_shoulder_yaw.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="rs02_r_ankle_a" file="rs02_r_ankle_a.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="rs02_r_ankle_b" file="rs02_r_ankle_b.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="rs02_r_elbow" file="rs02_r_elbow.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="rs02_r_hip_yaw" file="rs02_r_hip_yaw.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="rs02_r_shoulder_pitch" file="rs02_r_shoulder_pitch.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="rs02_r_shoulder_roll" file="rs02_r_shoulder_roll.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="rs02_r_shoulder_yaw" file="rs02_r_shoulder_yaw.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="rs03_l_hip_pitch" file="rs03_l_hip_pitch.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="rs03_l_hip_roll" file="rs03_l_hip_roll.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="rs03_l_knee" file="rs03_l_knee.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="rs03_r_hip_pitch" file="rs03_r_hip_pitch.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="rs03_r_hip_roll" file="rs03_r_hip_roll.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="rs03_r_knee" file="rs03_r_knee.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="rs05_neck" file="rs05_neck.stl" scale="0.001 0.001 0.001"/>
+  </asset>
+
+  <worldbody>
+    <body name="base_link" pos="0 0 1.6">
+      <inertial pos="0.002139 3.3e-05 0.012597" mass="8.64917" fullinertia="0.16581753 0.14365766 0.05668429 8.61e-06 0.00730431 -7.754e-05"/>
+      <geom type="mesh" mesh="base_link" pos="0 0 0" class="visual"/>
+      <geom type="mesh" mesh="base_link" pos="0 0 0" class="collision"/>
+      <geom type="mesh" mesh="rs02_l_hip_yaw" pos="0 0 0" class="visual"/>
+      <geom type="mesh" mesh="rs02_l_hip_yaw" pos="0 0 0" class="collision"/>
+      <geom type="mesh" mesh="rs02_r_hip_yaw" pos="0 0 0" class="visual"/>
+      <geom type="mesh" mesh="rs02_r_hip_yaw" pos="0 0 0" class="collision"/>
+      <geom type="mesh" mesh="rs05_neck" pos="0 0 0" class="visual"/>
+      <geom type="mesh" mesh="rs05_neck" pos="0 0 0" class="collision"/>
+      <geom type="mesh" mesh="neck_mount" pos="0 0 0" class="visual"/>
+      <geom type="mesh" mesh="neck_mount" pos="0 0 0" class="collision"/>
+      <geom type="mesh" mesh="rs02_l_shoulder_pitch" pos="0 0 0" class="visual"/>
+      <geom type="mesh" mesh="rs02_l_shoulder_pitch" pos="0 0 0" class="collision"/>
+      <geom type="mesh" mesh="rs02_r_shoulder_pitch" pos="0 0 0" class="visual"/>
+      <geom type="mesh" mesh="rs02_r_shoulder_pitch" pos="0 0 0" class="collision"/>
+      <body name="l_hip_yaw_link" pos="0.009587 0.043073 -0.157994">
+        <joint name="l_hip_yaw_joint" type="hinge" axis="0 0 1" range="-3.14159 3.14159" armature="0.0042" frictionloss="0" damping="0" class="act"/>
+        <inertial pos="-3.5e-05 0.001434 -0.060089" mass="1.05799" fullinertia="0.0012034 0.00167068 0.00111414 -7.1e-07 -7.2e-07 1.735e-05"/>
+        <geom type="mesh" mesh="l_hip_yaw_link" pos="0 0 0" class="visual"/>
+        <geom type="mesh" mesh="l_hip_yaw_link" pos="0 0 0" class="collision"/>
+        <geom type="mesh" mesh="rs03_l_hip_pitch" pos="0 0 0" class="visual"/>
+        <geom type="mesh" mesh="rs03_l_hip_pitch" pos="0 0 0" class="collision"/>
+        <body name="l_hip_pitch_link" pos="2e-06 0.02575 -0.062">
+          <joint name="l_hip_pitch_joint" type="hinge" axis="0 -1 0" range="-3.14159 3.14159" armature="0.02" frictionloss="0" damping="0" class="act"/>
+          <inertial pos="-0.005442 0.060333 -0.031597" mass="1.18163" fullinertia="0.00199283 0.00152652 0.00145115 2.217e-05 -1.266e-05 0.0001316"/>
+          <geom type="mesh" mesh="l_hip_pitch_link" pos="0 0 0" class="visual"/>
+          <geom type="mesh" mesh="l_hip_pitch_link" pos="0 0 0" class="collision"/>
+          <geom type="mesh" mesh="rs03_l_hip_roll" pos="0 0 0" class="visual"/>
+          <geom type="mesh" mesh="rs03_l_hip_roll" pos="0 0 0" class="collision"/>
+          <body name="l_hip_roll_link" pos="0.0225 0.062699 -0.034">
+            <joint name="l_hip_roll_joint" type="hinge" axis="-1 0 0" range="-3.14159 3.14159" armature="0.02" frictionloss="0" damping="0" class="act"/>
+            <inertial pos="-0.034699 -0.027552 -0.132599" mass="1.7079" fullinertia="0.01098964 0.00975951 0.00409591 -1.176e-05 -1.512e-05 -0.00025731"/>
+            <geom type="mesh" mesh="l_hip_roll_link" pos="0 0 0" class="visual"/>
+            <geom type="mesh" mesh="l_hip_roll_link" pos="0 0 0" class="collision"/>
+            <geom type="mesh" mesh="rs03_l_knee" pos="0 0 0" class="visual"/>
+            <geom type="mesh" mesh="rs03_l_knee" pos="0 0 0" class="collision"/>
+            <body name="l_knee_link" pos="-0.034799 0.0029 -0.312746">
+              <joint name="l_knee_joint" type="hinge" axis="0 -1 0" range="-3.14159 3.14159" class="passive"/>
+              <inertial pos="-0.00084 -7.5e-05 -0.127387" mass="1.48699" fullinertia="0.0102151 0.01165071 0.0018731 -1.42e-06 -0.00032066 -2.783e-05"/>
+              <geom type="mesh" mesh="l_knee_link" pos="0 0 0" class="visual"/>
+              <geom type="mesh" mesh="l_knee_link" pos="0 0 0" class="collision"/>
+              <geom type="mesh" mesh="rs02_l_ankle_a" pos="0 0 0" class="visual"/>
+              <geom type="mesh" mesh="rs02_l_ankle_a" pos="0 0 0" class="collision"/>
+              <geom type="mesh" mesh="rs02_l_ankle_b" pos="0 0 0" class="visual"/>
+              <geom type="mesh" mesh="rs02_l_ankle_b" pos="0 0 0" class="collision"/>
+              <body name="l_ankle_crank_link_a" pos="-0.001915 0.0229 -0.09521">
+                <joint name="l_ankle_upper_joint" type="hinge" axis="0 -1 0" range="-3.14159 3.14159" armature="0.0042" frictionloss="0" damping="0" class="act"/>
+                <inertial pos="0.02027 0.024517 0.008498" mass="0.097699" fullinertia="2.72e-05 6.048e-05 6.413e-05 -3.53e-06 -1.569e-05 -1.5e-06"/>
+                <geom type="mesh" mesh="l_ankle_crank_link_a" pos="0 0 0" class="visual"/>
+                <geom type="mesh" mesh="l_ankle_crank_link_a" pos="0 0 0" class="collision"/>
+                <body name="l_ankle_coupler_link_b" pos="0.048892 0.0263 0.010482">
+                  <joint name="l_ankle_coupler_joint_b_x" type="hinge" axis="1 0 0" range="-0.261799 0.261799" limited="true" solreflimit="0.004 1" solimplimit="0.99 0.9999 0.0001" class="passive"/>
+                  <joint name="l_ankle_coupler_joint_b_y" type="hinge" axis="0 1 0" class="passive"/>
+                  <joint name="l_ankle_coupler_joint_b_z" type="hinge" axis="0 0 1" range="-0.261799 0.261799" limited="true" solreflimit="0.004 1" solimplimit="0.99 0.9999 0.0001" class="passive"/>
+                  <inertial pos="0.001566 2e-06 -0.128991" mass="0.0954" fullinertia="0.00073964 0.0007393 8.39e-06 0 8.88e-06 1e-08"/>
+                  <geom type="mesh" mesh="l_ankle_coupler_link_b" pos="0 0 0" class="visual"/>
+                  <geom type="mesh" mesh="l_ankle_coupler_link_b" pos="0 0 0" class="collision"/>
+                </body>
+              </body>
+              <body name="l_ankle_crank_link_b" pos="-0.001915 -0.0231 -0.19621">
+                <joint name="l_ankle_lower_joint" type="hinge" axis="0 1 0" range="-3.14159 3.14159" armature="0.0042" frictionloss="0" damping="0" class="act"/>
+                <inertial pos="0.021459 -0.024511 0.004277" mass="0.0977" fullinertia="2.258e-05 6.038e-05 6.874e-05 3.75e-06 -7.25e-06 7.5e-07"/>
+                <geom type="mesh" mesh="l_ankle_crank_link_b" pos="0 0 0" class="visual"/>
+                <geom type="mesh" mesh="l_ankle_crank_link_b" pos="0 0 0" class="collision"/>
+                <body name="l_ankle_coupler_link_a" pos="0.049971 -0.025702 0.000486">
+                  <joint name="l_ankle_coupler_joint_a_x" type="hinge" axis="1 0 0" range="-0.261799 0.261799" limited="true" solreflimit="0.004 1" solimplimit="0.99 0.9999 0.0001" class="passive"/>
+                  <joint name="l_ankle_coupler_joint_a_y" type="hinge" axis="0 1 0" class="passive"/>
+                  <joint name="l_ankle_coupler_joint_a_z" type="hinge" axis="0 0 1" range="-0.261799 0.261799" limited="true" solreflimit="0.004 1" solimplimit="0.99 0.9999 0.0001" class="passive"/>
+                  <inertial pos="0.001031 -0.000197 -0.073492" mass="0.0618" fullinertia="0.00010098 0.00010065 5.7e-06 0 1.33e-06 -2.6e-07"/>
+                  <geom type="mesh" mesh="l_ankle_coupler_link_a" pos="0 0 0" class="visual"/>
+                  <geom type="mesh" mesh="l_ankle_coupler_link_a" pos="0 0 0" class="collision"/>
+                </body>
+              </body>
+              <body name="l_ankle_link" pos="0.000114 -2e-06 -0.26671">
+                <joint name="l_ankle_roll_joint" type="hinge" axis="1 0 0" range="-3.14159 3.14159" class="passive"/>
+                <inertial pos="0 1e-06 -0.024999" mass="0.106" fullinertia="7.201e-05 7.201e-05 2.63e-05 0 0 0"/>
+                <geom type="mesh" mesh="l_ankle_link" pos="0 0 0" class="visual"/>
+                <geom type="mesh" mesh="l_ankle_link" pos="0 0 0" class="collision"/>
+                <body name="l_foot" pos="-4e-06 0.000276 -0.049999">
+                  <joint name="l_ankle_pitch_joint" type="hinge" axis="0 -1 0" range="-3.14159 3.14159" class="passive"/>
+                  <inertial pos="0.03641 -0.000198 -0.039754" mass="0.833001" fullinertia="0.00152051 0.00436638 0.00529529 2.25e-06 0.00016013 -2.66e-06"/>
+                  <geom type="mesh" mesh="l_foot" pos="0 0 0" class="visual"/>
+                  <geom type="mesh" mesh="l_foot" pos="0 0 0" class="collision" friction="0.6 0.6 0.001"/>
+                </body>
+              </body>
+            </body>
+            <body name="l_knee_crank_link" pos="-0.034801 -0.0286 -0.13775">
+              <joint name="l_knee_pitch_joint" type="hinge" axis="0 -1 0" range="-3.14159 3.14159" armature="0.02" frictionloss="0" damping="0" class="act"/>
+              <inertial pos="0.019335 0.02899 0.007124" mass="0.15261" fullinertia="6.247e-05 0.00012321 0.00012195 -8.15e-06 -2.537e-05 -3e-06"/>
+              <geom type="mesh" mesh="l_knee_crank_link" pos="0 0 0" class="visual"/>
+              <geom type="mesh" mesh="l_knee_crank_link" pos="0 0 0" class="collision"/>
+              <body name="l_knee_coupler_link" pos="0.065782 0.0315 0.023944">
+                <joint name="l_knee_coupler_joint_a" type="hinge" axis="0 -1 0" range="-3.14159 3.14159" class="passive"/>
+                <inertial pos="-3e-06 0 -0.067002" mass="0.027601" fullinertia="8.761e-05 8.882e-05 2.91e-06 0 0 0"/>
+                <geom type="mesh" mesh="l_knee_coupler_link" pos="0 0 0" class="visual"/>
+                <geom type="mesh" mesh="l_knee_coupler_link" pos="0 0 0" class="collision"/>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="r_hip_yaw_link" pos="0.009587 -0.042927 -0.157994">
+        <joint name="r_hip_yaw_joint" type="hinge" axis="0 0 1" range="-3.14159 3.14159" armature="0.0042" frictionloss="0" damping="0" class="act"/>
+        <inertial pos="3.7e-05 -0.001434 -0.060089" mass="1.05799" fullinertia="0.0012034 0.00167069 0.00111414 -7.1e-07 7.2e-07 -1.735e-05"/>
+        <geom type="mesh" mesh="r_hip_yaw_link" pos="0 0 0" class="visual"/>
+        <geom type="mesh" mesh="r_hip_yaw_link" pos="0 0 0" class="collision"/>
+        <geom type="mesh" mesh="rs03_r_hip_pitch" pos="0 0 0" class="visual"/>
+        <geom type="mesh" mesh="rs03_r_hip_pitch" pos="0 0 0" class="collision"/>
+        <body name="r_hip_pitch_link" pos="1e-06 -0.02575 -0.062">
+          <joint name="r_hip_pitch_joint" type="hinge" axis="0 1 0" range="-3.14159 3.14159" armature="0.02" frictionloss="0" damping="0" class="act"/>
+          <inertial pos="-0.005441 -0.060269 -0.031597" mass="1.18162" fullinertia="0.00199244 0.0015265 0.00145077 -2.103e-05 -1.266e-05 -0.00013011"/>
+          <geom type="mesh" mesh="r_hip_pitch_link" pos="0 0 0" class="visual"/>
+          <geom type="mesh" mesh="r_hip_pitch_link" pos="0 0 0" class="collision"/>
+          <geom type="mesh" mesh="rs03_r_hip_roll" pos="0 0 0" class="visual"/>
+          <geom type="mesh" mesh="rs03_r_hip_roll" pos="0 0 0" class="collision"/>
+          <body name="r_hip_roll_link" pos="0.022501 -0.0627 -0.034">
+            <joint name="r_hip_roll_joint" type="hinge" axis="-1 0 0" range="-3.14159 3.14159" armature="0.02" frictionloss="0" damping="0" class="act"/>
+            <inertial pos="-0.034699 0.027552 -0.132644" mass="1.70788" fullinertia="0.01098902 0.00976012 0.00409465 1.171e-05 -1.643e-05 0.00026012"/>
+            <geom type="mesh" mesh="r_hip_roll_link" pos="0 0 0" class="visual"/>
+            <geom type="mesh" mesh="r_hip_roll_link" pos="0 0 0" class="collision"/>
+            <geom type="mesh" mesh="rs03_r_knee" pos="0 0 0" class="visual"/>
+            <geom type="mesh" mesh="rs03_r_knee" pos="0 0 0" class="collision"/>
+            <body name="r_knee_link" pos="-0.034799 -0.002899 -0.312746">
+              <joint name="r_knee_joint" type="hinge" axis="0 1 0" range="-3.14159 3.14159" class="passive"/>
+              <inertial pos="-0.000866 -1e-06 -0.12742" mass="1.48699" fullinertia="0.01021209 0.01164668 0.00187201 -5e-07 -0.00032231 2.312e-05"/>
+              <geom type="mesh" mesh="r_knee_link" pos="0 0 0" class="visual"/>
+              <geom type="mesh" mesh="r_knee_link" pos="0 0 0" class="collision"/>
+              <geom type="mesh" mesh="rs02_r_ankle_a" pos="0 0 0" class="visual"/>
+              <geom type="mesh" mesh="rs02_r_ankle_a" pos="0 0 0" class="collision"/>
+              <geom type="mesh" mesh="rs02_r_ankle_b" pos="0 0 0" class="visual"/>
+              <geom type="mesh" mesh="rs02_r_ankle_b" pos="0 0 0" class="collision"/>
+              <body name="r_ankle_crank_link_a" pos="-0.001936 0.023 -0.196208">
+                <joint name="r_ankle_lower_joint" type="hinge" axis="0 -1 0" range="-3.14159 3.14159" armature="0.0042" frictionloss="0" damping="0" class="act"/>
+                <inertial pos="0.02156 0.024517 0.004268" mass="0.097699" fullinertia="2.252e-05 6.047e-05 6.881e-05 -3.76e-06 -7.2e-06 -7.4e-07"/>
+                <geom type="mesh" mesh="r_ankle_crank_link_a" pos="0 0 0" class="visual"/>
+                <geom type="mesh" mesh="r_ankle_crank_link_a" pos="0 0 0" class="collision"/>
+                <body name="r_ankle_coupler_link_a" pos="0.050001 0.0263 0.000484">
+                  <joint name="r_ankle_coupler_joint_a_x" type="hinge" axis="1 0 0" range="-0.261799 0.261799" limited="true" solreflimit="0.004 1" solimplimit="0.99 0.9999 0.0001" class="passive"/>
+                  <joint name="r_ankle_coupler_joint_a_y" type="hinge" axis="0 1 0" class="passive"/>
+                  <joint name="r_ankle_coupler_joint_a_z" type="hinge" axis="0 0 1" range="-0.261799 0.261799" limited="true" solreflimit="0.004 1" solimplimit="0.99 0.9999 0.0001" class="passive"/>
+                  <inertial pos="0.001024 -5e-05 -0.073492" mass="0.0618" fullinertia="0.00010064 0.000101 5.69e-06 -1e-08 1.32e-06 -6e-08"/>
+                  <geom type="mesh" mesh="r_ankle_coupler_link_a" pos="0 0 0" class="visual"/>
+                  <geom type="mesh" mesh="r_ankle_coupler_link_a" pos="0 0 0" class="collision"/>
+                </body>
+              </body>
+              <body name="r_ankle_crank_link_b" pos="-0.001936 -0.023 -0.095208">
+                <joint name="r_ankle_upper_joint" type="hinge" axis="0 1 0" range="-3.14159 3.14159" armature="0.0042" frictionloss="0" damping="0" class="act"/>
+                <inertial pos="0.020168 -0.024511 0.008483" mass="0.0977" fullinertia="2.727e-05 6.04e-05 6.405e-05 3.52e-06 -1.571e-05 1.49e-06"/>
+                <geom type="mesh" mesh="r_ankle_crank_link_b" pos="0 0 0" class="visual"/>
+                <geom type="mesh" mesh="r_ankle_crank_link_b" pos="0 0 0" class="collision"/>
+                <body name="r_ankle_coupler_link_b" pos="0.048862 -0.025702 0.010477">
+                  <joint name="r_ankle_coupler_joint_b_x" type="hinge" axis="1 0 0" range="-0.261799 0.261799" limited="true" solreflimit="0.004 1" solimplimit="0.99 0.9999 0.0001" class="passive"/>
+                  <joint name="r_ankle_coupler_joint_b_y" type="hinge" axis="0 1 0" class="passive"/>
+                  <joint name="r_ankle_coupler_joint_b_z" type="hinge" axis="0 0 1" range="-0.261799 0.261799" limited="true" solreflimit="0.004 1" solimplimit="0.99 0.9999 0.0001" class="passive"/>
+                  <inertial pos="0.001594 -0.000249 -0.12899" mass="0.0954" fullinertia="0.00073964 0.0007393 8.39e-06 2e-08 9.04e-06 -1.41e-06"/>
+                  <geom type="mesh" mesh="r_ankle_coupler_link_b" pos="0 0 0" class="visual"/>
+                  <geom type="mesh" mesh="r_ankle_coupler_link_b" pos="0 0 0" class="collision"/>
+                </body>
+              </body>
+              <body name="r_ankle_link" pos="0.000114 -3e-06 -0.26671">
+                <joint name="r_ankle_roll_joint" type="hinge" axis="1 0 0" range="-3.14159 3.14159" class="passive"/>
+                <inertial pos="0 3e-06 -0.024999" mass="0.106" fullinertia="7.201e-05 7.201e-05 2.629e-05 0 0 0"/>
+                <geom type="mesh" mesh="r_ankle_link" pos="0 0 0" class="visual"/>
+                <geom type="mesh" mesh="r_ankle_link" pos="0 0 0" class="collision"/>
+                <body name="r_foot" pos="-4e-06 0 -0.05">
+                  <joint name="r_ankle_pitch_joint" type="hinge" axis="0 -1 0" range="-3.14159 3.14159" class="passive"/>
+                  <inertial pos="0.036409 7.6e-05 -0.039753" mass="0.833001" fullinertia="0.00152052 0.00436638 0.00529528 2.51e-06 0.00016016 -2.68e-06"/>
+                  <geom type="mesh" mesh="r_foot" pos="0 0 0" class="visual"/>
+                  <geom type="mesh" mesh="r_foot" pos="0 0 0" class="collision" friction="0.6 0.6 0.001"/>
+                </body>
+              </body>
+            </body>
+            <body name="r_knee_crank_link" pos="-0.034801 0.028601 -0.137749">
+              <joint name="r_knee_pitch_joint" type="hinge" axis="0 1 0" range="-3.14159 3.14159" armature="0.02" frictionloss="0" damping="0" class="act"/>
+              <inertial pos="0.019335 -0.02899 0.007124" mass="0.15261" fullinertia="6.247e-05 0.00012321 0.00012195 8.15e-06 -2.537e-05 3e-06"/>
+              <geom type="mesh" mesh="r_knee_crank_link" pos="0 0 0" class="visual"/>
+              <geom type="mesh" mesh="r_knee_crank_link" pos="0 0 0" class="collision"/>
+              <body name="r_knee_coupler_link" pos="0.065782 -0.0315 0.023943">
+                <joint name="r_knee_coupler_joint_a" type="hinge" axis="0 -1 0" range="-3.14159 3.14159" class="passive"/>
+                <inertial pos="-3e-06 0 -0.067002" mass="0.027601" fullinertia="8.761e-05 8.882e-05 2.91e-06 0 0 0"/>
+                <geom type="mesh" mesh="r_knee_coupler_link" pos="0 0 0" class="visual"/>
+                <geom type="mesh" mesh="r_knee_coupler_link" pos="0 0 0" class="collision"/>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="head_link" pos="0.009861 0.020159 0.285242">
+        <joint name="neck_pitch_joint" type="hinge" axis="0 -1 0" range="-3.14159 3.14159" class="act"/>
+        <inertial pos="0.00801 -0.019172 0.110399" mass="0.331999" fullinertia="0.00095006 0.0008196 0.00066181 1.21e-06 -7.248e-05 2.199e-05"/>
+        <geom type="mesh" mesh="head_link" pos="0 0 0" class="visual"/>
+        <geom type="mesh" mesh="head_link" pos="0 0 0" class="collision"/>
+      </body>
+      <body name="l_shoulder_pitch_link" pos="0.00986 0.129259 0.175747">
+        <joint name="l_shoulder_pitch_joint" type="hinge" axis="0 -1 0" range="-3.14159 3.14159" armature="0.0042" frictionloss="0" damping="0" class="act"/>
+        <inertial pos="-0.00386 0.053552 4.1e-05" mass="0.506398" fullinertia="0.00044335 0.00029463 0.00033792 3.78e-06 3.3e-07 -3e-08"/>
+        <geom type="mesh" mesh="l_shoulder_pitch_link" pos="0 0 0" class="visual"/>
+        <geom type="mesh" mesh="l_shoulder_pitch_link" pos="0 0 0" class="collision"/>
+        <geom type="mesh" mesh="rs02_l_shoulder_roll" pos="0 0 0" class="visual"/>
+        <geom type="mesh" mesh="rs02_l_shoulder_roll" pos="0 0 0" class="collision"/>
+        <body name="l_shoulder_roll_link" pos="0.021152 0.055349 -1e-06">
+          <joint name="l_shoulder_roll_joint" type="hinge" axis="-1 0 0" range="-3.14159 3.14159" armature="0.0042" frictionloss="0" damping="0" class="act"/>
+          <inertial pos="-0.028574 0.000143 -0.073673" mass="0.524269" fullinertia="0.00054009 0.0006219 0.00046105 2.7e-07 1.216e-05 -4.19e-06"/>
+          <geom type="mesh" mesh="l_shoulder_roll_link" pos="0 0 0" class="visual"/>
+          <geom type="mesh" mesh="l_shoulder_roll_link" pos="0 0 0" class="collision"/>
+          <geom type="mesh" mesh="rs02_l_shoulder_yaw" pos="0 0 0" class="visual"/>
+          <geom type="mesh" mesh="rs02_l_shoulder_yaw" pos="0 0 0" class="collision"/>
+          <body name="l_shoulder_yaw_link" pos="-0.0282 -1e-06 -0.105399">
+            <joint name="l_shoulder_yaw_joint" type="hinge" axis="0 0 1" range="-3.14159 3.14159" armature="0.0042" frictionloss="0" damping="0" class="act"/>
+            <inertial pos="4e-06 -0.002161 -0.089539" mass="0.551363" fullinertia="0.0008418 0.00096515 0.00036096 5e-08 -1.3e-07 -2.192e-05"/>
+            <geom type="mesh" mesh="l_shoulder_yaw_link" pos="0 0 0" class="visual"/>
+            <geom type="mesh" mesh="l_shoulder_yaw_link" pos="0 0 0" class="collision"/>
+            <geom type="mesh" mesh="rs02_l_elbow" pos="0 0 0" class="visual"/>
+            <geom type="mesh" mesh="rs02_l_elbow" pos="0 0 0" class="collision"/>
+            <body name="l_elbow_link" pos="0 0.020401 -0.105601">
+              <joint name="l_elbow_joint" type="hinge" axis="0 -1 0" range="-3.14159 3.14159" armature="0.0042" frictionloss="0" damping="0" class="act"/>
+              <inertial pos="0.082876 -0.015376 1e-06" mass="0.141583" fullinertia="0.00011606 0.00040298 0.00040978 5.696e-05 0 0"/>
+              <geom type="mesh" mesh="l_elbow_link" pos="0 0 0" class="visual"/>
+              <geom type="mesh" mesh="l_elbow_link" pos="0 0 0" class="collision"/>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="r_shoulder_pitch_link" pos="0.009863 -0.128741 0.175747">
+        <joint name="r_shoulder_pitch_joint" type="hinge" axis="0 1 0" range="-3.14159 3.14159" armature="0.0042" frictionloss="0" damping="0" class="act"/>
+        <inertial pos="-0.003863 -0.053552 -1.4e-05" mass="0.506398" fullinertia="0.00044335 0.00029463 0.00033792 -3.78e-06 -2.8e-07 -1e-08"/>
+        <geom type="mesh" mesh="r_shoulder_pitch_link" pos="0 0 0" class="visual"/>
+        <geom type="mesh" mesh="r_shoulder_pitch_link" pos="0 0 0" class="collision"/>
+        <geom type="mesh" mesh="rs02_r_shoulder_roll" pos="0 0 0" class="visual"/>
+        <geom type="mesh" mesh="rs02_r_shoulder_roll" pos="0 0 0" class="collision"/>
+        <body name="r_shoulder_roll_link" pos="0.021149 -0.055349 -1e-06">
+          <joint name="r_shoulder_roll_joint" type="hinge" axis="-1 0 0" range="-3.14159 3.14159" armature="0.0042" frictionloss="0" damping="0" class="act"/>
+          <inertial pos="-0.028574 0.000143 -0.073673" mass="0.524269" fullinertia="0.00054009 0.0006219 0.00046105 2.7e-07 1.216e-05 -4.19e-06"/>
+          <geom type="mesh" mesh="r_shoulder_roll_link" pos="0 0 0" class="visual"/>
+          <geom type="mesh" mesh="r_shoulder_roll_link" pos="0 0 0" class="collision"/>
+          <geom type="mesh" mesh="rs02_r_shoulder_yaw" pos="0 0 0" class="visual"/>
+          <geom type="mesh" mesh="rs02_r_shoulder_yaw" pos="0 0 0" class="collision"/>
+          <body name="r_shoulder_yaw_link" pos="-0.0282 -1e-06 -0.105399">
+            <joint name="r_shoulder_yaw_joint" type="hinge" axis="0 0 1" range="-3.14159 3.14159" armature="0.0042" frictionloss="0" damping="0" class="act"/>
+            <inertial pos="-4e-06 0.002164 -0.08954" mass="0.551352" fullinertia="0.00084176 0.0009651 0.00036095 5e-08 1.3e-07 2.192e-05"/>
+            <geom type="mesh" mesh="r_shoulder_yaw_link" pos="0 0 0" class="visual"/>
+            <geom type="mesh" mesh="r_shoulder_yaw_link" pos="0 0 0" class="collision"/>
+            <geom type="mesh" mesh="rs02_r_elbow" pos="0 0 0" class="visual"/>
+            <geom type="mesh" mesh="rs02_r_elbow" pos="0 0 0" class="collision"/>
+            <body name="r_elbow_link" pos="0 -0.020399 -0.105601">
+              <joint name="r_elbow_joint" type="hinge" axis="0 1 0" range="-3.14159 3.14159" armature="0.0042" frictionloss="0" damping="0" class="act"/>
+              <inertial pos="0.082876 0.015376 1e-06" mass="0.141568" fullinertia="0.00011605 0.00040293 0.00040974 -5.696e-05 0 0"/>
+              <geom type="mesh" mesh="r_elbow_link" pos="0 0 0" class="visual"/>
+              <geom type="mesh" mesh="r_elbow_link" pos="0 0 0" class="collision"/>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <equality>
+    <connect name="l_knee_coupler_joint_b_0" body1="l_knee_coupler_link" body2="l_knee_link" anchor="0 -0.01 -0.134" solref="0.004 1" solimp="0.99 0.9999 0.0001"/>
+    <connect name="l_knee_coupler_joint_b_1" body1="l_knee_coupler_link" body2="l_knee_link" anchor="0 0.01 -0.134" solref="0.004 1" solimp="0.99 0.9999 0.0001"/>
+    <connect name="r_knee_coupler_joint_b_0" body1="r_knee_coupler_link" body2="r_knee_link" anchor="0 0.01 -0.134" solref="0.004 1" solimp="0.99 0.9999 0.0001"/>
+    <connect name="r_knee_coupler_joint_b_1" body1="r_knee_coupler_link" body2="r_knee_link" anchor="0 -0.01 -0.134" solref="0.004 1" solimp="0.99 0.9999 0.0001"/>
+    <connect name="l_ankle_ball_c" body1="l_ankle_coupler_link_a" body2="l_foot" anchor="0.002064 -0.000394 -0.146985" solref="0.004 1" solimp="0.99 0.9999 0.0001"/>
+    <connect name="l_ankle_ball_d" body1="l_ankle_coupler_link_b" body2="l_foot" anchor="0.003133 4e-06 -0.257981" solref="0.004 1" solimp="0.99 0.9999 0.0001"/>
+    <connect name="r_ankle_ball_c" body1="r_ankle_coupler_link_a" body2="r_foot" anchor="0.002049 -0.0001 -0.146986" solref="0.004 1" solimp="0.99 0.9999 0.0001"/>
+    <connect name="r_ankle_ball_d" body1="r_ankle_coupler_link_b" body2="r_foot" anchor="0.003188 -0.000498 -0.257979" solref="0.004 1" solimp="0.99 0.9999 0.0001"/>
+  </equality>
+
+  <contact>
+    <exclude body1="base_link" body2="head_link"/>
+    <exclude body1="base_link" body2="l_hip_pitch_link"/>
+    <exclude body1="base_link" body2="l_hip_yaw_link"/>
+    <exclude body1="base_link" body2="l_shoulder_pitch_link"/>
+    <exclude body1="base_link" body2="l_shoulder_roll_link"/>
+    <exclude body1="base_link" body2="r_hip_pitch_link"/>
+    <exclude body1="base_link" body2="r_hip_yaw_link"/>
+    <exclude body1="base_link" body2="r_shoulder_pitch_link"/>
+    <exclude body1="base_link" body2="r_shoulder_roll_link"/>
+    <exclude body1="head_link" body2="l_hip_yaw_link"/>
+    <exclude body1="head_link" body2="l_shoulder_pitch_link"/>
+    <exclude body1="head_link" body2="r_hip_yaw_link"/>
+    <exclude body1="head_link" body2="r_shoulder_pitch_link"/>
+    <exclude body1="l_ankle_coupler_link_a" body2="l_ankle_coupler_link_b"/>
+    <exclude body1="l_ankle_coupler_link_a" body2="l_ankle_crank_link_b"/>
+    <exclude body1="l_ankle_coupler_link_a" body2="l_ankle_link"/>
+    <exclude body1="l_ankle_coupler_link_a" body2="l_foot"/>
+    <exclude body1="l_ankle_coupler_link_a" body2="l_knee_link"/>
+    <exclude body1="l_ankle_coupler_link_b" body2="l_ankle_crank_link_a"/>
+    <exclude body1="l_ankle_coupler_link_b" body2="l_ankle_link"/>
+    <exclude body1="l_ankle_coupler_link_b" body2="l_foot"/>
+    <exclude body1="l_ankle_coupler_link_b" body2="l_knee_link"/>
+    <exclude body1="l_ankle_crank_link_a" body2="l_ankle_crank_link_b"/>
+    <exclude body1="l_ankle_crank_link_a" body2="l_ankle_link"/>
+    <exclude body1="l_ankle_crank_link_a" body2="l_foot"/>
+    <exclude body1="l_ankle_crank_link_a" body2="l_hip_roll_link"/>
+    <exclude body1="l_ankle_crank_link_a" body2="l_knee_coupler_link"/>
+    <exclude body1="l_ankle_crank_link_a" body2="l_knee_link"/>
+    <exclude body1="l_ankle_crank_link_b" body2="l_ankle_link"/>
+    <exclude body1="l_ankle_crank_link_b" body2="l_foot"/>
+    <exclude body1="l_ankle_crank_link_b" body2="l_hip_roll_link"/>
+    <exclude body1="l_ankle_crank_link_b" body2="l_knee_coupler_link"/>
+    <exclude body1="l_ankle_crank_link_b" body2="l_knee_link"/>
+    <exclude body1="l_ankle_link" body2="l_foot"/>
+    <exclude body1="l_ankle_link" body2="l_hip_roll_link"/>
+    <exclude body1="l_ankle_link" body2="l_knee_coupler_link"/>
+    <exclude body1="l_ankle_link" body2="l_knee_link"/>
+    <exclude body1="l_elbow_link" body2="l_shoulder_roll_link"/>
+    <exclude body1="l_elbow_link" body2="l_shoulder_yaw_link"/>
+    <exclude body1="l_foot" body2="l_knee_link"/>
+    <exclude body1="l_hip_pitch_link" body2="l_hip_roll_link"/>
+    <exclude body1="l_hip_pitch_link" body2="l_hip_yaw_link"/>
+    <exclude body1="l_hip_pitch_link" body2="l_knee_crank_link"/>
+    <exclude body1="l_hip_pitch_link" body2="l_knee_link"/>
+    <exclude body1="l_hip_roll_link" body2="l_hip_yaw_link"/>
+    <exclude body1="l_hip_roll_link" body2="l_knee_coupler_link"/>
+    <exclude body1="l_hip_roll_link" body2="l_knee_crank_link"/>
+    <exclude body1="l_hip_roll_link" body2="l_knee_link"/>
+    <exclude body1="l_hip_yaw_link" body2="l_shoulder_pitch_link"/>
+    <exclude body1="l_hip_yaw_link" body2="r_hip_yaw_link"/>
+    <exclude body1="l_hip_yaw_link" body2="r_shoulder_pitch_link"/>
+    <exclude body1="l_knee_coupler_link" body2="l_knee_crank_link"/>
+    <exclude body1="l_knee_coupler_link" body2="l_knee_link"/>
+    <exclude body1="l_knee_crank_link" body2="l_knee_link"/>
+    <exclude body1="l_shoulder_pitch_link" body2="l_shoulder_roll_link"/>
+    <exclude body1="l_shoulder_pitch_link" body2="l_shoulder_yaw_link"/>
+    <exclude body1="l_shoulder_pitch_link" body2="r_hip_yaw_link"/>
+    <exclude body1="l_shoulder_pitch_link" body2="r_shoulder_pitch_link"/>
+    <exclude body1="l_shoulder_roll_link" body2="l_shoulder_yaw_link"/>
+    <exclude body1="r_ankle_coupler_link_a" body2="r_ankle_coupler_link_b"/>
+    <exclude body1="r_ankle_coupler_link_a" body2="r_ankle_crank_link_a"/>
+    <exclude body1="r_ankle_coupler_link_a" body2="r_ankle_link"/>
+    <exclude body1="r_ankle_coupler_link_a" body2="r_foot"/>
+    <exclude body1="r_ankle_coupler_link_a" body2="r_knee_link"/>
+    <exclude body1="r_ankle_coupler_link_b" body2="r_ankle_crank_link_b"/>
+    <exclude body1="r_ankle_coupler_link_b" body2="r_ankle_link"/>
+    <exclude body1="r_ankle_coupler_link_b" body2="r_foot"/>
+    <exclude body1="r_ankle_coupler_link_b" body2="r_knee_link"/>
+    <exclude body1="r_ankle_crank_link_a" body2="r_ankle_crank_link_b"/>
+    <exclude body1="r_ankle_crank_link_a" body2="r_ankle_link"/>
+    <exclude body1="r_ankle_crank_link_a" body2="r_foot"/>
+    <exclude body1="r_ankle_crank_link_a" body2="r_hip_roll_link"/>
+    <exclude body1="r_ankle_crank_link_a" body2="r_knee_coupler_link"/>
+    <exclude body1="r_ankle_crank_link_a" body2="r_knee_link"/>
+    <exclude body1="r_ankle_crank_link_b" body2="r_ankle_link"/>
+    <exclude body1="r_ankle_crank_link_b" body2="r_foot"/>
+    <exclude body1="r_ankle_crank_link_b" body2="r_hip_roll_link"/>
+    <exclude body1="r_ankle_crank_link_b" body2="r_knee_coupler_link"/>
+    <exclude body1="r_ankle_crank_link_b" body2="r_knee_link"/>
+    <exclude body1="r_ankle_link" body2="r_foot"/>
+    <exclude body1="r_ankle_link" body2="r_hip_roll_link"/>
+    <exclude body1="r_ankle_link" body2="r_knee_coupler_link"/>
+    <exclude body1="r_ankle_link" body2="r_knee_link"/>
+    <exclude body1="r_elbow_link" body2="r_shoulder_roll_link"/>
+    <exclude body1="r_elbow_link" body2="r_shoulder_yaw_link"/>
+    <exclude body1="r_foot" body2="r_knee_link"/>
+    <exclude body1="r_hip_pitch_link" body2="r_hip_roll_link"/>
+    <exclude body1="r_hip_pitch_link" body2="r_hip_yaw_link"/>
+    <exclude body1="r_hip_pitch_link" body2="r_knee_crank_link"/>
+    <exclude body1="r_hip_pitch_link" body2="r_knee_link"/>
+    <exclude body1="r_hip_roll_link" body2="r_hip_yaw_link"/>
+    <exclude body1="r_hip_roll_link" body2="r_knee_coupler_link"/>
+    <exclude body1="r_hip_roll_link" body2="r_knee_crank_link"/>
+    <exclude body1="r_hip_roll_link" body2="r_knee_link"/>
+    <exclude body1="r_hip_yaw_link" body2="r_shoulder_pitch_link"/>
+    <exclude body1="r_knee_coupler_link" body2="r_knee_crank_link"/>
+    <exclude body1="r_knee_coupler_link" body2="r_knee_link"/>
+    <exclude body1="r_knee_crank_link" body2="r_knee_link"/>
+    <exclude body1="r_shoulder_pitch_link" body2="r_shoulder_roll_link"/>
+    <exclude body1="r_shoulder_pitch_link" body2="r_shoulder_yaw_link"/>
+    <exclude body1="r_shoulder_roll_link" body2="r_shoulder_yaw_link"/>
+  </contact>
+
+  <actuator>
+    <position name="l_hip_yaw" joint="l_hip_yaw_joint" ctrlrange="-3.14159 3.14159" forcerange="-17 17" kp="100" kv="2" class="motor"/>
+    <position name="l_hip_pitch" joint="l_hip_pitch_joint" ctrlrange="-3.14159 3.14159" forcerange="-60 60" kp="100" kv="2" class="motor"/>
+    <position name="l_hip_roll" joint="l_hip_roll_joint" ctrlrange="-3.14159 3.14159" forcerange="-60 60" kp="100" kv="2" class="motor"/>
+    <position name="l_knee_pitch" joint="l_knee_pitch_joint" ctrlrange="-3.14159 3.14159" forcerange="-60 60" kp="150" kv="4" class="motor"/>
+    <position name="l_ankle_upper" joint="l_ankle_upper_joint" ctrlrange="-3.14159 3.14159" forcerange="-17 17" kp="40" kv="2" class="motor"/>
+    <position name="l_ankle_lower" joint="l_ankle_lower_joint" ctrlrange="-3.14159 3.14159" forcerange="-17 17" kp="40" kv="2" class="motor"/>
+    <position name="r_hip_yaw" joint="r_hip_yaw_joint" ctrlrange="-3.14159 3.14159" forcerange="-17 17" kp="100" kv="2" class="motor"/>
+    <position name="r_hip_pitch" joint="r_hip_pitch_joint" ctrlrange="-3.14159 3.14159" forcerange="-60 60" kp="100" kv="2" class="motor"/>
+    <position name="r_hip_roll" joint="r_hip_roll_joint" ctrlrange="-3.14159 3.14159" forcerange="-60 60" kp="100" kv="2" class="motor"/>
+    <position name="r_knee_pitch" joint="r_knee_pitch_joint" ctrlrange="-3.14159 3.14159" forcerange="-60 60" kp="150" kv="4" class="motor"/>
+    <position name="r_ankle_lower" joint="r_ankle_lower_joint" ctrlrange="-3.14159 3.14159" forcerange="-17 17" kp="40" kv="2" class="motor"/>
+    <position name="r_ankle_upper" joint="r_ankle_upper_joint" ctrlrange="-3.14159 3.14159" forcerange="-17 17" kp="40" kv="2" class="motor"/>
+    <position name="neck_pitch" joint="neck_pitch_joint" ctrlrange="-3.14159 3.14159" forcerange="-5.5 5.5" kp="10" kv="0.5" class="motor"/>
+    <position name="l_shoulder_pitch" joint="l_shoulder_pitch_joint" ctrlrange="-3.14159 3.14159" forcerange="-17 17" kp="40" kv="2" class="motor"/>
+    <position name="l_shoulder_roll" joint="l_shoulder_roll_joint" ctrlrange="-3.14159 3.14159" forcerange="-17 17" kp="40" kv="2" class="motor"/>
+    <position name="l_shoulder_yaw" joint="l_shoulder_yaw_joint" ctrlrange="-3.14159 3.14159" forcerange="-17 17" kp="40" kv="2" class="motor"/>
+    <position name="l_elbow" joint="l_elbow_joint" ctrlrange="-3.14159 3.14159" forcerange="-17 17" kp="40" kv="2" class="motor"/>
+    <position name="r_shoulder_pitch" joint="r_shoulder_pitch_joint" ctrlrange="-3.14159 3.14159" forcerange="-17 17" kp="40" kv="2" class="motor"/>
+    <position name="r_shoulder_roll" joint="r_shoulder_roll_joint" ctrlrange="-3.14159 3.14159" forcerange="-17 17" kp="40" kv="2" class="motor"/>
+    <position name="r_shoulder_yaw" joint="r_shoulder_yaw_joint" ctrlrange="-3.14159 3.14159" forcerange="-17 17" kp="40" kv="2" class="motor"/>
+    <position name="r_elbow" joint="r_elbow_joint" ctrlrange="-3.14159 3.14159" forcerange="-17 17" kp="40" kv="2" class="motor"/>
+  </actuator>
+
+  <sensor>
+    <actuatorfrc name="l_hip_yaw_trq" actuator="l_hip_yaw"/>
+    <actuatorfrc name="l_hip_pitch_trq" actuator="l_hip_pitch"/>
+    <actuatorfrc name="l_hip_roll_trq" actuator="l_hip_roll"/>
+    <actuatorfrc name="l_knee_pitch_trq" actuator="l_knee_pitch"/>
+    <actuatorfrc name="l_ankle_upper_trq" actuator="l_ankle_upper"/>
+    <actuatorfrc name="l_ankle_lower_trq" actuator="l_ankle_lower"/>
+    <actuatorfrc name="r_hip_yaw_trq" actuator="r_hip_yaw"/>
+    <actuatorfrc name="r_hip_pitch_trq" actuator="r_hip_pitch"/>
+    <actuatorfrc name="r_hip_roll_trq" actuator="r_hip_roll"/>
+    <actuatorfrc name="r_knee_pitch_trq" actuator="r_knee_pitch"/>
+    <actuatorfrc name="r_ankle_lower_trq" actuator="r_ankle_lower"/>
+    <actuatorfrc name="r_ankle_upper_trq" actuator="r_ankle_upper"/>
+    <actuatorfrc name="neck_pitch_trq" actuator="neck_pitch"/>
+    <actuatorfrc name="l_shoulder_pitch_trq" actuator="l_shoulder_pitch"/>
+    <actuatorfrc name="l_shoulder_roll_trq" actuator="l_shoulder_roll"/>
+    <actuatorfrc name="l_shoulder_yaw_trq" actuator="l_shoulder_yaw"/>
+    <actuatorfrc name="l_elbow_trq" actuator="l_elbow"/>
+    <actuatorfrc name="r_shoulder_pitch_trq" actuator="r_shoulder_pitch"/>
+    <actuatorfrc name="r_shoulder_roll_trq" actuator="r_shoulder_roll"/>
+    <actuatorfrc name="r_shoulder_yaw_trq" actuator="r_shoulder_yaw"/>
+    <actuatorfrc name="r_elbow_trq" actuator="r_elbow"/>
+  </sensor>
+</mujoco>

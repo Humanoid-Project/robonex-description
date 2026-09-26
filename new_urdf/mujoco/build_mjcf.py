@@ -22,10 +22,14 @@ ROD_END_AXES = (
 )
 
 OUT_DIR = os.path.join(ROOT, "mujoco", "robot", VARIANT)
-FREE_OUT = os.path.join(OUT_DIR, "robonex.xml")
-FREE_SCENE_OUT = os.path.join(OUT_DIR, "scene.xml")
-FIXED_OUT = os.path.join(OUT_DIR, "robonex_fixed.xml")
-FIXED_SCENE_OUT = os.path.join(OUT_DIR, "scene_fixed.xml")
+MOVABLE_ARMS = "--movable-arms" in sys.argv
+_SFX = "_arms" if MOVABLE_ARMS else ""
+FREE_OUT = os.path.join(OUT_DIR, "robonex%s.xml" % _SFX)
+FREE_SCENE_OUT = os.path.join(OUT_DIR, "scene%s.xml" % _SFX)
+FIXED_OUT = os.path.join(OUT_DIR, "robonex_fixed%s.xml" % _SFX)
+FIXED_SCENE_OUT = os.path.join(OUT_DIR, "scene_fixed%s.xml" % _SFX)
+VIEW_GAINS = {"neck_pitch_joint": (10.0, 0.5)}
+HELD = () if MOVABLE_ARMS else HELD_JOINTS
 
 NEIGHBOUR_DEPTH = 2
 PIN_HALF = 0.01
@@ -76,7 +80,7 @@ def emit_body(links, joints, kids, name, ball_set, actuated, depth, out,
                 out.append(
                     '%s  <joint name="%s" type="hinge" axis="%s"%s class="passive"/>'
                     % (pad, jname, fmt(axis_vec), lim))
-        elif parent_joint.name in HELD_JOINTS:
+        elif parent_joint.name in HELD:
             pass
         elif parent_joint.jtype in ("revolute", "continuous"):
             is_act = parent_joint.name in actuated
@@ -228,7 +232,7 @@ def append_home_keyframe(out_path, scene_out):
     for actuator_id in range(model.nu):
         joint_id = int(model.actuator_trnid[actuator_id, 0])
         joint_name = mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_JOINT, joint_id)
-        data.ctrl[actuator_id] = DEFAULT_JOINT_POS[joint_name]
+        data.ctrl[actuator_id] = DEFAULT_JOINT_POS.get(joint_name, 0.0)
     mujoco.mj_forward(model, data)
     residual = max(
         (abs(float(data.efc_pos[row])) for row in range(data.nefc)
@@ -276,6 +280,8 @@ def main():
     kids = children_of(joints)
     ball_set = set(loops.get("ball_upgrades", []))
     actuated = list(loops.get("actuated_joints", []))
+    if MOVABLE_ARMS:
+        actuated += [n for n in HELD_JOINTS if n in joints]
     ball_limit_deg = loops.get("ball_limit_deg")
     ball_limit = math.radians(ball_limit_deg) if ball_limit_deg else None
 
@@ -352,7 +358,7 @@ def main():
     out.append("  <actuator>")
     for name in actuated:
         j = joints[name]
-        kp, kv = CONTROL_GAINS_BY_JOINT[name]
+        kp, kv = CONTROL_GAINS_BY_JOINT.get(name) or VIEW_GAINS.get(name, (40.0, 2.0))
         out.append('    <position name="%s" joint="%s" ctrlrange="%s"'
                    ' forcerange="%s" kp="%g" kv="%g" class="motor"/>'
                    % (name.replace("_joint", ""), name, fmt((j.lower, j.upper)),
@@ -378,10 +384,10 @@ def main():
     print("wrote %s" % scene_out)
     print("  variant     : %s" % VARIANT)
     print("  bodies      : %d" % len(links))
-    print("  held rigid  : %s" % (", ".join(sorted(n for n in joints if n in HELD_JOINTS)) or "none"))
+    print("  held rigid  : %s" % (", ".join(sorted(n for n in joints if n in HELD)) or "none"))
     print("  hinges      : %d" % (sum(
         1 for j in joints.values()
-        if j.jtype in ("revolute", "continuous") and j.name not in ball_set and j.name not in HELD_JOINTS)
+        if j.jtype in ("revolute", "continuous") and j.name not in ball_set and j.name not in HELD)
         + len(ROD_END_AXES) * len(ball_set)))
     print("  rod ends    : %d (%d hinges each)" % (len(ball_set), len(ROD_END_AXES)))
     print("  equalities  : %d" % (
