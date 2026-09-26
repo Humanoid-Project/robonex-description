@@ -69,17 +69,10 @@ python3 ver2/isaac/build_isaac_urdf.py --variant edu --collision box
 cd ~/humanoid_project/robonex-description
 conda activate isaacsim
 
-# Free-floating
 ~/IsaacLab/isaaclab.sh -p ~/IsaacLab/scripts/tools/convert_urdf.py \
   $PWD/ver2/isaac/edu/closed_loop_mesh/robonex_edu_closed_loop_mesh.urdf \
   $PWD/ver2/isaac/edu/closed_loop_mesh/robonex_edu_closed_loop_mesh.usd \
   --joint-stiffness 40.0 --joint-damping 2.0 --headless
-
-# Fixed-base
-~/IsaacLab/isaaclab.sh -p ~/IsaacLab/scripts/tools/convert_urdf.py \
-  $PWD/ver2/isaac/edu/closed_loop_mesh/robonex_edu_closed_loop_mesh.urdf \
-  $PWD/ver2/isaac/edu/closed_loop_mesh/robonex_edu_closed_loop_mesh_fixed.usd \
-  --joint-stiffness 40.0 --joint-damping 2.0 --fix-base --headless
 ```
 
 <br>
@@ -94,7 +87,4 @@ conda activate isaacsim
 # Example
 ~/IsaacLab/isaaclab.sh -p ver2/isaac/scripts/apply_physical_loops.py \
   ver2/isaac/edu/closed_loop_mesh/robonex_edu_closed_loop_mesh.usd --headless
-
-~/IsaacLab/isaaclab.sh -p ver2/isaac/scripts/apply_physical_loops.py \
-  ver2/isaac/edu/closed_loop_mesh/robonex_edu_closed_loop_mesh_fixed.usd --headless
 ```

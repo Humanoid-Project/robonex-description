@@ -3,7 +3,6 @@
 
     conda activate isaacsim
     ~/IsaacLab/isaaclab.sh -p isaac/load_robonex.py
-    ~/IsaacLab/isaaclab.sh -p isaac/load_robonex.py --fixed-base
     ~/IsaacLab/isaaclab.sh -p isaac/load_robonex.py --headless
 
 Uses the generated USD under isaac/closed_loop_mesh/ or isaac/closed_loop_box/
@@ -16,14 +15,11 @@ import os
 from isaaclab.app import AppLauncher
 
 parser = argparse.ArgumentParser(description="Load robonex into an empty stage.")
-parser.add_argument("--fixed-base", action="store_true",
-                    help="load the fixed-base variant (base welded in the air) "
-                    "instead of the free-floating variant")
 parser.add_argument("--collision", choices=("mesh", "box"), default="mesh",
                     help="collision geometry variant to load")
 parser.add_argument("--spawn-height", type=float, default=None,
-                    help="spawn height in meters (default 1.085 free, 1.60 fixed, "
-                    "matching mujoco/build_mjcf.py's SPAWN_HEIGHT/FIXED_BASE_HEIGHT). "
+                    help="spawn height in meters (default 1.085, "
+                    "matching mujoco/build_mjcf.py's SPAWN_HEIGHT). "
                     "Named --spawn-height, not --height: AppLauncher reserves 'height' "
                     "for the viewport window size.")
 AppLauncher.add_app_launcher_args(parser)
@@ -40,13 +36,11 @@ from pxr import PhysxSchema, UsdGeom, UsdLux, UsdPhysics
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 
-def usd_for(collision, fixed_base):
+def usd_for(collision):
     name = "closed_loop_%s" % collision
-    suffix = "_fixed" if fixed_base else ""
-    return os.path.join(HERE, name, "robonex_%s%s.usd" % (name, suffix))
+    return os.path.join(HERE, name, "robonex_%s.usd" % name)
 
 SPAWN_HEIGHT = 1.085
-FIXED_BASE_HEIGHT = 1.60
 
 FLOOR_FRICTION = 0.6
 LOOP_PHYSICS_HZ = 250
@@ -55,15 +49,14 @@ LOOP_VELOCITY_ITERATIONS = 4
 
 
 def main():
-    usd_path = usd_for(args.collision, args.fixed_base)
+    usd_path = usd_for(args.collision)
     if not os.path.isfile(usd_path):
         raise FileNotFoundError(
             "%s not found. Build it first - see isaac/README.md for the "
-            "convert_urdf.py command (%s)."
-            % (usd_path, "add --fix-base for the fixed-base asset" if args.fixed_base else ""))
+            "convert_urdf.py command."
+            % usd_path)
 
-    height = args.spawn_height if args.spawn_height is not None else (
-        FIXED_BASE_HEIGHT if args.fixed_base else SPAWN_HEIGHT)
+    height = args.spawn_height if args.spawn_height is not None else SPAWN_HEIGHT
 
     stage = omni.usd.get_context().get_stage()
 
@@ -103,19 +96,14 @@ def main():
     articulation.CreateSolverPositionIterationCountAttr(LOOP_POSITION_ITERATIONS)
     articulation.CreateSolverVelocityIterationCountAttr(LOOP_VELOCITY_ITERATIONS)
 
-    print("[load_robonex] loaded %s at z=%.3f m (closed loop, %s collision, %s base)"
-          % (os.path.basename(usd_path), height, args.collision,
-             "fixed" if args.fixed_base else "free"),
+    print("[load_robonex] loaded %s at z=%.3f m (closed loop, %s collision)"
+          % (os.path.basename(usd_path), height, args.collision),
           flush=True)
     print("[load_robonex] closed-loop physics: TGS, %d Hz, %d/%d solver iterations"
           % (LOOP_PHYSICS_HZ, LOOP_POSITION_ITERATIONS,
              LOOP_VELOCITY_ITERATIONS), flush=True)
-    if args.fixed_base:
-        print("[load_robonex] press Play to start physics; the base remains welded",
-              flush=True)
-    else:
-        print("[load_robonex] press Play to drop it - with no controller yet it will fall, "
-              "same as the MuJoCo/Gazebo builds with ctrl=0", flush=True)
+    print("[load_robonex] press Play to drop it - with no controller yet it will fall, "
+          "same as the MuJoCo/Gazebo builds with ctrl=0", flush=True)
 
     while simulation_app.is_running():
         simulation_app.update()

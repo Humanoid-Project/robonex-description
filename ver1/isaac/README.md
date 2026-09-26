@@ -65,17 +65,10 @@ python3 ver1/isaac/build_isaac_urdf.py --collision box
 cd ~/humanoid_project/robonex-description
 conda activate isaacsim
 
-# Free-floating
 ~/IsaacLab/isaaclab.sh -p ~/IsaacLab/scripts/tools/convert_urdf.py \
   $PWD/ver1/isaac/closed_loop_mesh/robonex_closed_loop_mesh.urdf \
   $PWD/ver1/isaac/closed_loop_mesh/robonex_closed_loop_mesh.usd \
   --joint-stiffness 40.0 --joint-damping 2.0 --headless
-
-# Fixed-base
-~/IsaacLab/isaaclab.sh -p ~/IsaacLab/scripts/tools/convert_urdf.py \
-  $PWD/ver1/isaac/closed_loop_mesh/robonex_closed_loop_mesh.urdf \
-  $PWD/ver1/isaac/closed_loop_mesh/robonex_closed_loop_mesh_fixed.usd \
-  --joint-stiffness 40.0 --joint-damping 2.0 --fix-base --headless
 ```
 
 <br>
@@ -90,9 +83,6 @@ conda activate isaacsim
 # Example
 ~/IsaacLab/isaaclab.sh -p ver1/isaac/scripts/apply_physical_loops.py \
   ver1/isaac/closed_loop_mesh/robonex_closed_loop_mesh.usd --headless
-
-~/IsaacLab/isaaclab.sh -p ver1/isaac/scripts/apply_physical_loops.py \
-  ver1/isaac/closed_loop_mesh/robonex_closed_loop_mesh_fixed.usd --headless
 ```
 
 <br>
@@ -104,8 +94,7 @@ conda activate isaacsim
 | Command | Option | Default | Description |
 | --- | --- | --- | --- |
 | - | `--collision` | `mesh` | Variant collision (`mesh`, `box`) |
-| - | `--fixed-base` | Off | Load the fixed-base USD (base welded in the air) |
-| - | `--spawn-height` | `1.085` free, `1.60` fixed | Spawn height (m) |
+| - | `--spawn-height` | `1.085` | Spawn height (m) |
 | - | `--headless` | Off | Run without the viewport |
 
 ```bash
@@ -115,7 +104,6 @@ conda activate isaacsim
 
 ~/IsaacLab/isaaclab.sh -p ver1/isaac/load_robonex.py --collision mesh
 ~/IsaacLab/isaaclab.sh -p ver1/isaac/load_robonex.py --collision box
-~/IsaacLab/isaaclab.sh -p ver1/isaac/load_robonex.py --collision mesh --fixed-base
 ```
 
 Press **Play** in the viewport toolbar to start physics.
