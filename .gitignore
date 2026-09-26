@@ -6,9 +6,17 @@
 .venv*/
 __pycache__/
 
-# Ver.2 staging: user-provided source files and regenerable Isaac USD
-new_urdf/*.f3z
-new_urdf/*.docx
-new_urdf/isaac/*/*/*.usd
-new_urdf/isaac/*/*/configuration/
-new_urdf/verify/logs/
+# Ver.2: user-provided source files and regenerable Isaac USD
+ver2/*.f3z
+ver2/*.docx
+ver2/isaac/*/*/*.usd
+ver2/isaac/*/*/configuration/
+
+# Local only: Ver.2 generator sources (delete after the edu joint limits are decided) and agent info sheets
+ver2/asis/
+ver2/_extract/
+ver2/build/
+ver2/verify/
+ver1/INFO.md
+ver2/INFO.md
+ver1/ver1_constants.json

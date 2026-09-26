@@ -18,9 +18,5 @@ pip install -r requirements.txt
 ## Models
 | Folder | Description | README |
 | --- | --- | :---: |
-| `meshes` | Link and actuator STL meshes | - |
-| `urdf` | Source URDF kinematic and inertial model | - |
-| `ros2` | Xacro, RViz, Gazebo launch, and controller configuration | [📖](ros2/) |
-| `gazebo` | SDF generator and Gazebo Fortress scenes | [📖](gazebo/) |
-| `mujoco` | Closed-loop MJCF models and fixed/free-base scenes | [📖](mujoco/) |
-| `isaac` | Closed-loop URDF/USD models for Isaac Sim | [📖](isaac/) |
+| `ver1` | Ver.1 lower body: meshes, URDF, closed-loop MJCF and Isaac USD | [📖](ver1/) |
+| `ver2` | Ver.2 `edu` (legs), `pro` (legs + arms), `max` (legs + arms + head) | [📖](ver2/) |
