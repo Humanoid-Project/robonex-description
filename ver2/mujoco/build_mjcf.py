@@ -22,16 +22,12 @@ ROD_END_AXES = (
 )
 
 OUT_DIR = os.path.join(ROOT, "mujoco", "robot", VARIANT)
-MOVABLE_ARMS = "--movable-arms" in sys.argv
-TRAINING_LIMITS = "--training-limits" in sys.argv
-_SFX = ("_arms" if MOVABLE_ARMS else "") + ("_limits" if TRAINING_LIMITS else "")
-FREE_OUT = os.path.join(OUT_DIR, "robonex%s.xml" % _SFX)
-FREE_SCENE_OUT = os.path.join(OUT_DIR, "scene%s.xml" % _SFX)
-FIXED_OUT = os.path.join(OUT_DIR, "robonex_fixed%s.xml" % _SFX)
-FIXED_SCENE_OUT = os.path.join(OUT_DIR, "scene_fixed%s.xml" % _SFX)
+FREE_OUT = os.path.join(OUT_DIR, "robonex.xml")
+FREE_SCENE_OUT = os.path.join(OUT_DIR, "scene.xml")
+FIXED_OUT = os.path.join(OUT_DIR, "robonex_fixed.xml")
+FIXED_SCENE_OUT = os.path.join(OUT_DIR, "scene_fixed.xml")
 PROVISIONAL_LIMITS = CONSTANTS["provisional_limits"]
-VIEW_GAINS = {"neck_pitch_joint": (10.0, 0.5)}
-HELD = () if MOVABLE_ARMS else HELD_JOINTS
+HELD = HELD_JOINTS
 
 NEIGHBOUR_DEPTH = 2
 PIN_HALF = 0.01
@@ -278,15 +274,12 @@ def main():
         scene_out = FREE_SCENE_OUT
 
     links, joints, base = load_urdf()
-    if TRAINING_LIMITS:
-        for name, (lo, hi) in PROVISIONAL_LIMITS.items():
-            joints[name].lower, joints[name].upper = lo, hi
+    for name, (lo, hi) in PROVISIONAL_LIMITS.items():
+        joints[name].lower, joints[name].upper = lo, hi
     loops = load_loops()
     kids = children_of(joints)
     ball_set = set(loops.get("ball_upgrades", []))
     actuated = list(loops.get("actuated_joints", []))
-    if MOVABLE_ARMS:
-        actuated += [n for n in HELD_JOINTS if n in joints]
     ball_limit_deg = loops.get("ball_limit_deg")
     ball_limit = math.radians(ball_limit_deg) if ball_limit_deg else None
 
@@ -363,7 +356,7 @@ def main():
     out.append("  <actuator>")
     for name in actuated:
         j = joints[name]
-        kp, kv = CONTROL_GAINS_BY_JOINT.get(name) or VIEW_GAINS.get(name, (40.0, 2.0))
+        kp, kv = CONTROL_GAINS_BY_JOINT.get(name) or (40.0, 2.0)
         out.append('    <position name="%s" joint="%s" ctrlrange="%s"'
                    ' forcerange="%s" kp="%g" kv="%g" class="motor"/>'
                    % (name.replace("_joint", ""), name, fmt((j.lower, j.upper)),
