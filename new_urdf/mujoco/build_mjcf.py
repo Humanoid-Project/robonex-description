@@ -10,7 +10,7 @@ from model_io import (
 )
 from robonex_data import (
     motor_physics_for, COLLISION_BOX, FEET, FOOT_FRICTION, HELD_JOINTS, DEFAULT_JOINT_POS,
-    HOME_HEIGHT, HOME_PASSIVE_JOINT_POS, MUJOCO_SPAWN_HEIGHT, SPAWN_HEIGHT as SPAWN_HEIGHT_ZERO,
+    HOME_HEIGHT, HOME_PASSIVE_JOINT_POS, MUJOCO_SPAWN_HEIGHT, SPAWN_HEIGHT as SPAWN_HEIGHT_ZERO, CONSTANTS,
 )
 from robonex_common.actuators import CONTROL_GAINS_BY_JOINT
 
@@ -23,11 +23,13 @@ ROD_END_AXES = (
 
 OUT_DIR = os.path.join(ROOT, "mujoco", "robot", VARIANT)
 MOVABLE_ARMS = "--movable-arms" in sys.argv
-_SFX = "_arms" if MOVABLE_ARMS else ""
+TRAINING_LIMITS = "--training-limits" in sys.argv
+_SFX = ("_arms" if MOVABLE_ARMS else "") + ("_limits" if TRAINING_LIMITS else "")
 FREE_OUT = os.path.join(OUT_DIR, "robonex%s.xml" % _SFX)
 FREE_SCENE_OUT = os.path.join(OUT_DIR, "scene%s.xml" % _SFX)
 FIXED_OUT = os.path.join(OUT_DIR, "robonex_fixed%s.xml" % _SFX)
 FIXED_SCENE_OUT = os.path.join(OUT_DIR, "scene_fixed%s.xml" % _SFX)
+PROVISIONAL_LIMITS = CONSTANTS["provisional_limits"]
 VIEW_GAINS = {"neck_pitch_joint": (10.0, 0.5)}
 HELD = () if MOVABLE_ARMS else HELD_JOINTS
 
@@ -276,6 +278,9 @@ def main():
         scene_out = FREE_SCENE_OUT
 
     links, joints, base = load_urdf()
+    if TRAINING_LIMITS:
+        for name, (lo, hi) in PROVISIONAL_LIMITS.items():
+            joints[name].lower, joints[name].upper = lo, hi
     loops = load_loops()
     kids = children_of(joints)
     ball_set = set(loops.get("ball_upgrades", []))
