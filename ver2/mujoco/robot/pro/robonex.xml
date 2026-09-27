@@ -123,7 +123,7 @@
               <geom type="mesh" mesh="rs02_l_ankle_b" pos="0 0 0" class="visual"/>
               <geom type="mesh" mesh="rs02_l_ankle_b" pos="0 0 0" class="collision"/>
               <body name="l_ankle_crank_link_a" pos="-0.001915 0.0229 -0.09521">
-                <joint name="l_ankle_upper_joint" type="hinge" axis="0 -1 0" range="-0.610865 0.575959" armature="0.0042" frictionloss="0" damping="0" class="act"/>
+                <joint name="l_ankle_upper_joint" type="hinge" axis="0 -1 0" range="-0.279253 0.872665" armature="0.0042" frictionloss="0" damping="0" class="act"/>
                 <inertial pos="0.02027 0.024517 0.008498" mass="0.097699" fullinertia="2.72e-05 6.048e-05 6.413e-05 -3.53e-06 -1.569e-05 -1.5e-06"/>
                 <geom type="mesh" mesh="l_ankle_crank_link_a" pos="0 0 0" class="visual"/>
                 <geom type="mesh" mesh="l_ankle_crank_link_a" pos="0 0 0" class="collision"/>
@@ -137,7 +137,7 @@
                 </body>
               </body>
               <body name="l_ankle_crank_link_b" pos="-0.001915 -0.0231 -0.19621">
-                <joint name="l_ankle_lower_joint" type="hinge" axis="0 1 0" range="-0.610865 0.575959" armature="0.0042" frictionloss="0" damping="0" class="act"/>
+                <joint name="l_ankle_lower_joint" type="hinge" axis="0 1 0" range="-0.872665 0.523599" armature="0.0042" frictionloss="0" damping="0" class="act"/>
                 <inertial pos="0.021459 -0.024511 0.004277" mass="0.0977" fullinertia="2.258e-05 6.038e-05 6.874e-05 3.75e-06 -7.25e-06 7.5e-07"/>
                 <geom type="mesh" mesh="l_ankle_crank_link_b" pos="0 0 0" class="visual"/>
                 <geom type="mesh" mesh="l_ankle_crank_link_b" pos="0 0 0" class="collision"/>
@@ -164,7 +164,7 @@
               </body>
             </body>
             <body name="l_knee_crank_link" pos="-0.034801 -0.0286 -0.13775">
-              <joint name="l_knee_pitch_joint" type="hinge" axis="0 -1 0" range="-1.36136 0.261799" armature="0.02" frictionloss="0" damping="0" class="act"/>
+              <joint name="l_knee_pitch_joint" type="hinge" axis="0 -1 0" range="-1.22173 0.174533" armature="0.02" frictionloss="0" damping="0" class="act"/>
               <inertial pos="0.019335 0.02899 0.007124" mass="0.15261" fullinertia="6.247e-05 0.00012321 0.00012195 -8.15e-06 -2.537e-05 -3e-06"/>
               <geom type="mesh" mesh="l_knee_crank_link" pos="0 0 0" class="visual"/>
               <geom type="mesh" mesh="l_knee_crank_link" pos="0 0 0" class="collision"/>
@@ -209,7 +209,7 @@
               <geom type="mesh" mesh="rs02_r_ankle_b" pos="0 0 0" class="visual"/>
               <geom type="mesh" mesh="rs02_r_ankle_b" pos="0 0 0" class="collision"/>
               <body name="r_ankle_crank_link_a" pos="-0.001936 0.023 -0.196208">
-                <joint name="r_ankle_lower_joint" type="hinge" axis="0 -1 0" range="-0.575959 0.610865" armature="0.0042" frictionloss="0" damping="0" class="act"/>
+                <joint name="r_ankle_lower_joint" type="hinge" axis="0 -1 0" range="-0.523599 0.872665" armature="0.0042" frictionloss="0" damping="0" class="act"/>
                 <inertial pos="0.02156 0.024517 0.004268" mass="0.097699" fullinertia="2.252e-05 6.047e-05 6.881e-05 -3.76e-06 -7.2e-06 -7.4e-07"/>
                 <geom type="mesh" mesh="r_ankle_crank_link_a" pos="0 0 0" class="visual"/>
                 <geom type="mesh" mesh="r_ankle_crank_link_a" pos="0 0 0" class="collision"/>
@@ -223,7 +223,7 @@
                 </body>
               </body>
               <body name="r_ankle_crank_link_b" pos="-0.001936 -0.023 -0.095208">
-                <joint name="r_ankle_upper_joint" type="hinge" axis="0 1 0" range="-0.575959 0.610865" armature="0.0042" frictionloss="0" damping="0" class="act"/>
+                <joint name="r_ankle_upper_joint" type="hinge" axis="0 1 0" range="-0.872665 0.279253" armature="0.0042" frictionloss="0" damping="0" class="act"/>
                 <inertial pos="0.020168 -0.024511 0.008483" mass="0.0977" fullinertia="2.727e-05 6.04e-05 6.405e-05 3.52e-06 -1.571e-05 1.49e-06"/>
                 <geom type="mesh" mesh="r_ankle_crank_link_b" pos="0 0 0" class="visual"/>
                 <geom type="mesh" mesh="r_ankle_crank_link_b" pos="0 0 0" class="collision"/>
@@ -250,7 +250,7 @@
               </body>
             </body>
             <body name="r_knee_crank_link" pos="-0.034801 0.028601 -0.137749">
-              <joint name="r_knee_pitch_joint" type="hinge" axis="0 1 0" range="-0.261799 1.36136" armature="0.02" frictionloss="0" damping="0" class="act"/>
+              <joint name="r_knee_pitch_joint" type="hinge" axis="0 1 0" range="-0.174533 1.22173" armature="0.02" frictionloss="0" damping="0" class="act"/>
               <inertial pos="0.019335 -0.02899 0.007124" mass="0.15261" fullinertia="6.247e-05 0.00012321 0.00012195 8.15e-06 -2.537e-05 3e-06"/>
               <geom type="mesh" mesh="r_knee_crank_link" pos="0 0 0" class="visual"/>
               <geom type="mesh" mesh="r_knee_crank_link" pos="0 0 0" class="collision"/>
@@ -433,15 +433,15 @@
     <position name="l_hip_yaw" joint="l_hip_yaw_joint" ctrlrange="-0.837758 0.837758" forcerange="-17 17" kp="100" kv="2" class="motor"/>
     <position name="l_hip_pitch" joint="l_hip_pitch_joint" ctrlrange="-1.65806 1.65806" forcerange="-60 60" kp="100" kv="2" class="motor"/>
     <position name="l_hip_roll" joint="l_hip_roll_joint" ctrlrange="-2.0944 0.174533" forcerange="-60 60" kp="100" kv="2" class="motor"/>
-    <position name="l_knee_pitch" joint="l_knee_pitch_joint" ctrlrange="-1.36136 0.261799" forcerange="-60 60" kp="150" kv="4" class="motor"/>
-    <position name="l_ankle_upper" joint="l_ankle_upper_joint" ctrlrange="-0.610865 0.575959" forcerange="-17 17" kp="40" kv="2" class="motor"/>
-    <position name="l_ankle_lower" joint="l_ankle_lower_joint" ctrlrange="-0.610865 0.575959" forcerange="-17 17" kp="40" kv="2" class="motor"/>
+    <position name="l_knee_pitch" joint="l_knee_pitch_joint" ctrlrange="-1.22173 0.174533" forcerange="-60 60" kp="150" kv="4" class="motor"/>
+    <position name="l_ankle_upper" joint="l_ankle_upper_joint" ctrlrange="-0.279253 0.872665" forcerange="-17 17" kp="40" kv="2" class="motor"/>
+    <position name="l_ankle_lower" joint="l_ankle_lower_joint" ctrlrange="-0.872665 0.523599" forcerange="-17 17" kp="40" kv="2" class="motor"/>
     <position name="r_hip_yaw" joint="r_hip_yaw_joint" ctrlrange="-0.837758 0.837758" forcerange="-17 17" kp="100" kv="2" class="motor"/>
     <position name="r_hip_pitch" joint="r_hip_pitch_joint" ctrlrange="-1.65806 1.65806" forcerange="-60 60" kp="100" kv="2" class="motor"/>
     <position name="r_hip_roll" joint="r_hip_roll_joint" ctrlrange="-0.174533 2.0944" forcerange="-60 60" kp="100" kv="2" class="motor"/>
-    <position name="r_knee_pitch" joint="r_knee_pitch_joint" ctrlrange="-0.261799 1.36136" forcerange="-60 60" kp="150" kv="4" class="motor"/>
-    <position name="r_ankle_lower" joint="r_ankle_lower_joint" ctrlrange="-0.575959 0.610865" forcerange="-17 17" kp="40" kv="2" class="motor"/>
-    <position name="r_ankle_upper" joint="r_ankle_upper_joint" ctrlrange="-0.575959 0.610865" forcerange="-17 17" kp="40" kv="2" class="motor"/>
+    <position name="r_knee_pitch" joint="r_knee_pitch_joint" ctrlrange="-0.174533 1.22173" forcerange="-60 60" kp="150" kv="4" class="motor"/>
+    <position name="r_ankle_lower" joint="r_ankle_lower_joint" ctrlrange="-0.523599 0.872665" forcerange="-17 17" kp="40" kv="2" class="motor"/>
+    <position name="r_ankle_upper" joint="r_ankle_upper_joint" ctrlrange="-0.872665 0.279253" forcerange="-17 17" kp="40" kv="2" class="motor"/>
   </actuator>
 
   <sensor>
