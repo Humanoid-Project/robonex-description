@@ -243,8 +243,8 @@
       0.837758
     ],
     "l_hip_pitch_joint": [
-      -1.745329,
-      1.745329
+      -1.658063,
+      1.658063
     ],
     "l_hip_roll_joint": [
       -2.094395,
@@ -267,8 +267,8 @@
       0.837758
     ],
     "r_hip_pitch_joint": [
-      -1.745329,
-      1.745329
+      -1.658063,
+      1.658063
     ],
     "r_hip_roll_joint": [
       -0.174533,
@@ -287,5 +287,5 @@
       0.610865
     ]
   },
-  "provisional_limits_note": "hips: Ver.2 limits set by the user in the viewer (2026-09-26): yaw +-48 (the hip-yaw link touches the other leg's hip-pitch motor at 50), pitch +-100, roll -120..+10 (left, mirrored right); knee crank [-78, +15] deg from the four-bar; ankle cranks still the Ver.1 measured values (placeholder until measured in MuJoCo)"
+  "provisional_limits_note": "hips: Ver.2 limits set by the user in the viewer (2026-09-26): yaw +-48 (the hip-yaw link touches the other leg's hip-pitch motor at 50), pitch +-95 (user 2026-09-27: CAD hip_roll_link-base_link contact from -96 backward), roll -120..+10 (left, mirrored right); knee crank [-78, +15] deg from the four-bar; ankle cranks still the Ver.1 measured values (placeholder until measured in MuJoCo)"
 }

@@ -1082,7 +1082,7 @@
         <child link="l_hip_pitch_link"/>
         <origin xyz="0.000002 0.025750 -0.062000" rpy="0 0 0"/>
         <axis xyz="0 -1 0"/>
-        <limit lower="-1.745329" upper="1.745329" effort="60.0" velocity="20.9"/>
+        <limit lower="-1.658063" upper="1.658063" effort="60.0" velocity="20.9"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
 
@@ -1142,7 +1142,7 @@
         <child link="r_hip_pitch_link"/>
         <origin xyz="0.000001 -0.025750 -0.062000" rpy="0 0 0"/>
         <axis xyz="0 1 0"/>
-        <limit lower="-1.745329" upper="1.745329" effort="60.0" velocity="20.9"/>
+        <limit lower="-1.658063" upper="1.658063" effort="60.0" velocity="20.9"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
 

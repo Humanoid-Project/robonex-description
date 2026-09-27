@@ -80,7 +80,7 @@
         <geom type="mesh" mesh="rs03_l_hip_pitch" pos="0 0 0" class="visual"/>
         <geom type="mesh" mesh="rs03_l_hip_pitch" pos="0 0 0" class="collision"/>
         <body name="l_hip_pitch_link" pos="2e-06 0.02575 -0.062">
-          <joint name="l_hip_pitch_joint" type="hinge" axis="0 -1 0" range="-1.74533 1.74533" armature="0.02" frictionloss="0" damping="0" class="act"/>
+          <joint name="l_hip_pitch_joint" type="hinge" axis="0 -1 0" range="-1.65806 1.65806" armature="0.02" frictionloss="0" damping="0" class="act"/>
           <inertial pos="-0.005442 0.060333 -0.031597" mass="1.18163" fullinertia="0.00199283 0.00152652 0.00145115 2.217e-05 -1.266e-05 0.0001316"/>
           <geom type="mesh" mesh="l_hip_pitch_link" pos="0 0 0" class="visual"/>
           <geom type="mesh" mesh="l_hip_pitch_link" pos="0 0 0" class="collision"/>
@@ -166,7 +166,7 @@
         <geom type="mesh" mesh="rs03_r_hip_pitch" pos="0 0 0" class="visual"/>
         <geom type="mesh" mesh="rs03_r_hip_pitch" pos="0 0 0" class="collision"/>
         <body name="r_hip_pitch_link" pos="1e-06 -0.02575 -0.062">
-          <joint name="r_hip_pitch_joint" type="hinge" axis="0 1 0" range="-1.74533 1.74533" armature="0.02" frictionloss="0" damping="0" class="act"/>
+          <joint name="r_hip_pitch_joint" type="hinge" axis="0 1 0" range="-1.65806 1.65806" armature="0.02" frictionloss="0" damping="0" class="act"/>
           <inertial pos="-0.005441 -0.060269 -0.031597" mass="1.18162" fullinertia="0.00199244 0.0015265 0.00145077 -2.103e-05 -1.266e-05 -0.00013011"/>
           <geom type="mesh" mesh="r_hip_pitch_link" pos="0 0 0" class="visual"/>
           <geom type="mesh" mesh="r_hip_pitch_link" pos="0 0 0" class="collision"/>
@@ -340,13 +340,13 @@
 
   <actuator>
     <position name="l_hip_yaw" joint="l_hip_yaw_joint" ctrlrange="-0.837758 0.837758" forcerange="-17 17" kp="100" kv="2" class="motor"/>
-    <position name="l_hip_pitch" joint="l_hip_pitch_joint" ctrlrange="-1.74533 1.74533" forcerange="-60 60" kp="100" kv="2" class="motor"/>
+    <position name="l_hip_pitch" joint="l_hip_pitch_joint" ctrlrange="-1.65806 1.65806" forcerange="-60 60" kp="100" kv="2" class="motor"/>
     <position name="l_hip_roll" joint="l_hip_roll_joint" ctrlrange="-2.0944 0.174533" forcerange="-60 60" kp="100" kv="2" class="motor"/>
     <position name="l_knee_pitch" joint="l_knee_pitch_joint" ctrlrange="-1.36136 0.261799" forcerange="-60 60" kp="150" kv="4" class="motor"/>
     <position name="l_ankle_upper" joint="l_ankle_upper_joint" ctrlrange="-0.610865 0.575959" forcerange="-17 17" kp="40" kv="2" class="motor"/>
     <position name="l_ankle_lower" joint="l_ankle_lower_joint" ctrlrange="-0.610865 0.575959" forcerange="-17 17" kp="40" kv="2" class="motor"/>
     <position name="r_hip_yaw" joint="r_hip_yaw_joint" ctrlrange="-0.837758 0.837758" forcerange="-17 17" kp="100" kv="2" class="motor"/>
-    <position name="r_hip_pitch" joint="r_hip_pitch_joint" ctrlrange="-1.74533 1.74533" forcerange="-60 60" kp="100" kv="2" class="motor"/>
+    <position name="r_hip_pitch" joint="r_hip_pitch_joint" ctrlrange="-1.65806 1.65806" forcerange="-60 60" kp="100" kv="2" class="motor"/>
     <position name="r_hip_roll" joint="r_hip_roll_joint" ctrlrange="-0.174533 2.0944" forcerange="-60 60" kp="100" kv="2" class="motor"/>
     <position name="r_knee_pitch" joint="r_knee_pitch_joint" ctrlrange="-0.261799 1.36136" forcerange="-60 60" kp="150" kv="4" class="motor"/>
     <position name="r_ankle_lower" joint="r_ankle_lower_joint" ctrlrange="-0.575959 0.610865" forcerange="-17 17" kp="40" kv="2" class="motor"/>
