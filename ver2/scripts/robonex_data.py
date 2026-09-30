@@ -1,7 +1,7 @@
 import json
 import os
 
-from robonex_common.joints import JOINT_BY_MODEL_NAME
+from robonex_common.joints import ALL_MOTORS
 from robonex_common.motors import MOTOR_PHYSICS
 
 
@@ -23,13 +23,11 @@ HELD_JOINTS = (
 DAMPING = 0.2
 
 
+MOTOR_MODEL_BY_JOINT = {joint.model_name: joint.motor_model for joint in ALL_MOTORS}
+
+
 def motor_physics_for(joint_name):
-    joint = JOINT_BY_MODEL_NAME.get(joint_name)
-    if joint:
-        return MOTOR_PHYSICS[joint.motor_model]
-    if joint_name in HELD_JOINTS and joint_name != "neck_pitch_joint":
-        return MOTOR_PHYSICS["rs02"]
-    return None
+    return MOTOR_PHYSICS.get(MOTOR_MODEL_BY_JOINT.get(joint_name))
 
 
 JOINT_ORDER = [
