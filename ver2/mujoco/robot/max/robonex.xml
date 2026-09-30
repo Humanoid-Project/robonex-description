@@ -272,29 +272,34 @@
         </body>
       </body>
       <body name="head_link" pos="0.009861 0.020159 0.285242">
+        <joint name="neck_pitch_joint" type="hinge" axis="0 -1 0" range="-0.523599 0.523599" class="act"/>
         <inertial pos="0.00801 -0.019172 0.110399" mass="0.331999" fullinertia="0.00095006 0.0008196 0.00066181 1.21e-06 -7.248e-05 2.199e-05"/>
         <geom type="mesh" mesh="head_link" pos="0 0 0" class="visual"/>
         <geom type="mesh" mesh="head_link" pos="0 0 0" class="collision"/>
       </body>
       <body name="l_shoulder_pitch_link" pos="0.00986 0.129259 0.175747">
+        <joint name="l_shoulder_pitch_joint" type="hinge" axis="0 -1 0" range="-0.785398 0.785398" armature="0.0042" frictionloss="0" damping="0" class="act"/>
         <inertial pos="-0.00386 0.053552 4.1e-05" mass="0.506398" fullinertia="0.00044335 0.00029463 0.00033792 3.78e-06 3.3e-07 -3e-08"/>
         <geom type="mesh" mesh="l_shoulder_pitch_link" pos="0 0 0" class="visual"/>
         <geom type="mesh" mesh="l_shoulder_pitch_link" pos="0 0 0" class="collision"/>
         <geom type="mesh" mesh="rs02_l_shoulder_roll" pos="0 0 0" class="visual"/>
         <geom type="mesh" mesh="rs02_l_shoulder_roll" pos="0 0 0" class="collision"/>
         <body name="l_shoulder_roll_link" pos="0.021152 0.055349 -1e-06">
+          <joint name="l_shoulder_roll_joint" type="hinge" axis="-1 0 0" range="-0.785398 0.785398" armature="0.0042" frictionloss="0" damping="0" class="act"/>
           <inertial pos="-0.028574 0.000143 -0.073673" mass="0.524269" fullinertia="0.00054009 0.0006219 0.00046105 2.7e-07 1.216e-05 -4.19e-06"/>
           <geom type="mesh" mesh="l_shoulder_roll_link" pos="0 0 0" class="visual"/>
           <geom type="mesh" mesh="l_shoulder_roll_link" pos="0 0 0" class="collision"/>
           <geom type="mesh" mesh="rs02_l_shoulder_yaw" pos="0 0 0" class="visual"/>
           <geom type="mesh" mesh="rs02_l_shoulder_yaw" pos="0 0 0" class="collision"/>
           <body name="l_shoulder_yaw_link" pos="-0.0282 -1e-06 -0.105399">
+            <joint name="l_shoulder_yaw_joint" type="hinge" axis="0 0 1" range="-0.785398 0.785398" armature="0.0042" frictionloss="0" damping="0" class="act"/>
             <inertial pos="4e-06 -0.002161 -0.089539" mass="0.551363" fullinertia="0.0008418 0.00096515 0.00036096 5e-08 -1.3e-07 -2.192e-05"/>
             <geom type="mesh" mesh="l_shoulder_yaw_link" pos="0 0 0" class="visual"/>
             <geom type="mesh" mesh="l_shoulder_yaw_link" pos="0 0 0" class="collision"/>
             <geom type="mesh" mesh="rs02_l_elbow" pos="0 0 0" class="visual"/>
             <geom type="mesh" mesh="rs02_l_elbow" pos="0 0 0" class="collision"/>
             <body name="l_elbow_link" pos="0 0.020401 -0.105601">
+              <joint name="l_elbow_joint" type="hinge" axis="0 -1 0" range="-0.785398 0.785398" armature="0.0042" frictionloss="0" damping="0" class="act"/>
               <inertial pos="0.082876 -0.015376 1e-06" mass="0.141583" fullinertia="0.00011606 0.00040298 0.00040978 5.696e-05 0 0"/>
               <geom type="mesh" mesh="l_elbow_link" pos="0 0 0" class="visual"/>
               <geom type="mesh" mesh="l_elbow_link" pos="0 0 0" class="collision"/>
@@ -303,24 +308,28 @@
         </body>
       </body>
       <body name="r_shoulder_pitch_link" pos="0.009863 -0.128741 0.175747">
+        <joint name="r_shoulder_pitch_joint" type="hinge" axis="0 1 0" range="-0.785398 0.785398" armature="0.0042" frictionloss="0" damping="0" class="act"/>
         <inertial pos="-0.003863 -0.053552 -1.4e-05" mass="0.506398" fullinertia="0.00044335 0.00029463 0.00033792 -3.78e-06 -2.8e-07 -1e-08"/>
         <geom type="mesh" mesh="r_shoulder_pitch_link" pos="0 0 0" class="visual"/>
         <geom type="mesh" mesh="r_shoulder_pitch_link" pos="0 0 0" class="collision"/>
         <geom type="mesh" mesh="rs02_r_shoulder_roll" pos="0 0 0" class="visual"/>
         <geom type="mesh" mesh="rs02_r_shoulder_roll" pos="0 0 0" class="collision"/>
         <body name="r_shoulder_roll_link" pos="0.021149 -0.055349 -1e-06">
+          <joint name="r_shoulder_roll_joint" type="hinge" axis="-1 0 0" range="-0.785398 0.785398" armature="0.0042" frictionloss="0" damping="0" class="act"/>
           <inertial pos="-0.028574 0.000143 -0.073673" mass="0.524269" fullinertia="0.00054009 0.0006219 0.00046105 2.7e-07 1.216e-05 -4.19e-06"/>
           <geom type="mesh" mesh="r_shoulder_roll_link" pos="0 0 0" class="visual"/>
           <geom type="mesh" mesh="r_shoulder_roll_link" pos="0 0 0" class="collision"/>
           <geom type="mesh" mesh="rs02_r_shoulder_yaw" pos="0 0 0" class="visual"/>
           <geom type="mesh" mesh="rs02_r_shoulder_yaw" pos="0 0 0" class="collision"/>
           <body name="r_shoulder_yaw_link" pos="-0.0282 -1e-06 -0.105399">
+            <joint name="r_shoulder_yaw_joint" type="hinge" axis="0 0 1" range="-0.785398 0.785398" armature="0.0042" frictionloss="0" damping="0" class="act"/>
             <inertial pos="-4e-06 0.002164 -0.08954" mass="0.551352" fullinertia="0.00084176 0.0009651 0.00036095 5e-08 1.3e-07 2.192e-05"/>
             <geom type="mesh" mesh="r_shoulder_yaw_link" pos="0 0 0" class="visual"/>
             <geom type="mesh" mesh="r_shoulder_yaw_link" pos="0 0 0" class="collision"/>
             <geom type="mesh" mesh="rs02_r_elbow" pos="0 0 0" class="visual"/>
             <geom type="mesh" mesh="rs02_r_elbow" pos="0 0 0" class="collision"/>
             <body name="r_elbow_link" pos="0 -0.020399 -0.105601">
+              <joint name="r_elbow_joint" type="hinge" axis="0 1 0" range="-0.785398 0.785398" armature="0.0042" frictionloss="0" damping="0" class="act"/>
               <inertial pos="0.082876 0.015376 1e-06" mass="0.141568" fullinertia="0.00011605 0.00040293 0.00040974 -5.696e-05 0 0"/>
               <geom type="mesh" mesh="r_elbow_link" pos="0 0 0" class="visual"/>
               <geom type="mesh" mesh="r_elbow_link" pos="0 0 0" class="collision"/>
@@ -459,6 +468,15 @@
     <position name="r_knee_pitch" joint="r_knee_pitch_joint" ctrlrange="-0.174533 1.22173" forcerange="-60 60" kp="150" kv="4" class="motor"/>
     <position name="r_ankle_lower" joint="r_ankle_lower_joint" ctrlrange="-0.523599 0.872665" forcerange="-17 17" kp="40" kv="2" class="motor"/>
     <position name="r_ankle_upper" joint="r_ankle_upper_joint" ctrlrange="-0.872665 0.279253" forcerange="-17 17" kp="40" kv="2" class="motor"/>
+    <position name="neck_pitch" joint="neck_pitch_joint" ctrlrange="-0.523599 0.523599" forcerange="-5.5 5.5" kp="20" kv="1" class="motor"/>
+    <position name="l_shoulder_pitch" joint="l_shoulder_pitch_joint" ctrlrange="-0.785398 0.785398" forcerange="-17 17" kp="40" kv="2" class="motor"/>
+    <position name="l_shoulder_roll" joint="l_shoulder_roll_joint" ctrlrange="-0.785398 0.785398" forcerange="-17 17" kp="40" kv="2" class="motor"/>
+    <position name="l_shoulder_yaw" joint="l_shoulder_yaw_joint" ctrlrange="-0.785398 0.785398" forcerange="-17 17" kp="40" kv="2" class="motor"/>
+    <position name="l_elbow" joint="l_elbow_joint" ctrlrange="-0.785398 0.785398" forcerange="-17 17" kp="40" kv="2" class="motor"/>
+    <position name="r_shoulder_pitch" joint="r_shoulder_pitch_joint" ctrlrange="-0.785398 0.785398" forcerange="-17 17" kp="40" kv="2" class="motor"/>
+    <position name="r_shoulder_roll" joint="r_shoulder_roll_joint" ctrlrange="-0.785398 0.785398" forcerange="-17 17" kp="40" kv="2" class="motor"/>
+    <position name="r_shoulder_yaw" joint="r_shoulder_yaw_joint" ctrlrange="-0.785398 0.785398" forcerange="-17 17" kp="40" kv="2" class="motor"/>
+    <position name="r_elbow" joint="r_elbow_joint" ctrlrange="-0.785398 0.785398" forcerange="-17 17" kp="40" kv="2" class="motor"/>
   </actuator>
 
   <sensor>
@@ -474,9 +492,18 @@
     <actuatorfrc name="r_knee_pitch_trq" actuator="r_knee_pitch"/>
     <actuatorfrc name="r_ankle_lower_trq" actuator="r_ankle_lower"/>
     <actuatorfrc name="r_ankle_upper_trq" actuator="r_ankle_upper"/>
+    <actuatorfrc name="neck_pitch_trq" actuator="neck_pitch"/>
+    <actuatorfrc name="l_shoulder_pitch_trq" actuator="l_shoulder_pitch"/>
+    <actuatorfrc name="l_shoulder_roll_trq" actuator="l_shoulder_roll"/>
+    <actuatorfrc name="l_shoulder_yaw_trq" actuator="l_shoulder_yaw"/>
+    <actuatorfrc name="l_elbow_trq" actuator="l_elbow"/>
+    <actuatorfrc name="r_shoulder_pitch_trq" actuator="r_shoulder_pitch"/>
+    <actuatorfrc name="r_shoulder_roll_trq" actuator="r_shoulder_roll"/>
+    <actuatorfrc name="r_shoulder_yaw_trq" actuator="r_shoulder_yaw"/>
+    <actuatorfrc name="r_elbow_trq" actuator="r_elbow"/>
   </sensor>
 
   <keyframe>
-    <key name="home" qpos="0 0 0.94226 1 0 0 0 0 0.1 0 -0.29669739 0.212557738 1.6087348e-05 0.18375353 3.04736664e-06 -0.203804891 3.46141733e-05 0.168073449 -0.000450036836 6.23677935e-05 0.196690826 -0.329865695 0.418809142 0 -0.1 0 0.296696424 0.203804891 2.98017462e-05 0.16807133 -0.000113924771 -0.212557738 2.05559853e-05 0.183758821 -0.000354468285 6.23131587e-05 0.196702805 0.329865695 0.418811258" ctrl="0 0.1 0 -0.329865695 0.212557738 -0.203804891 0 -0.1 0 0.329865695 0.203804891 -0.212557738"/>
+    <key name="home" qpos="0 0 0.94226 1 0 0 0 0 0.1 0 -0.29669739 0.212557738 1.6087348e-05 0.18375353 3.04736664e-06 -0.203804891 3.46141733e-05 0.168073449 -0.000450036836 6.23677935e-05 0.196690826 -0.329865695 0.418809142 0 -0.1 0 0.296696424 0.203804891 2.98017462e-05 0.16807133 -0.000113924771 -0.212557738 2.05559853e-05 0.183758821 -0.000354468285 6.23131587e-05 0.196702805 0.329865695 0.418811258 0 0 0 0 0 0 0 0 0" ctrl="0 0.1 0 -0.329865695 0.212557738 -0.203804891 0 -0.1 0 0.329865695 0.203804891 -0.212557738 0 0 0 0 0 0 0 0 0"/>
   </keyframe>
 </mujoco>

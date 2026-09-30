@@ -22,8 +22,8 @@ isaac/
 
 | Variant | Mechanism | Collision |
 | --- | --- | --- |
-| `closed_loop_mesh` | Four-bar and differential closures kept; 12 cranks actuated | Visual meshes |
-| `closed_loop_box` | Four-bar and differential closures kept; 12 cranks actuated | Box primitives |
+| `closed_loop_mesh` | Four-bar and differential closures kept; 12 cranks actuated (pro/max + 8 arms, max + neck pitch) | Visual meshes |
+| `closed_loop_box` | Four-bar and differential closures kept; 12 cranks actuated (pro/max + 8 arms, max + neck pitch) | Box primitives |
 
 <br>
 

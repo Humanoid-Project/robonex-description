@@ -9,8 +9,9 @@ from model_io import (
     load_urdf, load_loops, children_of, rpy_to_quat, fmt, ROOT, VARIANT,
 )
 from robonex_data import (
-    motor_physics_for, COLLISION_BOX, FEET, FOOT_FRICTION, HELD_JOINTS, DEFAULT_JOINT_POS,
-    HOME_HEIGHT, HOME_PASSIVE_JOINT_POS, MUJOCO_SPAWN_HEIGHT, SPAWN_HEIGHT as SPAWN_HEIGHT_ZERO, CONSTANTS,
+    motor_physics_for, actuated_joints, COLLISION_BOX, FEET, FOOT_FRICTION, UPPER_BODY_JOINTS,
+    UPPER_BODY_DEFAULT_POS, DEFAULT_JOINT_POS, HOME_HEIGHT, HOME_PASSIVE_JOINT_POS, MUJOCO_SPAWN_HEIGHT,
+    SPAWN_HEIGHT as SPAWN_HEIGHT_ZERO, CONSTANTS,
 )
 from robonex_common.actuators import CONTROL_GAINS_BY_JOINT
 
@@ -27,7 +28,6 @@ FREE_SCENE_OUT = os.path.join(OUT_DIR, "scene.xml")
 FIXED_OUT = os.path.join(OUT_DIR, "robonex_fixed.xml")
 FIXED_SCENE_OUT = os.path.join(OUT_DIR, "scene_fixed.xml")
 PROVISIONAL_LIMITS = CONSTANTS["provisional_limits"]
-HELD = HELD_JOINTS
 
 NEIGHBOUR_DEPTH = 2
 PIN_HALF = 0.01
@@ -78,8 +78,6 @@ def emit_body(links, joints, kids, name, ball_set, actuated, depth, out,
                 out.append(
                     '%s  <joint name="%s" type="hinge" axis="%s"%s class="passive"/>'
                     % (pad, jname, fmt(axis_vec), lim))
-        elif parent_joint.name in HELD:
-            pass
         elif parent_joint.jtype in ("revolute", "continuous"):
             is_act = parent_joint.name in actuated
             cls = "act" if is_act else "passive"
@@ -222,7 +220,10 @@ def append_home_keyframe(out_path, scene_out):
     data = mujoco.MjData(model)
     root_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, "root")
     data.qpos[model.jnt_qposadr[root_id] + 2] = HOME_HEIGHT
-    for name, value in {**DEFAULT_JOINT_POS, **HOME_PASSIVE_JOINT_POS}.items():
+    upper_body = {name: value for name, value in UPPER_BODY_DEFAULT_POS.items()
+                  if mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, name) >= 0}
+    home = {**DEFAULT_JOINT_POS, **upper_body}
+    for name, value in {**home, **HOME_PASSIVE_JOINT_POS}.items():
         joint_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, name)
         if joint_id < 0:
             raise ValueError("home pose joint not found: %s" % name)
@@ -230,7 +231,7 @@ def append_home_keyframe(out_path, scene_out):
     for actuator_id in range(model.nu):
         joint_id = int(model.actuator_trnid[actuator_id, 0])
         joint_name = mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_JOINT, joint_id)
-        data.ctrl[actuator_id] = DEFAULT_JOINT_POS.get(joint_name, 0.0)
+        data.ctrl[actuator_id] = home.get(joint_name, 0.0)
     mujoco.mj_forward(model, data)
     residual = max(
         (abs(float(data.efc_pos[row])) for row in range(data.nefc)
@@ -275,11 +276,12 @@ def main():
 
     links, joints, base = load_urdf()
     for name, (lo, hi) in PROVISIONAL_LIMITS.items():
-        joints[name].lower, joints[name].upper = lo, hi
+        if name in joints:
+            joints[name].lower, joints[name].upper = lo, hi
     loops = load_loops()
     kids = children_of(joints)
     ball_set = set(loops.get("ball_upgrades", []))
-    actuated = list(loops.get("actuated_joints", []))
+    actuated = actuated_joints(joints, loops.get("actuated_joints", []))
     ball_limit_deg = loops.get("ball_limit_deg")
     ball_limit = math.radians(ball_limit_deg) if ball_limit_deg else None
 
@@ -382,10 +384,10 @@ def main():
     print("wrote %s" % scene_out)
     print("  variant     : %s" % VARIANT)
     print("  bodies      : %d" % len(links))
-    print("  held rigid  : %s" % (", ".join(sorted(n for n in joints if n in HELD)) or "none"))
+    print("  upper body  : %s" % (", ".join(n for n in UPPER_BODY_JOINTS if n in joints) or "none"))
     print("  hinges      : %d" % (sum(
         1 for j in joints.values()
-        if j.jtype in ("revolute", "continuous") and j.name not in ball_set and j.name not in HELD)
+        if j.jtype in ("revolute", "continuous") and j.name not in ball_set)
         + len(ROD_END_AXES) * len(ball_set)))
     print("  rod ends    : %d (%d hinges each)" % (len(ball_set), len(ROD_END_AXES)))
     print("  equalities  : %d" % (

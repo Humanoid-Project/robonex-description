@@ -1,7 +1,7 @@
 import json
 import os
 
-from robonex_common.joints import ALL_MOTORS
+from robonex_common.joints import ALL_MOTORS, AUXILIARY_JOINTS
 from robonex_common.motors import MOTOR_PHYSICS
 
 
@@ -14,11 +14,8 @@ MUJOCO_SPAWN_HEIGHT = CONSTANTS.get("mujoco_spawn_height", 0.956)
 HOME_HEIGHT = CONSTANTS.get("home_base_height")
 DEFAULT_JOINT_POS = CONSTANTS.get("default_actuated_pos", {})
 HOME_PASSIVE_JOINT_POS = CONSTANTS.get("home_passive_pos", {})
-HELD_JOINTS = (
-    "neck_pitch_joint",
-    "l_shoulder_pitch_joint", "l_shoulder_roll_joint", "l_shoulder_yaw_joint", "l_elbow_joint",
-    "r_shoulder_pitch_joint", "r_shoulder_roll_joint", "r_shoulder_yaw_joint", "r_elbow_joint",
-)
+UPPER_BODY_JOINTS = tuple(joint.model_name for joint in AUXILIARY_JOINTS)
+UPPER_BODY_DEFAULT_POS = CONSTANTS.get("upper_body_default_pos", {})
 
 DAMPING = 0.2
 
@@ -28,6 +25,10 @@ MOTOR_MODEL_BY_JOINT = {joint.model_name: joint.motor_model for joint in ALL_MOT
 
 def motor_physics_for(joint_name):
     return MOTOR_PHYSICS.get(MOTOR_MODEL_BY_JOINT.get(joint_name))
+
+
+def actuated_joints(model_joints, loop_actuated):
+    return [name for name in (*loop_actuated, *UPPER_BODY_JOINTS) if name in model_joints]
 
 
 JOINT_ORDER = [
