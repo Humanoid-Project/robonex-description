@@ -18,4 +18,5 @@ pip install -r requirements.txt
 ## Models
 | Folder | Description | README |
 | --- | --- | :---: |
+| `ver1` | Ver.1 lower body: meshes, URDF, closed-loop MJCF and Isaac USD | [📖](ver1/) |
 | `ver2` | Ver.2 `edu` (legs), `pro` (legs + arms), `max` (legs + arms + head) | [📖](ver2/) |
