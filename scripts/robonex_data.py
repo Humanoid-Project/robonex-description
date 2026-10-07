@@ -4,10 +4,11 @@ import os
 from robonex_common.joints import ALL_MOTORS, AUXILIARY_JOINTS
 from robonex_common.motors import MOTOR_PHYSICS
 
+from model_io import CONSTANTS_PATH as _CONST_PATH
+
 
 DEG = 3.141592653589793 / 180.0
 
-_CONST_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "ver2_constants.json")
 CONSTANTS = json.load(open(_CONST_PATH)) if os.path.exists(_CONST_PATH) else {}
 SPAWN_HEIGHT = CONSTANTS.get("zero_pose_base_height", 0.95)
 MUJOCO_SPAWN_HEIGHT = CONSTANTS.get("mujoco_spawn_height", 0.956)

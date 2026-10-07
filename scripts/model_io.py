@@ -8,8 +8,22 @@ from dataclasses import dataclass, field
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(HERE)
-VARIANTS = ("edu", "pro", "max")
+REPO = os.path.dirname(HERE)
+VERSIONS = {
+    "ver2": dict(variants=("edu", "pro", "max"), constants="ver2_constants.json"),
+    "ver2-2": dict(variants=("edu",), constants="ver2-2_constants.json"),
+}
+_ARG_VERSION = sys.argv[sys.argv.index("--version") + 1] if "--version" in sys.argv else None
+_ENV_VERSION = os.environ.get("ROBONEX_VERSION")
+if _ARG_VERSION and _ENV_VERSION and _ARG_VERSION != _ENV_VERSION:
+    raise SystemExit("--version %s conflicts with ROBONEX_VERSION=%s (a builder under <version>/ sets it from its path)"
+                     % (_ARG_VERSION, _ENV_VERSION))
+VERSION = _ARG_VERSION or _ENV_VERSION
+if VERSION not in VERSIONS:
+    raise SystemExit("model version must be one of %s (--version or ROBONEX_VERSION), got %r"
+                     % (tuple(VERSIONS), VERSION))
+ROOT = os.path.join(REPO, VERSION)
+VARIANTS = VERSIONS[VERSION]["variants"]
 VARIANT = (sys.argv[sys.argv.index("--variant") + 1] if "--variant" in sys.argv
            else os.environ.get("ROBONEX_VARIANT", "edu"))
 if VARIANT not in VARIANTS:
@@ -17,7 +31,7 @@ if VARIANT not in VARIANTS:
 URDF_PATH = os.path.join(ROOT, "urdf", "robonex_%s.urdf" % VARIANT)
 LOOPS_PATH = os.path.join(ROOT, "loop_closures.yaml")
 MESH_DIR = os.path.join(ROOT, "meshes")
-CONSTANTS_PATH = os.path.join(ROOT, "ver2_constants.json")
+CONSTANTS_PATH = os.path.join(ROOT, VERSIONS[VERSION]["constants"])
 
 
 

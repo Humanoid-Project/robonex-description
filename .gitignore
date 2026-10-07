@@ -20,3 +20,8 @@ ver2/verify/
 ver1/INFO.md
 ver2/INFO.md
 ver1/ver1_constants.json
+
+# Ver.2-2: regenerable Isaac USD and info sheet
+ver2-2/isaac/*/*/*.usd
+ver2-2/isaac/*/*/configuration/
+ver2-2/INFO.md
