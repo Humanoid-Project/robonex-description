@@ -1,0 +1,10 @@
+RoboNex Description
+Copyright 2026 RoboNex
+
+This product includes software and robot models developed by RoboNex.
+
+The actuator meshes (RobStride RS02, RS03, RS05) and the Intel RealSense D435i camera mesh in this repository are
+simplified shapes drawn by RoboNex from measured outer dimensions. They are not the manufacturers' CAD models.
+RobStride and Intel RealSense are trademarks of their respective owners.
+
+The RoboNex name and logo are not licensed under the Apache License.

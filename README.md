@@ -69,3 +69,9 @@ cd ~/humanoid_project/robonex-description
 | --- | --- |
 | `<version>/meshes/`, `<version>/loop_closures.yaml`, `<version>/urdf/robonex_edu.urdf` | `build` |
 | `<version>/<version>_constants.json` | `constants` |
+
+<br>
+
+## License
+
+Licensed under the [Apache License 2.0](LICENSE). Copyright 2026 RoboNex. See [NOTICE](NOTICE).
