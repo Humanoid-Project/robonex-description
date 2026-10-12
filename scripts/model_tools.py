@@ -1,12 +1,12 @@
 """RoboNex model tools: build the model from a Fusion 360 export package, solve the constants, check it.
 
-Usage: python -I scripts/model_tools.py --version {ver2,ver2-2} <command> [options]
-       (build and constants: ver2-2 only; ver2's urdf/, meshes/ and ver2_constants.json are frozen)
+Usage: python -I scripts/model_tools.py --version {ver2,ver2-2,ver2-3} <command> [options]
+       (build and constants: ver2-2 and ver2-3; ver2's urdf/, meshes/ and ver2_constants.json are frozen)
 
-  build --package DIR     re-pose the Fusion export DIR (ver2-2_Edu.urdf or urdf/robonex.urdf, loop_closures.yaml,
-                          meshes/*.stl) to level soles, apply MEASURED_LIMITS; writes meshes/, loop_closures.yaml,
-                          urdf/robonex_edu.urdf
-  constants               solve the home pose on mujoco/robot/edu/scene_fixed.xml; writes ver2-2_constants.json
+  build --package DIR     re-pose the Fusion export DIR (ver2-2_Edu.urdf, ver2-3_Edu.urdf or urdf/robonex.urdf,
+                          loop_closures.yaml, meshes/*.stl) to level soles, apply MEASURED_LIMITS; writes meshes/,
+                          loop_closures.yaml, urdf/robonex_edu.urdf
+  constants               solve the home pose on mujoco/robot/edu/scene_fixed.xml; writes <version>_constants.json
   constants --seed-limits-only
                           write only provisional_limits (bootstrap before the first fixed-base MJCF)
   loops [--pose zero|home] [--scene PATH]
@@ -14,10 +14,11 @@ Usage: python -I scripts/model_tools.py --version {ver2,ver2-2} <command> [optio
   limits [--variant edu]  interactive joint viewer with the loops solved
   check [--urdf PATH]     link/joint counts, total mass, SPD inertias, L/R mirror residuals
 
-Regeneration order (from robonex-description/):
+Regeneration order (from robonex-description/). ver2-2 is shown; ver2-3 is the same order with
+--version ver2-3, ver2-3/ paths and ver2-3_constants.json (neck_pitch_joint is fixed at 0 in the MJCF and Isaac URDF):
   1. .venv/bin/python -I scripts/model_tools.py --version ver2-2 build --package DIR
   2. .venv/bin/python -I ver2-2/mujoco/build_mjcf.py --variant edu --fixed-base
-     (first build without ver2-2_constants.json: run `model_tools.py --version ver2-2 constants --seed-limits-only`
+     (first build without <version>_constants.json: run `model_tools.py --version <version> constants --seed-limits-only`
      before it)
   3. .venv/bin/python -I scripts/model_tools.py --version ver2-2 constants
   4. .venv/bin/python -I ver2-2/mujoco/build_mjcf.py --variant edu
@@ -38,12 +39,14 @@ import numpy as np
 import yaml
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-GENERATOR_VERSIONS = ("ver2-2",)
+GENERATOR_VERSIONS = ("ver2-2", "ver2-3")
 ROOT = URDF_DIR = MESH_DIR = LOOPS_OUT = CONSTANTS_OUT = SCENE_FIXED = None
+VERSION = None
 
 
 def select_version():
-    global ROOT, URDF_DIR, MESH_DIR, LOOPS_OUT, CONSTANTS_OUT, SCENE_FIXED
+    global ROOT, URDF_DIR, MESH_DIR, LOOPS_OUT, CONSTANTS_OUT, SCENE_FIXED, VERSION
+    global TITLE, COLLISION_LINKS, UPPER_BODY_NOTE, STL_LABEL
     sys.path.insert(0, HERE)
     import model_io
     ROOT = model_io.ROOT
@@ -52,10 +55,22 @@ def select_version():
     LOOPS_OUT = model_io.LOOPS_PATH
     CONSTANTS_OUT = model_io.CONSTANTS_PATH
     SCENE_FIXED = os.path.join(ROOT, "mujoco", "robot", "edu", "scene_fixed.xml")
-    return model_io.VERSION
+    VERSION = model_io.VERSION
+    if VERSION == "ver2-3":
+        TITLE = "lower body, battery and e-stop merged into base_link, neck fixed at 0 in sim"
+        COLLISION_LINKS = ["base_link", "head_link"] + LEG_COLLISION_LINKS
+        UPPER_BODY_NOTE = UPPER_BODY_LIMITS_NOTE_V23
+        STL_LABEL = "Ver.2-3"
+    else:
+        TITLE = "lower body, battery and e-stop split out of base_link"
+        COLLISION_LINKS = ["base_link", "estop_link"] + LEG_COLLISION_LINKS
+        UPPER_BODY_NOTE = UPPER_BODY_LIMITS_NOTE
+        STL_LABEL = "Ver.2-2"
+    return VERSION
 
 VARIANT = "edu"
 TITLE = "lower body, battery and e-stop split out of base_link"
+STL_LABEL = "Ver.2-2"
 D = math.pi / 180.0
 MEASURED_LIMITS = {
     "l_hip_yaw_joint": (-48 * D, 48 * D), "r_hip_yaw_joint": (-48 * D, 48 * D),
@@ -88,8 +103,14 @@ UPPER_BODY_LIMITS_NOTE = (
     "neck pitch +-73 deg and shoulder pitch +-100 deg set by the user (2026-10-01, bench); other arm joints +-45 deg are "
     "robonex-common v1.2.0 AUXILIARY_JOINTS PLACEHOLDERS, not measured (open item H29); "
     "pro/max only, edu has no upper-body joints")
-COLLISION_LINKS = ["base_link", "estop_link"] + ["%s_%s" % (s, n) for s in "lr" for n in (
+UPPER_BODY_LIMITS_NOTE_V23 = (
+    "neck_pitch_joint is fixed at 0 rad in the MuJoCo and Isaac models (head_link attached at 0 deg); "
+    "the URDF keeps the package revolute limits (Ver.2 max). shoulder and elbow entries are "
+    "robonex-common AUXILIARY_JOINTS placeholders, unused by edu")
+UPPER_BODY_NOTE = UPPER_BODY_LIMITS_NOTE
+LEG_COLLISION_LINKS = ["%s_%s" % (s, n) for s in "lr" for n in (
     "hip_yaw_link", "hip_pitch_link", "hip_roll_link", "knee_link", "ankle_link", "foot")]
+COLLISION_LINKS = ["base_link", "estop_link"] + LEG_COLLISION_LINKS
 SPAWN_MARGIN = 0.006
 
 STL_DTYPE = np.dtype([("n", "<f4", 3), ("v", "<f4", (3, 3)), ("a", "<u2")])
@@ -254,12 +275,14 @@ def sole_normal(tris):
 def package_paths(package):
     package = os.path.abspath(os.path.expanduser(package))
     urdf = None
-    for rel in ("ver2-2_Edu.urdf", os.path.join("urdf", "robonex.urdf")):
+    rels = ("ver2-3_Edu.urdf", "ver2-2_Edu.urdf", os.path.join("urdf", "robonex.urdf")) if VERSION == "ver2-3" else (
+        "ver2-2_Edu.urdf", os.path.join("urdf", "robonex.urdf"))
+    for rel in rels:
         if os.path.isfile(os.path.join(package, rel)):
             urdf = os.path.join(package, rel)
             break
     if urdf is None:
-        raise SystemExit("%s: no ver2-2_Edu.urdf or urdf/robonex.urdf" % package)
+        raise SystemExit("%s: no %s" % (package, " or ".join(rels)))
     loops = os.path.join(package, "loop_closures.yaml")
     meshes = os.path.join(package, "meshes")
     for p in (loops, meshes):
@@ -358,7 +381,7 @@ def build(package):
             out["v"] = (tris["v"].astype(np.float64).reshape(-1, 3) @ R.T).reshape(-1, 3, 3).astype(np.float32)
             out["n"] = (tris["n"].astype(np.float64) @ R.T).astype(np.float32)
             write_stl(os.path.join(MESH_DIR, m + ".stl"), out,
-                      "RoboNex Ver.2-2 %s, mm, URDF axes, frame of %s, level-sole zero" % (m, name))
+                      "RoboNex %s %s, mm, URDF axes, frame of %s, level-sole zero" % (STL_LABEL, m, name))
             written.add(m)
     copied = []
     for name, lk in new_L.items():
@@ -400,14 +423,28 @@ def build(package):
 
     links = new_L
     joints = {k: v for k, v in new_J.items() if v["child"] in links and v["parent"] in links}
-    o = ['<?xml version="1.0"?>', '<robot name="robonex_%s">' % VARIANT, "",
-         "    <!-- RoboNex Ver.2-2 %s (%s): ver2-2/scripts/model_tools.py build" % (VARIANT, TITLE),
-         "         from the Fusion 360 export package %s (link-level inertials with motors included," % os.path.basename(
-             os.path.dirname(mesh_src)),
-         "         user-confirmed masses), re-posed so that both soles are",
-         "         level at the zero pose (same motion as Ver.2). battery_link and estop_link are fixed to base_link;",
-         "         their frames are their COMs. Every link frame is parallel to base_link at zero: X forward, Y left,",
-         "         Z up. Meshes in link frames (mm). Joint limits are -pi..+pi until the Ver.2 joint-limit sweep. -->", "",
+    pkg = os.path.basename(os.path.dirname(mesh_src))
+    if VERSION == "ver2-3":
+        header = [
+            "    <!-- RoboNex Ver.2-3 %s (%s): scripts/model_tools.py build" % (VARIANT, TITLE),
+            "         from the Fusion 360 export package %s (link-level inertials with motors included," % pkg,
+            "         user-confirmed masses), re-posed so that both soles are",
+            "         level at the zero pose (same motion as Ver.2-2). The battery and the e-stop are merged into",
+            "         base_link. neck_pitch_joint stays revolute in this URDF; MuJoCo and Isaac fix it at 0 rad and",
+            "         keep head_link attached. Every link frame is parallel to base_link at zero: X forward, Y left,",
+            "         Z up. Meshes in link frames (mm). Hip limits are the Ver.2 measured limits; other joints stay",
+            "         at the package limits. -->", "",
+        ]
+    else:
+        header = [
+            "    <!-- RoboNex Ver.2-2 %s (%s): ver2-2/scripts/model_tools.py build" % (VARIANT, TITLE),
+            "         from the Fusion 360 export package %s (link-level inertials with motors included," % pkg,
+            "         user-confirmed masses), re-posed so that both soles are",
+            "         level at the zero pose (same motion as Ver.2). battery_link and estop_link are fixed to base_link;",
+            "         their frames are their COMs. Every link frame is parallel to base_link at zero: X forward, Y left,",
+            "         Z up. Meshes in link frames (mm). Joint limits are -pi..+pi until the Ver.2 joint-limit sweep. -->", "",
+        ]
+    o = ['<?xml version="1.0"?>', '<robot name="robonex_%s">' % VARIANT, ""] + header + [
          '    <material name="black">', '        <color rgba="0.05 0.05 0.05 1.0"/>', "    </material>", "",
          '    <material name="gray">', '        <color rgba="0.647 0.647 0.647 1.0"/>', "    </material>", ""]
     for name, lk in links.items():
@@ -564,7 +601,7 @@ def constants():
     from robonex_common.joints import AUXILIARY_JOINTS
     if not os.path.exists(SCENE_FIXED):
         raise SystemExit("constants needs %s: run `mujoco/build_mjcf.py --variant edu --fixed-base` first (on a first "
-                         "build, `model_tools.py --version ver2-2 constants --seed-limits-only` before it)" % SCENE_FIXED)
+                         "build, `model_tools.py --version %s constants --seed-limits-only` before it)" % (SCENE_FIXED, VERSION))
     lp = Loops("edu")
     corners = sole_corners()
     lp.set({n: 0.0 for n in lp.names})
@@ -621,7 +658,7 @@ def constants():
         "variant_mass_kg": variant_masses(),
         "provisional_limits": provisional_limits(),
         "provisional_limits_note": PROVISIONAL_LIMITS_NOTE,
-        "upper_body_limits_note": UPPER_BODY_LIMITS_NOTE,
+        "upper_body_limits_note": UPPER_BODY_NOTE,
         "upper_body_default_pos": {joint.model_name: 0.0 for joint in AUXILIARY_JOINTS},
     }
     with open(CONSTANTS_OUT, "w") as f:
@@ -876,11 +913,12 @@ def limits(variant):
 
 def main():
     parser = argparse.ArgumentParser(description="RoboNex model tools (build, constants, loops, limits, check).")
-    parser.add_argument("--version", required=True, help="model folder: ver2 or ver2-2 (build, constants: ver2-2 only)")
+    parser.add_argument("--version", required=True,
+                        help="model folder: ver2, ver2-2 or ver2-3 (build, constants: ver2-2 and ver2-3)")
     sub = parser.add_subparsers(dest="command", required=True)
     p = sub.add_parser("build", help="re-pose a Fusion export package into meshes/, loop_closures.yaml, urdf/")
-    p.add_argument("--package", required=True, help="Fusion export folder (ver2-2_Edu.urdf or urdf/robonex.urdf, "
-                                                     "loop_closures.yaml, meshes/)")
+    p.add_argument("--package", required=True, help="Fusion export folder (ver2-2_Edu.urdf, ver2-3_Edu.urdf or "
+                                                     "urdf/robonex.urdf, loop_closures.yaml, meshes/)")
     p = sub.add_parser("constants", help="solve the home pose and write <version>_constants.json")
     p.add_argument("--seed-limits-only", action="store_true", help="write only provisional_limits (first build)")
     p = sub.add_parser("loops", help="loop-closure residuals of a MuJoCo scene")
@@ -894,7 +932,7 @@ def main():
     args = parser.parse_args()
     version = select_version()
     if args.command in ("build", "constants") and version not in GENERATOR_VERSIONS:
-        raise SystemExit("%s is Ver.2-2 only (%s: urdf/, meshes/ and the constants file are frozen)"
+        raise SystemExit("%s is Ver.2-2 and Ver.2-3 only (%s: urdf/, meshes/ and the constants file are frozen)"
                          % (args.command, version))
     if args.command == "build":
         build(args.package)
