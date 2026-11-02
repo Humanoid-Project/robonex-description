@@ -19,15 +19,13 @@ pip install -r requirements.txt
 | Folder | Description | README |
 | --- | --- | :---: |
 | `ver1` | Ver.1 lower body: meshes, URDF, closed-loop MJCF and Isaac USD | [📖](ver1/) |
-| `ver2` | Ver.2 `edu` (legs), `pro` (legs + arms), `max` (legs + arms + head) | [📖](ver2/) |
-| `ver2-2` | Ver.2-2 `edu`: battery and E-stop as their own links, measured masses (24.49 kg) | [📖](ver2-2/) |
-| `ver2-3` | Ver.2-3 `edu`: battery and E-stop merged into `base_link`, head fixed at 0 rad (25.57 kg) | [📖](ver2-3/) |
+| `ver2` | Ver.2 `edu` (formerly `ver2-3`): battery and E-stop merged into `base_link`, head fixed at 0 rad (25.57 kg) | [📖](ver2/) |
 
 <br>
 
 ## Scripts
 
-Shared by `ver2`, `ver2-2` and `ver2-3` (`ver1` keeps its own `ver1/scripts/`). The builders under `<version>/mujoco/` and
+Used by `ver2` (`ver1` keeps its own `ver1/scripts/`). The builders under `<version>/mujoco/` and
 `<version>/isaac/` import `model_io.py` and `robonex_data.py` from here and pass their own version.
 
 ```text
@@ -43,8 +41,8 @@ scripts/
 
 | Command | Option | Default | Description |
 | --- | --- | --- | --- |
-| - | `--version` | `Required` | Model folder (`ver2`, `ver2-2`, `ver2-3`); `build` and `constants` are `ver2-2` and `ver2-3` |
-| `build` | `--package` | `Required` | Fusion 360 export folder (`ver2-2_Edu.urdf`, `ver2-3_Edu.urdf` or `urdf/robonex.urdf`, `loop_closures.yaml`, `meshes/`); writes `meshes/`, `loop_closures.yaml`, `urdf/robonex_edu.urdf` |
+| - | `--version` | `Required` | Model folder (`ver2`) |
+| `build` | `--package` | `Required` | Fusion 360 export folder (`ver2-3_Edu.urdf` or `urdf/robonex.urdf`, `loop_closures.yaml`, `meshes/`); writes `meshes/`, `loop_closures.yaml`, `urdf/robonex_edu.urdf` |
 | `constants` | `--seed-limits-only` | Off | Write only `provisional_limits` (first build, before `scene_fixed.xml` exists) |
 | `loops` | `--pose` | `zero` | Pose to check (`zero`, `home`) |
 | - | `--scene` | `<version>/mujoco/robot/edu/scene_fixed.xml` | MuJoCo scene to check |
@@ -56,26 +54,20 @@ scripts/
 # Example
 cd ~/humanoid_project/robonex-description
 
-.venv/bin/python -I scripts/model_tools.py --version ver2-2 build --package "$HOME/Downloads/new2_urdf (1)/new2_urdf"
-.venv/bin/python -I scripts/model_tools.py --version ver2-2 constants
+.venv/bin/python -I scripts/model_tools.py --version ver2 build --package "$HOME/humanoid_project/robonex-description/new3_urdf"
+.venv/bin/python -I scripts/model_tools.py --version ver2 constants
 
 # checks
-.venv/bin/python -I scripts/model_tools.py --version ver2-2 loops --pose home
-.venv/bin/python -I scripts/model_tools.py --version ver2 loops --pose home --scene ver2/mujoco/robot/pro/scene_fixed.xml
+.venv/bin/python -I scripts/model_tools.py --version ver2 loops --pose home
+.venv/bin/python -I scripts/model_tools.py --version ver2 loops --pose home --scene ver2/mujoco/robot/edu/scene.xml
 .venv/bin/python -I scripts/model_tools.py --version ver2 check
-.venv/bin/python -I scripts/model_tools.py --version ver2-2 limits --variant edu
-
-# ver2-3
-.venv/bin/python -I scripts/model_tools.py --version ver2-3 build --package "$HOME/humanoid_project/robonex-description/new3_urdf"
-.venv/bin/python -I scripts/model_tools.py --version ver2-3 constants
-.venv/bin/python -I scripts/model_tools.py --version ver2-3 loops --pose home
-.venv/bin/python -I scripts/model_tools.py --version ver2-3 check
+.venv/bin/python -I scripts/model_tools.py --version ver2 limits --variant edu
 ```
 
 | Output | Description |
 | --- | --- |
 | `<version>/meshes/`, `<version>/loop_closures.yaml`, `<version>/urdf/robonex_edu.urdf` | `build` |
-| `<version>/<version>_constants.json` | `constants` |
+| `ver2/ver2_constants.json` | `constants` |
 
 <br>
 

@@ -6,27 +6,13 @@
 .venv*/
 __pycache__/
 
-# Ver.2: user-provided source files and regenerable Isaac USD
+# Ver.2: user-provided source files, regenerable Isaac USD and info sheet
 ver2/*.f3z
 ver2/*.docx
 ver2/isaac/*/*/*.usd
 ver2/isaac/*/*/configuration/
-
-# Local only: Ver.2 generator sources (delete after the edu joint limits are decided) and agent info sheets
-ver2/asis/
-ver2/_extract/
-ver2/build/
-ver2/verify/
-ver1/INFO.md
 ver2/INFO.md
+
+# Local only: Ver.1 info sheet and constants
+ver1/INFO.md
 ver1/ver1_constants.json
-
-# Ver.2-2: regenerable Isaac USD and info sheet
-ver2-2/isaac/*/*/*.usd
-ver2-2/isaac/*/*/configuration/
-ver2-2/INFO.md
-
-# Ver.2-3: regenerable Isaac USD and info sheet
-ver2-3/isaac/*/*/*.usd
-ver2-3/isaac/*/*/configuration/
-ver2-3/INFO.md

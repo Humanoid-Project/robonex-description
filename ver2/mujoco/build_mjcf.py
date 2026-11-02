@@ -44,6 +44,7 @@ IMPRATIO = 10
 SPAWN_HEIGHT = MUJOCO_SPAWN_HEIGHT
 LEG_DROP_V2 = SPAWN_HEIGHT_ZERO
 FIXED_BASE_HEIGHT = 1.60
+FIXED_ZERO_JOINTS = {"neck_pitch_joint"}
 
 
 def emit_body(links, joints, kids, name, ball_set, actuated, depth, out,
@@ -80,6 +81,8 @@ def emit_body(links, joints, kids, name, ball_set, actuated, depth, out,
                 out.append(
                     '%s  <joint name="%s" type="hinge" axis="%s"%s class="passive"/>'
                     % (pad, jname, fmt(axis_vec), lim))
+        elif parent_joint.name in FIXED_ZERO_JOINTS:
+            pass
         elif parent_joint.jtype in ("revolute", "continuous"):
             is_act = parent_joint.name in actuated
             cls = "act" if is_act else "passive"
@@ -284,7 +287,8 @@ def main():
     loops = load_loops()
     kids = children_of(joints)
     ball_set = set(loops.get("ball_upgrades", []))
-    actuated = actuated_joints(joints, loops.get("actuated_joints", []))
+    actuated = [name for name in actuated_joints(joints, loops.get("actuated_joints", []))
+                if name not in FIXED_ZERO_JOINTS]
     ball_limit_deg = loops.get("ball_limit_deg")
     ball_limit = math.radians(ball_limit_deg) if ball_limit_deg else None
 
@@ -387,10 +391,13 @@ def main():
     print("wrote %s" % scene_out)
     print("  variant     : %s" % VARIANT)
     print("  bodies      : %d" % len(links))
-    print("  upper body  : %s" % (", ".join(n for n in UPPER_BODY_JOINTS if n in joints) or "none"))
+    print("  upper body  : %s" % (
+        ", ".join(n for n in UPPER_BODY_JOINTS if n in joints and n not in FIXED_ZERO_JOINTS) or "none"))
+    print("  fixed at 0  : %s" % (
+        ", ".join(n for n in sorted(FIXED_ZERO_JOINTS) if n in joints) or "none"))
     print("  hinges      : %d" % (sum(
         1 for j in joints.values()
-        if j.jtype in ("revolute", "continuous") and j.name not in ball_set)
+        if j.jtype in ("revolute", "continuous") and j.name not in ball_set and j.name not in FIXED_ZERO_JOINTS)
         + len(ROD_END_AXES) * len(ball_set)))
     print("  rod ends    : %d (%d hinges each)" % (len(ball_set), len(ROD_END_AXES)))
     print("  equalities  : %d" % (

@@ -10,9 +10,7 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(HERE)
 VERSIONS = {
-    "ver2": dict(variants=("edu", "pro", "max"), constants="ver2_constants.json"),
-    "ver2-2": dict(variants=("edu",), constants="ver2-2_constants.json"),
-    "ver2-3": dict(variants=("edu",), constants="ver2-3_constants.json"),
+    "ver2": dict(variants=("edu",), constants="ver2_constants.json"),
 }
 _ARG_VERSION = sys.argv[sys.argv.index("--version") + 1] if "--version" in sys.argv else None
 _ENV_VERSION = os.environ.get("ROBONEX_VERSION")

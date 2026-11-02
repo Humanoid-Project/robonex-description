@@ -8,22 +8,19 @@
 isaac/
 ├── README.md
 ├── build_isaac_urdf.py
-├── load_robonex.py
 ├── scripts/
 │   ├── apply_physical_loops.py
 │   ├── build_closed_loop_mesh.py
 │   └── build_closed_loop_box.py
-├── edu/
-│   ├── closed_loop_mesh/
-│   └── closed_loop_box/
-├── pro/
-└── max/
+└── edu/
+    ├── closed_loop_mesh/
+    └── closed_loop_box/
 ```
 
 | Variant | Mechanism | Collision |
 | --- | --- | --- |
-| `closed_loop_mesh` | Four-bar and differential closures kept; 12 cranks actuated (pro/max + 8 arms, max + neck pitch) | Visual meshes |
-| `closed_loop_box` | Four-bar and differential closures kept; 12 cranks actuated (pro/max + 8 arms, max + neck pitch) | Box primitives |
+| `closed_loop_mesh` | Four-bar and differential closures kept; 12 cranks actuated; neck fixed at 0 rad | Visual meshes |
+| `closed_loop_box` | Four-bar and differential closures kept; 12 cranks actuated; neck fixed at 0 rad | Box primitives |
 
 <br>
 
@@ -45,7 +42,7 @@ python3 ver2/isaac/scripts/build_closed_loop_box.py --variant edu
 
 | Command | Option | Default | Description |
 | --- | --- | --- | --- |
-| - | `--variant` | `edu` | Model variant (`edu`, `pro`, `max`) |
+| - | `--variant` | `edu` | Model variant (`edu`) |
 | - | `--collision` | `mesh` | Collision geometry source (`mesh`, `box`) |
 
 ```bash
