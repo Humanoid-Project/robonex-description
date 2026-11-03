@@ -73,4 +73,4 @@ cd ~/humanoid_project/robonex-description
 
 ## License
 
-Licensed under the [Apache License 2.0](LICENSE). Copyright 2026 RoboNex. See [NOTICE](NOTICE).
+Licensed under [CC BY-NC-SA 4.0](LICENSE). Copyright 2026 RoboNex. Personal, academic and non-profit research use is welcome; commercial use requires a separate licence. See [NOTICE](NOTICE).

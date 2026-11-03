@@ -1,10 +1,20 @@
 RoboNex Description
 Copyright 2026 RoboNex
 
-This product includes software and robot models developed by RoboNex.
+This product includes robot models and software developed by RoboNex.
+
+Licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License
+(CC BY-NC-SA 4.0, https://creativecommons.org/licenses/by-nc-sa/4.0/). The full text is in LICENSE.
+
+Additional permission: personal, academic and non-profit research use is welcome, including research at universities
+and public research institutes regardless of the source of funding. Commercial use requires a separate licence from
+RoboNex.
+
+Versions of this repository published before this licence change were released under the Apache License 2.0; those
+copies keep that licence.
 
 The actuator meshes (RobStride RS02, RS03, RS05) and the Intel RealSense D435i camera mesh in this repository are
 simplified shapes drawn by RoboNex from measured outer dimensions. They are not the manufacturers' CAD models.
 RobStride and Intel RealSense are trademarks of their respective owners.
 
-The RoboNex name and logo are not licensed under the Apache License.
+The RoboNex name and logo are not licensed under CC BY-NC-SA 4.0.
