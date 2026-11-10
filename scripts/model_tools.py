@@ -769,7 +769,8 @@ def limits(variant):
         return sorted(out)
 
     def exact_check():
-        sys.path.insert(0, "/home/polygon/humanoid_project/robonex-walking/etc/delegates/2026-09-24_physopt/ankle_verification")
+        sys.path.insert(0, os.path.join(os.environ.get("HUMANOID_DATA", os.path.expanduser("~/.agents/departments/humanoid/data")),
+                                        "analysis/walking-delegates/2026-09-24_physopt/ankle_verification"))
         os.environ.setdefault("ANKLE_SRC", "unused")
         from common import geoms, place, depth, any_hit
         if state["leg_bodies"] is None:
