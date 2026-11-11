@@ -1,15 +1,6 @@
 <?xml version="1.0"?>
 <robot name="robonex_edu">
 
-    <!-- RoboNex Ver.2-3 edu (lower body, battery and e-stop merged into base_link, neck fixed at 0 in sim): scripts/model_tools.py build
-         from the Fusion 360 export package new3_urdf (link-level inertials with motors included,
-         user-confirmed masses), re-posed so that both soles are
-         level at the zero pose (same motion as Ver.2-2). The battery and the e-stop are merged into
-         base_link. neck_pitch_joint stays revolute in this URDF; MuJoCo and Isaac fix it at 0 rad and
-         keep head_link attached. Every link frame is parallel to base_link at zero: X forward, Y left,
-         Z up. Meshes in link frames (mm). Hip limits are the Ver.2 measured limits; other joints stay
-         at the package limits. -->
-
     <material name="black">
         <color rgba="0.05 0.05 0.05 1.0"/>
     </material>
