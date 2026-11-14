@@ -68,8 +68,8 @@ ACTUATED = ["l_hip_yaw_joint", "l_hip_pitch_joint", "l_hip_roll_joint", "l_knee_
             "r_hip_yaw_joint", "r_hip_pitch_joint", "r_hip_roll_joint", "r_knee_pitch_joint",
             "r_ankle_lower_joint", "r_ankle_upper_joint"]
 
-HIP_PITCH = 0.1
-KNEE_OUT = 0.29669690697178175
+HIP_PITCH = 0.13
+KNEE_OUT = 0.35
 ANKLE_PITCH = KNEE_OUT - HIP_PITCH
 PROVISIONAL_LIMITS = {
     "l_hip_yaw_joint": [-0.837758, 0.837758], "l_hip_pitch_joint": [-1.658063, 1.658063],
@@ -94,9 +94,9 @@ LEG_COLLISION_LINKS = ["%s_%s" % (s, n) for s in "lr" for n in (
 COLLISION_LINKS = ["base_link", "head_link"] + LEG_COLLISION_LINKS
 SPAWN_MARGIN = 0.006
 REPOSE_SKIP_DEG = 0.01
-CONTRACT_DEFAULT_POS = {"hip_yaw_joint": 0.0, "hip_pitch_joint": 0.1, "hip_roll_joint": 0.0,
-                        "knee_pitch_joint": -0.32986569515650255, "ankle_upper_joint": 0.21255773798848684,
-                        "ankle_lower_joint": -0.20380489141212904}
+CONTRACT_DEFAULT_POS = {"hip_yaw_joint": 0.0, "hip_pitch_joint": 0.13, "hip_roll_joint": 0.0,
+                        "knee_pitch_joint": -0.3961936767101065, "ankle_upper_joint": 0.23962121825843782,
+                        "ankle_lower_joint": -0.22908552614940247}
 CONTRACT_POSE_TOL = 1e-4
 
 STL_DTYPE = np.dtype([("n", "<f4", 3), ("v", "<f4", (3, 3)), ("a", "<u2")])
