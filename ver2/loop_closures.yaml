@@ -2,41 +2,41 @@ ball_loops:
   - name: l_ankle_ball_c
     parent: l_ankle_coupler_link_a
     child: l_foot
-    parent_xyz: [0.002064, -0.000394, -0.146985]
-    child_xyz: [0.050009, -0.049470, -0.025999]
+    parent_xyz: [0.002057, -0.000149, -0.146985]
+    child_xyz: [0.050002, -0.049200, -0.025999]
 
   - name: l_ankle_ball_d
     parent: l_ankle_coupler_link_b
     child: l_foot
-    parent_xyz: [0.003133, 0.000004, -0.257981]
-    child_xyz: [0.050000, 0.048930, -0.026000]
+    parent_xyz: [0.003165, 0.000249, -0.257980]
+    child_xyz: [0.050002, 0.049200, -0.025999]
 
   - name: r_ankle_ball_c
     parent: r_ankle_coupler_link_a
     child: r_foot
-    parent_xyz: [0.002049, -0.000100, -0.146986]
-    child_xyz: [0.050004, 0.049203, -0.026000]
+    parent_xyz: [0.002057, 0.000149, -0.146985]
+    child_xyz: [0.050002, 0.049200, -0.025999]
 
   - name: r_ankle_ball_d
     parent: r_ankle_coupler_link_b
     child: r_foot
-    parent_xyz: [0.003188, -0.000498, -0.257979]
-    child_xyz: [0.050004, -0.049197, -0.026000]
+    parent_xyz: [0.003165, -0.000249, -0.257980]
+    child_xyz: [0.050002, -0.049200, -0.025999]
 
 
 pin_loops:
   - name: l_knee_coupler_joint_b
     parent: l_knee_coupler_link
     child: l_knee_link
-    parent_xyz: [0.000000, -0.000000, -0.134000]
-    child_xyz: [0.065780, -0.000000, 0.064940]
+    parent_xyz: [0.000000, 0.000000, -0.134000]
+    child_xyz: [0.065780, 0.000001, 0.064940]
     axis: [0.0, 1.0, 0.0]
 
   - name: r_knee_coupler_joint_b
     parent: r_knee_coupler_link
     child: r_knee_link
     parent_xyz: [0.000000, 0.000000, -0.134000]
-    child_xyz: [0.065780, 0.000000, 0.064940]
+    child_xyz: [0.065780, -0.000001, 0.064940]
     axis: [0.0, -1.0, 0.0]
 
 

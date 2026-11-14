@@ -6,37 +6,37 @@
     "l_hip_yaw_joint": 0.0,
     "l_hip_pitch_joint": 0.1,
     "l_hip_roll_joint": 0.0,
-    "l_ankle_upper_joint": 0.21255773798848684,
-    "l_ankle_lower_joint": -0.20380489141212904,
-    "l_knee_pitch_joint": -0.32986569515650255,
+    "l_ankle_upper_joint": 0.21255483259320654,
+    "l_ankle_lower_joint": -0.20378853754081205,
+    "l_knee_pitch_joint": -0.3298662856549414,
     "r_hip_yaw_joint": 0.0,
     "r_hip_pitch_joint": -0.1,
     "r_hip_roll_joint": 0.0,
-    "r_ankle_lower_joint": 0.20380489141212904,
-    "r_ankle_upper_joint": -0.21255773798848684,
-    "r_knee_pitch_joint": 0.32986569515650255
+    "r_ankle_lower_joint": 0.20378853754081205,
+    "r_ankle_upper_joint": -0.21255483259320654,
+    "r_knee_pitch_joint": 0.3298662856549414
   },
   "home_passive_pos": {
-    "l_knee_joint": -0.2966973899736524,
-    "l_knee_coupler_joint_a": 0.4188091416152242,
-    "l_ankle_roll_joint": 6.236779354830382e-05,
-    "l_ankle_pitch_joint": 0.19669082561564988,
-    "l_ankle_coupler_joint_a_x": 3.461417330705796e-05,
-    "l_ankle_coupler_joint_a_y": 0.16807344890754108,
-    "l_ankle_coupler_joint_a_z": -0.0004500368358585282,
-    "l_ankle_coupler_joint_b_x": 1.6087347961521945e-05,
-    "l_ankle_coupler_joint_b_y": 0.1837535300884858,
-    "l_ankle_coupler_joint_b_z": 3.047366674085828e-06,
-    "r_knee_joint": 0.29669642397317664,
-    "r_knee_coupler_joint_a": 0.41881125821036846,
-    "r_ankle_roll_joint": 6.23131586723821e-05,
-    "r_ankle_pitch_joint": 0.19670280530403172,
-    "r_ankle_coupler_joint_a_x": 2.9801746228496372e-05,
-    "r_ankle_coupler_joint_a_y": 0.16807133043969885,
-    "r_ankle_coupler_joint_a_z": -0.00011392477059827818,
-    "r_ankle_coupler_joint_b_x": 2.0555985269368058e-05,
-    "r_ankle_coupler_joint_b_y": 0.18375882070192867,
-    "r_ankle_coupler_joint_b_z": -0.00035446828140430327
+    "l_knee_joint": -0.29669690697178175,
+    "l_knee_coupler_joint_a": 0.41881199790181217,
+    "l_ankle_roll_joint": 0.0,
+    "l_ankle_pitch_joint": 0.19669690697178174,
+    "l_ankle_coupler_joint_a_x": 2.4119991400496567e-06,
+    "l_ankle_coupler_joint_a_y": 0.1680583565033337,
+    "l_ankle_coupler_joint_a_z": -0.0001703281221743531,
+    "l_ankle_coupler_joint_b_x": -2.2077606407875643e-06,
+    "l_ankle_coupler_joint_b_y": 0.1837540053249583,
+    "l_ankle_coupler_joint_b_z": 0.0001773301988612825,
+    "r_knee_joint": 0.29669690697178175,
+    "r_knee_coupler_joint_a": 0.41881199790181217,
+    "r_ankle_roll_joint": 0.0,
+    "r_ankle_pitch_joint": 0.19669690697178174,
+    "r_ankle_coupler_joint_a_x": -2.4119991320926482e-06,
+    "r_ankle_coupler_joint_a_y": 0.16805835650333248,
+    "r_ankle_coupler_joint_a_z": 0.00017032812160663204,
+    "r_ankle_coupler_joint_b_x": 2.207760652096197e-06,
+    "r_ankle_coupler_joint_b_y": 0.18375400532495673,
+    "r_ankle_coupler_joint_b_z": -0.00017733019977323147
   },
   "default_output_pose": {
     "hip_pitch": 0.1,
@@ -46,7 +46,7 @@
   "foot_sole_corners": [
     [
       -0.0591,
-      -0.0591,
+      -0.0588,
       -0.0654
     ],
     [
@@ -56,7 +56,7 @@
     ],
     [
       0.1441,
-      -0.0591,
+      -0.0588,
       -0.0654
     ],
     [
@@ -66,18 +66,18 @@
     ]
   ],
   "foot_origin_rest_height": 0.0654,
-  "stance_width_default": 0.26898,
+  "stance_width_default": 0.2687,
   "hip_pitch_height_default": 0.72227,
   "collision_box": {
     "base_link": [
       [
-        0.2734,
+        0.2651,
         0.2597,
         0.4694
       ],
       [
-        -0.0437,
-        0.0002,
+        -0.0478,
+        0.0001,
         0.0777
       ]
     ],
@@ -112,7 +112,7 @@
         0.1315
       ],
       [
-        -0.0046,
+        -0.0045,
         0.0601,
         -0.0257
       ]
@@ -120,12 +120,12 @@
     "l_hip_roll_link": [
       [
         0.115,
-        0.135,
-        0.3628
+        0.1485,
+        0.3627
       ],
       [
         -0.0348,
-        0.0019,
+        -0.0044,
         -0.1514
       ]
     ],
@@ -137,7 +137,7 @@
       ],
       [
         0.0029,
-        -0.0001,
+        0.0,
         -0.1076
       ]
     ],
@@ -149,7 +149,7 @@
       ],
       [
         0.0,
-        0.0,
+        -0.0,
         -0.025
       ]
     ],
@@ -161,7 +161,7 @@
       ],
       [
         0.045,
-        -0.0003,
+        -0.0,
         -0.0202
       ]
     ],
@@ -184,7 +184,7 @@
         0.1315
       ],
       [
-        -0.0045,
+        -0.0046,
         -0.0601,
         -0.0257
       ]
@@ -192,12 +192,12 @@
     "r_hip_roll_link": [
       [
         0.115,
-        0.135,
-        0.3628
+        0.1485,
+        0.3627
       ],
       [
         -0.0348,
-        -0.0019,
+        0.0044,
         -0.1514
       ]
     ],
@@ -239,13 +239,13 @@
     ]
   },
   "solve_residual_m": 2.220446049250313e-16,
-  "symmetrization_max_rad": 6.84980116310574e-05,
+  "symmetrization_max_rad": 9.43689570931383e-16,
   "sole_tilt_deg_default": [
-    0.0035246333421307756,
-    0.003520472246899821
+    0.0,
+    0.0
   ],
   "variant_mass_kg": {
-    "edu": 25.567049
+    "edu": 24.623
   },
   "provisional_limits": {
     "l_hip_yaw_joint": [
@@ -296,10 +296,6 @@
       -0.523599,
       0.872665
     ],
-    "neck_pitch_joint": [
-      -1.27409,
-      1.27409
-    ],
     "l_shoulder_pitch_joint": [
       -1.745329,
       1.745329
@@ -313,6 +309,10 @@
       0.785398
     ],
     "l_elbow_joint": [
+      -0.785398,
+      0.785398
+    ],
+    "l_wrist_yaw_joint": [
       -0.785398,
       0.785398
     ],
@@ -331,19 +331,34 @@
     "r_elbow_joint": [
       -0.785398,
       0.785398
+    ],
+    "r_wrist_yaw_joint": [
+      -0.785398,
+      0.785398
+    ],
+    "neck_pitch_joint": [
+      -1.27409,
+      1.27409
+    ],
+    "neck_yaw_joint": [
+      -0.523599,
+      0.523599
     ]
   },
   "provisional_limits_note": "hips: Ver.2 limits set by the user in the viewer (2026-09-26): yaw +-48 (the hip-yaw link touches the other leg's hip-pitch motor at 50), pitch +-95 (user 2026-09-27: CAD hip_roll_link-base_link contact from -96 backward), roll -120..+10 (left, mirrored right); knee crank -70..+10 (CAD hip_roll_link-knee_coupler_link contact from +13, knee output peaks near -80); ankle upper -16..+50, lower -50..+30 with a coupled foot roll limit of 12 deg (fcl crank-pair scan, user 2026-09-27)",
   "upper_body_limits_note": "neck_pitch_joint is fixed at 0 rad in the MuJoCo and Isaac models (head_link attached at 0 deg); the URDF keeps the package revolute limits (Ver.2 max). shoulder and elbow entries are robonex-common AUXILIARY_JOINTS placeholders, unused by edu",
   "upper_body_default_pos": {
-    "neck_pitch_joint": 0.0,
     "l_shoulder_pitch_joint": 0.0,
     "l_shoulder_roll_joint": 0.0,
     "l_shoulder_yaw_joint": 0.0,
     "l_elbow_joint": 0.0,
+    "l_wrist_yaw_joint": 0.0,
     "r_shoulder_pitch_joint": 0.0,
     "r_shoulder_roll_joint": 0.0,
     "r_shoulder_yaw_joint": 0.0,
-    "r_elbow_joint": 0.0
+    "r_elbow_joint": 0.0,
+    "r_wrist_yaw_joint": 0.0,
+    "neck_pitch_joint": 0.0,
+    "neck_yaw_joint": 0.0
   }
 }

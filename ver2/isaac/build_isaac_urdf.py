@@ -7,7 +7,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 os.environ["ROBONEX_VERSION"] = os.path.basename(os.path.dirname(HERE))
 sys.path.insert(0, os.path.join(HERE, "..", "..", "scripts"))
 
-from model_io import load_urdf, fmt, ROOT, VARIANT, VARIANTS
+from model_io import load_urdf, drop_frame_links, fmt, ROOT, VARIANT, VARIANTS
 from robonex_data import DEG, motor_physics_for, COLLISION_BOX, CONSTANTS, UPPER_BODY_JOINTS
 
 PROVISIONAL_LIMITS = CONSTANTS["provisional_limits"]
@@ -145,6 +145,7 @@ def build(collision):
     out_path = output_path(collision)
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
     links, joints, base = load_urdf()
+    links, joints = drop_frame_links(links, joints)
 
     o = []
     o.append('<?xml version="1.0"?>')

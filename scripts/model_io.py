@@ -142,6 +142,14 @@ def load_urdf(path=URDF_PATH):
     return links, joints, base[0]
 
 
+def drop_frame_links(links, joints):
+    frames = {j.child for j in joints.values()
+              if j.jtype == "fixed" and links[j.child].mass == 0.0 and not links[j.child].visuals
+              and not links[j.child].collisions and not any(k.parent == j.child for k in joints.values())}
+    return ({n: lk for n, lk in links.items() if n not in frames},
+            {n: j for n, j in joints.items() if j.child not in frames})
+
+
 def children_of(joints):
     out = {}
     for j in joints.values():

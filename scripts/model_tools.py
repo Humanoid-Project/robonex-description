@@ -2,7 +2,7 @@
 
 Usage: python -I scripts/model_tools.py --version ver2 <command> [options]
 
-  build --package DIR     re-pose the Fusion export DIR (ver2-3_Edu.urdf or urdf/robonex.urdf,
+  build --package DIR     re-pose the Fusion export DIR (ver2-4_Edu.urdf, ver2-3_Edu.urdf or urdf/robonex.urdf,
                           loop_closures.yaml, meshes/*.stl) to level soles, apply MEASURED_LIMITS; writes meshes/,
                           loop_closures.yaml, urdf/robonex_edu.urdf
   constants               solve the home pose on mujoco/robot/edu/scene_fixed.xml; writes <version>_constants.json
@@ -56,8 +56,7 @@ def select_version():
     return VERSION
 
 VARIANT = "edu"
-TITLE = "lower body, battery and e-stop merged into base_link, neck fixed at 0 in sim"
-STL_LABEL = "Ver.2-3"
+STL_LABEL = "Ver.2-4"
 D = math.pi / 180.0
 MEASURED_LIMITS = {
     "l_hip_yaw_joint": (-48 * D, 48 * D), "r_hip_yaw_joint": (-48 * D, 48 * D),
@@ -94,6 +93,7 @@ LEG_COLLISION_LINKS = ["%s_%s" % (s, n) for s in "lr" for n in (
     "hip_yaw_link", "hip_pitch_link", "hip_roll_link", "knee_link", "ankle_link", "foot")]
 COLLISION_LINKS = ["base_link", "head_link"] + LEG_COLLISION_LINKS
 SPAWN_MARGIN = 0.006
+REPOSE_SKIP_DEG = 0.01
 
 STL_DTYPE = np.dtype([("n", "<f4", 3), ("v", "<f4", (3, 3)), ("a", "<u2")])
 
@@ -257,7 +257,7 @@ def sole_normal(tris):
 def package_paths(package):
     package = os.path.abspath(os.path.expanduser(package))
     urdf = None
-    rels = ("ver2-3_Edu.urdf", os.path.join("urdf", "robonex.urdf"))
+    rels = ("ver2-4_Edu.urdf", "ver2-3_Edu.urdf", os.path.join("urdf", "robonex.urdf"))
     for rel in rels:
         if os.path.isfile(os.path.join(package, rel)):
             urdf = os.path.join(package, rel)
@@ -336,21 +336,43 @@ def mesh_name(path):
     return os.path.splitext(os.path.basename(path))[0]
 
 
+def is_frame_link(link, joints):
+    parent = [j for j in joints.values() if j["child"] == link["name"]]
+    return ("mass" not in link and not link["meshes"] and not link["col"] and len(parent) == 1
+            and parent[0]["type"] == "fixed" and not any(j["parent"] == link["name"] for j in joints.values()))
+
+
+def rotation_deg(R):
+    v = np.array([R[2, 1] - R[1, 2], R[0, 2] - R[2, 0], R[1, 0] - R[0, 1]])
+    return float(np.degrees(np.arctan2(np.linalg.norm(v), np.trace(R) - 1.0)))
+
+
 def build(package):
     urdf_src, loops_src, mesh_src = package_paths(package)
     L, J, loops, G, motion, report = repose(urdf_src, loops_src, mesh_src)
+    frames = [name for name, link in L.items() if is_frame_link(link, J)]
     for name, link in L.items():
-        if "mass" not in link:
+        if "mass" not in link and name not in frames:
             raise ValueError("package link %s has no inertial" % name)
+    angles = {k: rotation_deg(R) for k, (R, _) in motion.items()}
+    skip = max(angles.values()) < REPOSE_SKIP_DEG
+    print("re-pose rotations (deg): %s" % {k: round(v, 6) for k, v in sorted(angles.items())})
+    if skip:
+        print("re-pose skipped: max rotation %.6f deg < %g deg, package written unchanged" % (max(angles.values()),
+                                                                                             REPOSE_SKIP_DEG))
+        motion = {}
     origin = {k: (motion[k][1] if k in motion else G[k]) for k in L}
     new_L = {}
     for name, link in L.items():
+        if name in frames:
+            new_L[name] = dict(frame=True, meshes=[])
+            continue
         R = motion[name][0] if name in motion else np.eye(3)
         new_L[name] = dict(mass=link["mass"], com=R @ link["com"], I=R @ link["I"] @ R.T,
                            meshes=[mesh_name(m[0]) for m in link["meshes"]])
     new_J = {}
     for name, j in J.items():
-        new_J[name] = dict(j, xyz=origin[j["child"]] - origin[j["parent"]])
+        new_J[name] = dict(j, xyz=j["xyz"] if skip else origin[j["child"]] - origin[j["parent"]])
 
     os.makedirs(MESH_DIR, exist_ok=True)
     written = set()
@@ -404,21 +426,13 @@ def build(package):
 
     links = new_L
     joints = {k: v for k, v in new_J.items() if v["child"] in links and v["parent"] in links}
-    pkg = os.path.basename(os.path.dirname(mesh_src))
-    header = [
-        "    <!-- RoboNex Ver.2-3 %s (%s): scripts/model_tools.py build" % (VARIANT, TITLE),
-        "         from the Fusion 360 export package %s (link-level inertials with motors included," % pkg,
-        "         user-confirmed masses), re-posed so that both soles are",
-        "         level at the zero pose (same motion as Ver.2-2). The battery and the e-stop are merged into",
-        "         base_link. neck_pitch_joint stays revolute in this URDF; MuJoCo and Isaac fix it at 0 rad and",
-        "         keep head_link attached. Every link frame is parallel to base_link at zero: X forward, Y left,",
-        "         Z up. Meshes in link frames (mm). Hip limits are the Ver.2 measured limits; other joints stay",
-        "         at the package limits. -->", "",
-    ]
-    o = ['<?xml version="1.0"?>', '<robot name="robonex_%s">' % VARIANT, ""] + header + [
+    o = ['<?xml version="1.0"?>', '<robot name="robonex_%s">' % VARIANT, "",
          '    <material name="black">', '        <color rgba="0.05 0.05 0.05 1.0"/>', "    </material>", "",
          '    <material name="gray">', '        <color rgba="0.647 0.647 0.647 1.0"/>', "    </material>", ""]
     for name, lk in links.items():
+        if lk.get("frame"):
+            o += ["    <!-- [Link] %s -->" % name, '    <link name="%s"/>' % name, ""]
+            continue
         I = lk["I"]
         o += ["    <!-- [Link] %s -->" % name, '    <link name="%s">' % name, "        <inertial>",
               '            <origin xyz="%s" rpy="0 0 0"/>' % f6(lk["com"]),
@@ -460,8 +474,9 @@ def build(package):
     print("meshes re-posed: %d %s" % (len(written), sorted(written)))
     print("meshes copied unchanged: %d" % len(copied))
     print("motor meshes replaced by scripts/parts: %d %s" % (len(replaced), replaced))
+    print("frame-only links: %s" % (frames or "none"))
     print("%s: %d links, %d joints, %.5f kg -> %s" % (VARIANT, len(links), len(joints),
-                                                     sum(l["mass"] for l in links.values()), path))
+                                                     sum(l.get("mass", 0.0) for l in links.values()), path))
 
 
 class Loops:
@@ -683,6 +698,8 @@ def check(urdf_path):
                                                              dict(sorted(types.items())), total))
     bad, missing = [], []
     for name, l in links.items():
+        if is_frame_link(l, joints):
+            continue
         if "I" not in l:
             bad.append("%s: no inertial" % name)
             continue
@@ -692,7 +709,9 @@ def check(urdf_path):
         for f in l["meshes"] + l["col"]:
             if f[0] and not os.path.exists(os.path.join(os.path.dirname(urdf_path), f[0])):
                 missing.append(f[0])
-    print("inertias SPD + triangle inequality: %s" % ("all %d ok" % len(links) if not bad else bad))
+    frames = [n for n, l in links.items() if is_frame_link(l, joints)]
+    print("inertias SPD + triangle inequality: %s" % ("all %d ok" % (len(links) - len(frames)) if not bad else bad))
+    print("frame-only links: %s" % (frames or "none"))
     print("missing mesh files: %s" % (sorted(set(missing)) or "none"))
     F = np.diag([1.0, -1.0, 1.0])
 
@@ -889,8 +908,8 @@ def main():
                         help="model folder: ver2")
     sub = parser.add_subparsers(dest="command", required=True)
     p = sub.add_parser("build", help="re-pose a Fusion export package into meshes/, loop_closures.yaml, urdf/")
-    p.add_argument("--package", required=True, help="Fusion export folder (ver2-3_Edu.urdf or "
-                                                     "urdf/robonex.urdf, loop_closures.yaml, meshes/)")
+    p.add_argument("--package", required=True, help="Fusion export folder (ver2-4_Edu.urdf, ver2-3_Edu.urdf "
+                                                     "or urdf/robonex.urdf, loop_closures.yaml, meshes/)")
     p = sub.add_parser("constants", help="solve the home pose and write <version>_constants.json")
     p.add_argument("--seed-limits-only", action="store_true", help="write only provisional_limits (first build)")
     p = sub.add_parser("loops", help="loop-closure residuals of a MuJoCo scene")

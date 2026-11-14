@@ -4,7 +4,7 @@
 | Folder | Description | README |
 | --- | --- | :---: |
 | `meshes` | Link STL meshes (level-sole zero pose); battery and E-stop are in `base_link`, `head_link` is included; actuator meshes are the simplified `scripts/parts/` cylinders | - |
-| `urdf` | Source URDF: `robonex_edu` (lower body, `neck_pitch_joint` revolute) | - |
+| `urdf` | Source URDF: `robonex_edu` (lower body, `neck_pitch_joint` revolute, `d435_link` camera frame; frame-only links are left out of the MuJoCo and Isaac models) | - |
 | `mujoco` | Closed-loop MJCF models and fixed/free-base scenes; neck fixed at 0 rad | [📖](mujoco/) |
 | `isaac` | Closed-loop URDF/USD models for Isaac Sim; neck fixed at 0 rad | [📖](isaac/) |
 
@@ -23,7 +23,7 @@ Repo-root [`scripts/`](../#scripts), run with `--version ver2`. Regeneration ord
 # Example
 cd ~/humanoid_project/robonex-description
 
-.venv/bin/python -I scripts/model_tools.py --version ver2 build --package "$HOME/humanoid_project/robonex-description/new3_urdf"
+.venv/bin/python -I scripts/model_tools.py --version ver2 build --package "$HOME/Downloads/new4_urdf"
 .venv/bin/python -I ver2/mujoco/build_mjcf.py --variant edu --fixed-base
 .venv/bin/python -I scripts/model_tools.py --version ver2 constants
 .venv/bin/python -I ver2/mujoco/build_mjcf.py --variant edu

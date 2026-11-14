@@ -19,7 +19,7 @@ pip install -r requirements.txt
 | Folder | Description | README |
 | --- | --- | :---: |
 | `ver1` | Ver.1 lower body: meshes, URDF, closed-loop MJCF and Isaac USD | [📖](ver1/) |
-| `ver2` | Ver.2 `edu` (formerly `ver2-3`): battery and E-stop merged into `base_link`, head fixed at 0 rad (25.57 kg) | [📖](ver2/) |
+| `ver2` | Ver.2 `edu` (Ver.2-4, measured part masses): battery and E-stop merged into `base_link`, head fixed at 0 rad, `d435_link` camera frame (24.62 kg) | [📖](ver2/) |
 
 <br>
 
@@ -33,7 +33,7 @@ scripts/
 ├── model_io.py              VERSIONS table (variants, constants file), URDF/YAML parser
 ├── robonex_data.py          build constants read from <version>/<version>_constants.json
 ├── model_tools.py           build, constants, loops, limits, check
-├── parts/                   rs02.stl, rs03.stl, d435i.stl — simplified actuator / camera meshes placed by `build`
+├── parts/                   rs02.stl, rs03.stl — simplified actuator meshes placed by `build`; d435i.stl camera box (not placed)
 └── REPORT_fusion_v14.md     Ver.2-2 Fusion export report
 ```
 
@@ -42,7 +42,7 @@ scripts/
 | Command | Option | Default | Description |
 | --- | --- | --- | --- |
 | - | `--version` | `Required` | Model folder (`ver2`) |
-| `build` | `--package` | `Required` | Fusion 360 export folder (`ver2-3_Edu.urdf` or `urdf/robonex.urdf`, `loop_closures.yaml`, `meshes/`); writes `meshes/`, `loop_closures.yaml`, `urdf/robonex_edu.urdf` |
+| `build` | `--package` | `Required` | Fusion 360 export folder (`ver2-4_Edu.urdf`, `ver2-3_Edu.urdf` or `urdf/robonex.urdf`, `loop_closures.yaml`, `meshes/`); writes `meshes/`, `loop_closures.yaml`, `urdf/robonex_edu.urdf` |
 | `constants` | `--seed-limits-only` | Off | Write only `provisional_limits` (first build, before `scene_fixed.xml` exists) |
 | `loops` | `--pose` | `zero` | Pose to check (`zero`, `home`) |
 | - | `--scene` | `<version>/mujoco/robot/edu/scene_fixed.xml` | MuJoCo scene to check |
@@ -54,7 +54,7 @@ scripts/
 # Example
 cd ~/humanoid_project/robonex-description
 
-.venv/bin/python -I scripts/model_tools.py --version ver2 build --package "$HOME/humanoid_project/robonex-description/new3_urdf"
+.venv/bin/python -I scripts/model_tools.py --version ver2 build --package "$HOME/Downloads/new4_urdf"
 .venv/bin/python -I scripts/model_tools.py --version ver2 constants
 
 # checks

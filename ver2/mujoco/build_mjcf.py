@@ -8,7 +8,7 @@ os.environ["ROBONEX_VERSION"] = os.path.basename(os.path.dirname(HERE))
 sys.path.insert(0, os.path.join(HERE, "..", "..", "scripts"))
 
 from model_io import (
-    load_urdf, load_loops, children_of, rpy_to_quat, fmt, ROOT, VARIANT, VERSION,
+    load_urdf, load_loops, children_of, drop_frame_links, rpy_to_quat, fmt, ROOT, VARIANT, VERSION,
 )
 from robonex_data import (
     motor_physics_for, actuated_joints, COLLISION_BOX, FEET, FOOT_FRICTION, UPPER_BODY_JOINTS,
@@ -281,6 +281,7 @@ def main():
         scene_out = FREE_SCENE_OUT
 
     links, joints, base = load_urdf()
+    links, joints = drop_frame_links(links, joints)
     for name, (lo, hi) in PROVISIONAL_LIMITS.items():
         if name in joints:
             joints[name].lower, joints[name].upper = lo, hi
