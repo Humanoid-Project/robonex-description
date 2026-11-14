@@ -94,6 +94,10 @@ LEG_COLLISION_LINKS = ["%s_%s" % (s, n) for s in "lr" for n in (
 COLLISION_LINKS = ["base_link", "head_link"] + LEG_COLLISION_LINKS
 SPAWN_MARGIN = 0.006
 REPOSE_SKIP_DEG = 0.01
+CONTRACT_DEFAULT_POS = {"hip_yaw_joint": 0.0, "hip_pitch_joint": 0.1, "hip_roll_joint": 0.0,
+                        "knee_pitch_joint": -0.32986569515650255, "ankle_upper_joint": 0.21255773798848684,
+                        "ankle_lower_joint": -0.20380489141212904}
+CONTRACT_POSE_TOL = 1e-4
 
 STL_DTYPE = np.dtype([("n", "<f4", 3), ("v", "<f4", (3, 3)), ("a", "<u2")])
 
@@ -611,6 +615,13 @@ def constants():
     for n in actuated:
         mag = 0.5 * (abs(solved[n]) + abs(solved[mirror_name(n)]))
         default_act[n] = float(np.copysign(mag, solved[n])) if abs(solved[n]) > 1e-12 else 0.0
+    contract = {n: (1.0 if n.startswith("l_") else -1.0) * CONTRACT_DEFAULT_POS[n[2:]] + 0.0 for n in actuated}
+    pose_shift = max(abs(default_act[n] - contract[n]) for n in actuated)
+    if pose_shift < CONTRACT_POSE_TOL:
+        default_act = contract
+        print("default pose: policy-contract values kept (solved pose differs by %.2e rad)" % pose_shift)
+    else:
+        print("default pose: solved pose differs from the policy contract by %.2e rad, solved values written" % pose_shift)
     passive_names = [n for s in "lr" for n in leg_passive(s)]
     res2, it2 = lp.solve(default_act, passive_names, tol=1e-13)
     passive = {n: lp.q(n) for n in passive_names}
@@ -640,6 +651,7 @@ def constants():
         "collision_box": boxes,
         "solve_residual_m": float(max(res, res2)),
         "symmetrization_max_rad": float(asym),
+        "default_pose_contract_shift_rad": float(pose_shift),
         "sole_tilt_deg_default": sole_level,
         "variant_mass_kg": variant_masses(),
         "provisional_limits": provisional_limits(),
