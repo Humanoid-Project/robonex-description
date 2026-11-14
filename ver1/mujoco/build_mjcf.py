@@ -10,7 +10,6 @@ from model_io import (
 )
 from robonex_data import motor_physics_for, COLLISION_BOX, FEET, FOOT_FRICTION
 from robonex_common.actuators import CONTROL_GAINS_BY_JOINT
-from robonex_common.joints import DEFAULT_JOINT_POS
 
 ROD_END_BOLT_AXIS = "y"
 ROD_END_AXES = (
@@ -38,6 +37,12 @@ SPAWN_HEIGHT = 1.085
 FIXED_BASE_HEIGHT = 1.60
 LEG_DROP = 1.0789
 HOME_HEIGHT = 1.0710
+DEFAULT_JOINT_POS = {
+    "l_hip_yaw_joint": 0.0, "l_hip_pitch_joint": 0.1, "l_hip_roll_joint": 0.0,
+    "l_knee_pitch_joint": -0.38578, "l_ankle_upper_joint": 0.2056595, "l_ankle_lower_joint": -0.2056595,
+    "r_hip_yaw_joint": 0.0, "r_hip_pitch_joint": -0.1, "r_hip_roll_joint": 0.0,
+    "r_knee_pitch_joint": 0.38578, "r_ankle_upper_joint": -0.2056595, "r_ankle_lower_joint": 0.2056595,
+}
 HOME_PASSIVE_JOINT_POS = {
     "l_knee_joint": -0.29669690697178175,
     "l_knee_coupler_joint_a": 0.22857922748055304,
