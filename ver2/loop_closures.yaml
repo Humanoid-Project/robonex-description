@@ -28,15 +28,15 @@ pin_loops:
   - name: l_knee_coupler_joint_b
     parent: l_knee_coupler_link
     child: l_knee_link
-    parent_xyz: [0.000000, 0.000000, -0.134000]
-    child_xyz: [0.065780, 0.000001, 0.064940]
+    parent_xyz: [-0.032196, 0.000000, -0.130074]
+    child_xyz: [0.065779, 0.000001, 0.064938]
     axis: [0.0, 1.0, 0.0]
 
   - name: r_knee_coupler_joint_b
     parent: r_knee_coupler_link
     child: r_knee_link
-    parent_xyz: [0.000000, 0.000000, -0.134000]
-    child_xyz: [0.065780, -0.000001, 0.064940]
+    parent_xyz: [-0.032196, 0.000000, -0.130074]
+    child_xyz: [0.065779, -0.000001, 0.064938]
     axis: [0.0, -1.0, 0.0]
 
 

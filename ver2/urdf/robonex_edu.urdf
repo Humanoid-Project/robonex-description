@@ -186,9 +186,9 @@
     <!-- [Link] l_knee_crank_link -->
     <link name="l_knee_crank_link">
         <inertial>
-            <origin xyz="0.019336 0.028990 0.007124" rpy="0 0 0"/>
+            <origin xyz="0.034436 0.029627 0.007203" rpy="0 0 0"/>
             <mass value="0.197000"/>
-            <inertia ixx="0.00008064" ixy="-0.00001052" ixz="-0.00003274" iyy="0.00015905" iyz="-0.00000387" izz="0.00015742"/>
+            <inertia ixx="0.00007234" ixy="-0.00001199" ixz="-0.00003896" iyy="0.00024791" iyz="-0.00000251" izz="0.00024738"/>
         </inertial>
 
         <visual>
@@ -210,9 +210,9 @@
     <!-- [Link] l_knee_coupler_link -->
     <link name="l_knee_coupler_link">
         <inertial>
-            <origin xyz="-0.000003 0.000000 -0.067002" rpy="0 0 0"/>
+            <origin xyz="-0.016099 0.000000 -0.065038" rpy="0 0 0"/>
             <mass value="0.114000"/>
-            <inertia ixx="0.00036186" ixy="0.00000000" ixz="0.00000000" iyy="0.00036685" iyz="0.00000000" izz="0.00001202"/>
+            <inertia ixx="0.00034167" ixy="0.00000000" ixz="-0.00008160" iyy="0.00036686" iyz="0.00000000" izz="0.00003221"/>
         </inertial>
 
         <visual>
@@ -539,9 +539,9 @@
     <!-- [Link] r_knee_crank_link -->
     <link name="r_knee_crank_link">
         <inertial>
-            <origin xyz="0.019336 -0.028990 0.007124" rpy="0 0 0"/>
+            <origin xyz="0.034436 -0.029627 0.007203" rpy="0 0 0"/>
             <mass value="0.197000"/>
-            <inertia ixx="0.00008064" ixy="0.00001052" ixz="-0.00003274" iyy="0.00015905" iyz="0.00000387" izz="0.00015742"/>
+            <inertia ixx="0.00007234" ixy="0.00001199" ixz="-0.00003896" iyy="0.00024791" iyz="0.00000251" izz="0.00024738"/>
         </inertial>
 
         <visual>
@@ -563,9 +563,9 @@
     <!-- [Link] r_knee_coupler_link -->
     <link name="r_knee_coupler_link">
         <inertial>
-            <origin xyz="-0.000003 0.000000 -0.067002" rpy="0 0 0"/>
+            <origin xyz="-0.016099 0.000000 -0.065038" rpy="0 0 0"/>
             <mass value="0.114000"/>
-            <inertia ixx="0.00036186" ixy="0.00000000" ixz="0.00000000" iyy="0.00036685" iyz="0.00000000" izz="0.00001202"/>
+            <inertia ixx="0.00034167" ixy="0.00000000" ixz="-0.00008160" iyy="0.00036686" iyz="0.00000000" izz="0.00003221"/>
         </inertial>
 
         <visual>
@@ -859,7 +859,7 @@
     <joint name="l_knee_coupler_joint_a" type="revolute">
         <parent link="l_knee_crank_link"/>
         <child link="l_knee_coupler_link"/>
-        <origin xyz="0.065782 0.031500 0.023943" rpy="0 0 0"/>
+        <origin xyz="0.097977 0.031500 0.020015" rpy="0 0 0"/>
         <axis xyz="0 -1 0"/>
         <limit lower="-3.141593" upper="3.141593" effort="0.0" velocity="0.0"/>
         <dynamics damping="0.0" friction="0.0"/>
@@ -919,7 +919,7 @@
     <joint name="r_knee_coupler_joint_a" type="revolute">
         <parent link="r_knee_crank_link"/>
         <child link="r_knee_coupler_link"/>
-        <origin xyz="0.065782 -0.031500 0.023943" rpy="0 0 0"/>
+        <origin xyz="0.097977 -0.031500 0.020015" rpy="0 0 0"/>
         <axis xyz="0 -1 0"/>
         <limit lower="-3.141593" upper="3.141593" effort="0.0" velocity="0.0"/>
         <dynamics damping="0.0" friction="0.0"/>
