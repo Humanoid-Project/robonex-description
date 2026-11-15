@@ -73,17 +73,17 @@ KNEE_OUT = 0.35
 ANKLE_PITCH = KNEE_OUT - HIP_PITCH
 PROVISIONAL_LIMITS = {
     "l_hip_yaw_joint": [-0.837758, 0.837758], "l_hip_pitch_joint": [-1.658063, 1.658063],
-    "l_hip_roll_joint": [-2.094395, 0.174533], "l_knee_pitch_joint": [-1.221730, 0.174533],
+    "l_hip_roll_joint": [-2.094395, 0.174533], "l_knee_pitch_joint": [-1.012291, 0.087266],
     "l_ankle_upper_joint": [-0.279253, 0.872665], "l_ankle_lower_joint": [-0.872665, 0.523599],
     "r_hip_yaw_joint": [-0.837758, 0.837758], "r_hip_pitch_joint": [-1.658063, 1.658063],
-    "r_hip_roll_joint": [-0.174533, 2.094395], "r_knee_pitch_joint": [-0.174533, 1.221730],
+    "r_hip_roll_joint": [-0.174533, 2.094395], "r_knee_pitch_joint": [-0.087266, 1.012291],
     "r_ankle_upper_joint": [-0.872665, 0.279253], "r_ankle_lower_joint": [-0.523599, 0.872665],
 }
 PROVISIONAL_LIMITS_NOTE = (
     "hips: Ver.2 limits set by the user in the viewer (2026-09-26): yaw +-48 (the hip-yaw link touches the other leg's "
     "hip-pitch motor at 50), pitch +-95 (user 2026-09-27: CAD hip_roll_link-base_link contact from -96 backward), roll "
-    "-120..+10 (left, mirrored right); knee crank -70..+10 (CAD hip_roll_link-knee_coupler_link contact "
-    "from +13, knee output peaks near -80); ankle upper -16..+50, lower -50..+30 with a coupled foot "
+    "-120..+10 (left, mirrored right); knee crank -58..+5 (user 2026-11-15, exact-mesh sweep: knee_coupler_link-knee_crank_link contact "
+    "from +7.3, knee_coupler_link-knee_link from -60.1, 2 deg margin; knee output -42.7..+5.2); ankle upper -16..+50, lower -50..+30 with a coupled foot "
     "roll limit of 12 deg (fcl crank-pair scan, user 2026-09-27)")
 UPPER_BODY_NOTE = (
     "neck_pitch_joint is fixed at 0 rad in the MuJoCo and Isaac models (head_link attached at 0 deg); "
