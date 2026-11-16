@@ -11,6 +11,8 @@ ver2/*.f3z
 ver2/*.docx
 ver2/isaac/*/*/*.usd
 ver2/isaac/*/*/configuration/
+ver2/isaac/*/*/config.yaml
+ver2/isaac/*/*/.asset_hash
 ver2/INFO.md
 
 # Local only: Ver.1 info sheet and constants
