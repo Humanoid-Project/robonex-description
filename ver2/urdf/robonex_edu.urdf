@@ -811,7 +811,7 @@
         <child link="l_hip_yaw_link"/>
         <origin xyz="0.009587 0.043000 -0.157994" rpy="0 0 0"/>
         <axis xyz="0 0 1"/>
-        <limit lower="-0.837758" upper="0.837758" effort="17.0" velocity="42.9"/>
+        <limit lower="-0.799361" upper="0.759218" effort="17.0" velocity="42.9"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
 
@@ -821,7 +821,7 @@
         <child link="l_hip_pitch_link"/>
         <origin xyz="0.000000 0.025750 -0.062000" rpy="0 0 0"/>
         <axis xyz="0 -1 0"/>
-        <limit lower="-1.658063" upper="1.658063" effort="60.0" velocity="20.9"/>
+        <limit lower="-1.539380" upper="1.968731" effort="60.0" velocity="20.9"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
 
@@ -831,7 +831,7 @@
         <child link="l_hip_roll_link"/>
         <origin xyz="0.022500 0.062700 -0.034000" rpy="0 0 0"/>
         <axis xyz="-1 0 0"/>
-        <limit lower="-2.094395" upper="0.174533" effort="60.0" velocity="20.9"/>
+        <limit lower="-2.513274" upper="0.225147" effort="60.0" velocity="20.9"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
 
@@ -871,7 +871,7 @@
         <child link="r_hip_yaw_link"/>
         <origin xyz="0.009587 -0.043000 -0.157994" rpy="0 0 0"/>
         <axis xyz="0 0 1"/>
-        <limit lower="-0.837758" upper="0.837758" effort="17.0" velocity="42.9"/>
+        <limit lower="-0.759218" upper="0.799361" effort="17.0" velocity="42.9"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
 
@@ -881,7 +881,7 @@
         <child link="r_hip_pitch_link"/>
         <origin xyz="0.000000 -0.025750 -0.062000" rpy="0 0 0"/>
         <axis xyz="0 1 0"/>
-        <limit lower="-1.658063" upper="1.658063" effort="60.0" velocity="20.9"/>
+        <limit lower="-1.968731" upper="1.539380" effort="60.0" velocity="20.9"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
 
@@ -891,7 +891,7 @@
         <child link="r_hip_roll_link"/>
         <origin xyz="0.022500 -0.062700 -0.034000" rpy="0 0 0"/>
         <axis xyz="-1 0 0"/>
-        <limit lower="-0.174533" upper="2.094395" effort="60.0" velocity="20.9"/>
+        <limit lower="-0.225147" upper="2.513274" effort="60.0" velocity="20.9"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
 

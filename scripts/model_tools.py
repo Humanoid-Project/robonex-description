@@ -59,9 +59,9 @@ VARIANT = "edu"
 STL_LABEL = "Ver.2-4"
 D = math.pi / 180.0
 MEASURED_LIMITS = {
-    "l_hip_yaw_joint": (-48 * D, 48 * D), "r_hip_yaw_joint": (-48 * D, 48 * D),
-    "l_hip_pitch_joint": (-95 * D, 95 * D), "r_hip_pitch_joint": (-95 * D, 95 * D),
-    "l_hip_roll_joint": (-120 * D, 10 * D), "r_hip_roll_joint": (-10 * D, 120 * D),
+    "l_hip_yaw_joint": (-45.8 * D, 43.5 * D), "r_hip_yaw_joint": (-43.5 * D, 45.8 * D),
+    "l_hip_pitch_joint": (-88.2 * D, 112.8 * D), "r_hip_pitch_joint": (-112.8 * D, 88.2 * D),
+    "l_hip_roll_joint": (-144.0 * D, 12.9 * D), "r_hip_roll_joint": (-12.9 * D, 144.0 * D),
 }
 ACTUATED = ["l_hip_yaw_joint", "l_hip_pitch_joint", "l_hip_roll_joint", "l_knee_pitch_joint",
             "l_ankle_upper_joint", "l_ankle_lower_joint",
@@ -72,19 +72,21 @@ HIP_PITCH = 0.13
 KNEE_OUT = 0.35
 ANKLE_PITCH = KNEE_OUT - HIP_PITCH
 PROVISIONAL_LIMITS = {
-    "l_hip_yaw_joint": [-0.837758, 0.837758], "l_hip_pitch_joint": [-1.658063, 1.658063],
-    "l_hip_roll_joint": [-2.094395, 0.174533], "l_knee_pitch_joint": [-0.802851, 0.000000],
-    "l_ankle_upper_joint": [-0.279253, 0.872665], "l_ankle_lower_joint": [-0.872665, 0.523599],
-    "r_hip_yaw_joint": [-0.837758, 0.837758], "r_hip_pitch_joint": [-1.658063, 1.658063],
-    "r_hip_roll_joint": [-0.174533, 2.094395], "r_knee_pitch_joint": [0.000000, 0.802851],
-    "r_ankle_upper_joint": [-0.872665, 0.279253], "r_ankle_lower_joint": [-0.523599, 0.872665],
+    "l_hip_yaw_joint": [-0.799361, 0.759218], "l_hip_pitch_joint": [-1.539380, 1.968731],
+    "l_hip_roll_joint": [-2.513274, 0.225147], "l_knee_pitch_joint": [-1.092576, 0.000000],
+    "l_ankle_upper_joint": [-0.656244, 0.506145], "l_ankle_lower_joint": [-0.593412, 0.472984],
+    "r_hip_yaw_joint": [-0.759218, 0.799361], "r_hip_pitch_joint": [-1.968731, 1.539380],
+    "r_hip_roll_joint": [-0.225147, 2.513274], "r_knee_pitch_joint": [0.000000, 1.092576],
+    "r_ankle_upper_joint": [-0.506145, 0.656244], "r_ankle_lower_joint": [-0.472984, 0.593412],
 }
 PROVISIONAL_LIMITS_NOTE = (
-    "hips: Ver.2 limits set by the user in the viewer (2026-09-26): yaw +-48 (the hip-yaw link touches the other leg's "
-    "hip-pitch motor at 50), pitch +-95 (user 2026-09-27: CAD hip_roll_link-base_link contact from -96 backward), roll "
-    "-120..+10 (left, mirrored right); knee crank -46..0 (2026-11-15, 100 mm crank, exact-mesh sweep: knee_coupler_link-knee_crank_link contact "
-    "from +1.75, knee_coupler_link-knee_link from -48.6, four-bar dead centres at +6.2 and -80.1; knee output -54.2..0); ankle upper -16..+50, lower -50..+30 with a coupled foot "
-    "roll limit of 12 deg (fcl crank-pair scan, user 2026-09-27)")
+    "robonex-common 2.4.0 command limits (2026-11-18; left, right mirrored; crank angles for knee and ankles): measured "
+    "mechanical stops of the Ver.2-4 robot hung on the stand and moved by hand (2026-11-17), tighter leg, minus 1 deg: "
+    "hip yaw -45.8..+43.5, pitch -88.2..+112.8, roll -144.0..+12.9, knee crank -62.6..0 (straight end kept at 0: the "
+    "four-bar dead centre is at +6.17, stop +4.2); ankle upper -37.6..+29.0, lower -34.0..+27.1 (toe-up and lower floor "
+    "from the 2026-11-17 walking run extremes minus 1 deg, the other sides from the partner-held stops) with a coupled "
+    "foot roll limit of 12 deg. Stop limits (real-hardware stop checks only) are in robonex-common STOP_LIMITS_DEG. "
+    "The CAD meshes disagree with the measured knee and hip pitch ranges (no self-collision in sim)")
 UPPER_BODY_NOTE = (
     "neck_pitch_joint is fixed at 0 rad in the MuJoCo and Isaac models (head_link attached at 0 deg); "
     "the URDF keeps the package revolute limits (Ver.2 max). shoulder and elbow entries are "
