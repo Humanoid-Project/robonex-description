@@ -33,7 +33,7 @@ scripts/
 ├── model_io.py              VERSIONS table (variants, constants file), URDF/YAML parser
 ├── robonex_data.py          build constants read from <version>/<version>_constants.json
 ├── model_tools.py           build, constants, loops, limits, check
-├── parts/                   rs02.stl, rs03.stl — simplified actuator meshes placed by `build`; d435i.stl camera box (not placed)
+├── parts/                   rs02.stl, rs03.stl — simplified actuator meshes placed by `build`; rs05.stl, d435i.stl camera box (not placed)
 └── REPORT_fusion_v14.md     Ver.2-2 Fusion export report
 ```
 

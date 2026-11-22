@@ -463,6 +463,8 @@ def build(package):
             lim = dict(j["limit"])
             if name in MEASURED_LIMITS:
                 lim["lower"], lim["upper"] = MEASURED_LIMITS[name]
+            if any(abs(a - round(a)) > 1e-6 for a in j["axis"]):
+                raise SystemExit("joint %s axis %s is not axis-aligned" % (name, j["axis"]))
             o += ['        <axis xyz="%s"/>' % " ".join("%d" % int(round(a)) for a in j["axis"]),
                   '        <limit lower="%.6f" upper="%.6f" effort="%.1f" velocity="%.1f"/>'
                   % (lim["lower"], lim["upper"], lim["effort"], lim["velocity"]),

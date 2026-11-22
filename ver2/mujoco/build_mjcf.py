@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import argparse
 import math
 import os
 import sys
@@ -8,7 +9,7 @@ os.environ["ROBONEX_VERSION"] = os.path.basename(os.path.dirname(HERE))
 sys.path.insert(0, os.path.join(HERE, "..", "..", "scripts"))
 
 from model_io import (
-    load_urdf, load_loops, children_of, drop_frame_links, rpy_to_quat, fmt, ROOT, VARIANT, VERSION,
+    load_urdf, load_loops, children_of, drop_frame_links, rpy_to_quat, fmt, ROOT, VARIANT, VARIANTS, VERSION,
 )
 from robonex_data import (
     motor_physics_for, actuated_joints, COLLISION_BOX, FEET, FOOT_FRICTION, UPPER_BODY_JOINTS,
@@ -216,10 +217,7 @@ def write_scene(scene_out, robot_filename):
 
 
 def append_home_keyframe(out_path, scene_out):
-    try:
-        import mujoco
-    except ImportError:
-        return "skipped (mujoco not installed)"
+    import mujoco
 
     model = mujoco.MjModel.from_xml_path(scene_out)
     data = mujoco.MjData(model)
@@ -266,7 +264,10 @@ def append_home_keyframe(out_path, scene_out):
 
 
 def main():
-    fixed_base = "--fixed-base" in sys.argv
+    parser = argparse.ArgumentParser(description="Build the RoboNex MJCF model and scene.")
+    parser.add_argument("--variant", choices=VARIANTS, default=VARIANT)
+    parser.add_argument("--fixed-base", action="store_true")
+    fixed_base = parser.parse_args().fixed_base
     os.makedirs(OUT_DIR, exist_ok=True)
     if not fixed_base and (HOME_HEIGHT is None or not HOME_PASSIVE_JOINT_POS):
         raise SystemExit("free-base build needs home constants: build --fixed-base, then run "
@@ -366,7 +367,7 @@ def main():
     out.append("  <actuator>")
     for name in actuated:
         j = joints[name]
-        kp, kv = CONTROL_GAINS_BY_JOINT.get(name) or (40.0, 2.0)
+        kp, kv = CONTROL_GAINS_BY_JOINT[name]
         out.append('    <position name="%s" joint="%s" ctrlrange="%s"'
                    ' forcerange="%s" kp="%g" kv="%g" class="motor"/>'
                    % (name.replace("_joint", ""), name, fmt((j.lower, j.upper)),

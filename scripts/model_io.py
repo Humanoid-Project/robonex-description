@@ -7,6 +7,8 @@ from dataclasses import dataclass, field
 
 import sys
 
+import yaml
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(HERE)
 VERSIONS = {
@@ -158,60 +160,9 @@ def children_of(joints):
 
 
 
-def _mini_yaml(text):
-    data, stack = {}, []
-    cur_key, cur_list, cur_item = None, None, None
-
-    def coerce(v):
-        v = v.strip()
-        if v.startswith("[") and v.endswith("]"):
-            body = v[1:-1].strip()
-            return [float(x) for x in body.split(",")] if body else []
-        try:
-            return float(v)
-        except ValueError:
-            return v
-
-    for raw in text.splitlines():
-        line = raw.split("#", 1)[0].rstrip()
-        if not line.strip():
-            continue
-        indent = len(line) - len(line.lstrip())
-        s = line.strip()
-
-        if indent == 0 and s.endswith(":"):
-            cur_key = s[:-1]
-            cur_list = []
-            data[cur_key] = cur_list
-            cur_item = None
-        elif indent == 0 and ":" in s:
-            k, v = s.split(":", 1)
-            data[k.strip()] = coerce(v)
-            cur_key, cur_list, cur_item = None, None, None
-        elif s.startswith("- "):
-            body = s[2:]
-            if ":" in body:
-                cur_item = {}
-                cur_list.append(cur_item)
-                k, v = body.split(":", 1)
-                cur_item[k.strip()] = coerce(v)
-            else:
-                cur_list.append(coerce(body))
-                cur_item = None
-        elif ":" in s and cur_item is not None:
-            k, v = s.split(":", 1)
-            cur_item[k.strip()] = coerce(v)
-    return data
-
-
 def load_loops(path=LOOPS_PATH):
     with open(path, "r", encoding="utf-8") as f:
-        text = f.read()
-    try:
-        import yaml
-    except ImportError:
-        return _mini_yaml(text)
-    return yaml.safe_load(text)
+        return yaml.safe_load(f)
 
 
 

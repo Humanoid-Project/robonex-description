@@ -8,7 +8,7 @@ os.environ["ROBONEX_VERSION"] = os.path.basename(os.path.dirname(HERE))
 sys.path.insert(0, os.path.join(HERE, "..", "..", "scripts"))
 
 from model_io import load_urdf, drop_frame_links, fmt, ROOT, VARIANT, VARIANTS
-from robonex_data import DEG, motor_physics_for, COLLISION_BOX, CONSTANTS, UPPER_BODY_JOINTS
+from robonex_data import motor_physics_for, COLLISION_BOX, CONSTANTS, UPPER_BODY_JOINTS
 
 PROVISIONAL_LIMITS = CONSTANTS["provisional_limits"]
 
@@ -108,7 +108,7 @@ def emit_joint(o, j):
         return
     if j.name in MOTOR_JOINTS:
         lower, upper = PROVISIONAL_LIMITS[j.name]
-        spec = (j.effort, j.velocity, lower / DEG, upper / DEG)
+        spec = (j.effort, j.velocity, lower, upper)
     else:
         spec = None
     passive_output = j.name in ANKLE_OUTPUT_JOINTS or j.name in KNEE_PASSIVE_JOINTS
@@ -123,10 +123,10 @@ def emit_joint(o, j):
     o.append('    <child link="%s"/>' % j.child)
     o.append('    <origin xyz="%s" rpy="%s"/>' % (fmt(j.xyz), fmt(j.rpy)))
     if spec:
-        effort, velocity, lo_deg, hi_deg = spec
+        effort, velocity, lower, upper = spec
         o.append('    <axis xyz="%s"/>' % fmt(j.axis))
         o.append('    <limit lower="%.6f" upper="%.6f" effort="%g" velocity="%g"/>'
-                 % (lo_deg * DEG, hi_deg * DEG, effort, velocity))
+                 % (lower, upper, effort, velocity))
         phys = motor_physics_for(j.name) or {"viscous_friction": 0.0, "frictionloss": 0.0}
         o.append('    <dynamics damping="%g" friction="%g"/>'
                  % (phys["viscous_friction"], phys["frictionloss"]))
