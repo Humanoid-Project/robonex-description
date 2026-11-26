@@ -18,3 +18,10 @@ ver2/INFO.md
 # Local only: Ver.1 info sheet and constants
 ver1/INFO.md
 ver1/ver1_constants.json
+
+# Ver.3: regenerable Isaac USD and local info sheet
+ver3/isaac/*/*/*.usd
+ver3/isaac/*/*/configuration/
+ver3/isaac/*/*/config.yaml
+ver3/isaac/*/*/.asset_hash
+ver3/INFO.md

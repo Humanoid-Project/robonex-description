@@ -20,6 +20,7 @@ pip install -r requirements.txt
 | --- | --- | :---: |
 | `ver1` | Ver.1 lower body: meshes, URDF, closed-loop MJCF and Isaac USD | [📖](ver1/) |
 | `ver2` | Ver.2 `edu` (Ver.2-4, measured part masses): battery and E-stop merged into `base_link`, head fixed at 0 rad, `d435_link` camera frame (24.62 kg) | [📖](ver2/) |
+| `ver3` | Ver.3 full body (one model): legs as Ver.2-4, two 5-DOF arms, 2-DOF neck, head; G1-format joint names, elbows 90° at zero; MuJoCo/Isaac variants `full` (24 actuators) and `legs` (arms and neck fixed) (29.71 kg) | [📖](ver3/) |
 
 <br>
 
@@ -32,6 +33,7 @@ Used by `ver2` (`ver1` keeps its own `ver1/scripts/`). The builders under `<vers
 scripts/
 ├── model_io.py              VERSIONS table (variants, constants file), URDF/YAML parser
 ├── robonex_data.py          build constants read from <version>/<version>_constants.json
+├── robonex_data_ver3.py     ver3 joint table (G1 names -> robonex-common motor IDs, gains, limits) and constants
 ├── model_tools.py           build, constants, loops, limits, check
 ├── parts/                   rs02.stl, rs03.stl — simplified actuator meshes placed by `build`; rs05.stl, d435i.stl camera box (not placed)
 └── REPORT_fusion_v14.md     Ver.2-2 Fusion export report

@@ -1,0 +1,64 @@
+ball_loops:
+  - name: left_ankle_lower_ball_joint
+    parent: left_ankle_lower_coupler_link
+    child: left_ankle_pitch_link
+    parent_xyz: [0.002057, -0.000149, -0.146985]
+    child_xyz: [0.050002, -0.049200, -0.025999]
+
+  - name: left_ankle_upper_ball_joint
+    parent: left_ankle_upper_coupler_link
+    child: left_ankle_pitch_link
+    parent_xyz: [0.003165, 0.000249, -0.257980]
+    child_xyz: [0.050002, 0.049200, -0.025999]
+
+  - name: right_ankle_lower_ball_joint
+    parent: right_ankle_lower_coupler_link
+    child: right_ankle_pitch_link
+    parent_xyz: [0.002057, 0.000149, -0.146985]
+    child_xyz: [0.050002, 0.049200, -0.025999]
+
+  - name: right_ankle_upper_ball_joint
+    parent: right_ankle_upper_coupler_link
+    child: right_ankle_pitch_link
+    parent_xyz: [0.003165, -0.000249, -0.257980]
+    child_xyz: [0.050002, -0.049200, -0.025999]
+
+
+pin_loops:
+  - name: left_knee_coupler_pin_joint
+    parent: left_knee_coupler_link
+    child: left_knee_link
+    parent_xyz: [-0.032196, 0.000000, -0.130074]
+    child_xyz: [0.065779, 0.000001, 0.064938]
+    axis: [0.0, 1.0, 0.0]
+
+  - name: right_knee_coupler_pin_joint
+    parent: right_knee_coupler_link
+    child: right_knee_link
+    parent_xyz: [-0.032196, 0.000000, -0.130074]
+    child_xyz: [0.065779, -0.000001, 0.064938]
+    axis: [0.0, -1.0, 0.0]
+
+
+ball_upgrades:
+  - left_ankle_lower_coupler_joint
+  - left_ankle_upper_coupler_joint
+  - right_ankle_lower_coupler_joint
+  - right_ankle_upper_coupler_joint
+
+ball_limit_deg: 15.0
+
+
+actuated_joints:
+  - left_hip_yaw_joint
+  - left_hip_pitch_joint
+  - left_hip_roll_joint
+  - left_knee_pitch_joint
+  - left_ankle_upper_joint
+  - left_ankle_lower_joint
+  - right_hip_yaw_joint
+  - right_hip_pitch_joint
+  - right_hip_roll_joint
+  - right_knee_pitch_joint
+  - right_ankle_lower_joint
+  - right_ankle_upper_joint

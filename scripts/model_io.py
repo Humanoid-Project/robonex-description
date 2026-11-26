@@ -13,6 +13,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(HERE)
 VERSIONS = {
     "ver2": dict(variants=("edu",), constants="ver2_constants.json"),
+    "ver3": dict(variants=("full", "legs"), constants="ver3_constants.json", urdf="robonex_ver3.urdf"),
 }
 _ARG_VERSION = sys.argv[sys.argv.index("--version") + 1] if "--version" in sys.argv else None
 _ENV_VERSION = os.environ.get("ROBONEX_VERSION")
@@ -26,10 +27,10 @@ if VERSION not in VERSIONS:
 ROOT = os.path.join(REPO, VERSION)
 VARIANTS = VERSIONS[VERSION]["variants"]
 VARIANT = (sys.argv[sys.argv.index("--variant") + 1] if "--variant" in sys.argv
-           else os.environ.get("ROBONEX_VARIANT", "edu"))
+           else os.environ.get("ROBONEX_VARIANT", VARIANTS[0]))
 if VARIANT not in VARIANTS:
     raise SystemExit("variant must be one of %s, got %r" % (VARIANTS, VARIANT))
-URDF_PATH = os.path.join(ROOT, "urdf", "robonex_%s.urdf" % VARIANT)
+URDF_PATH = os.path.join(ROOT, "urdf", VERSIONS[VERSION].get("urdf", "robonex_%s.urdf" % VARIANT))
 LOOPS_PATH = os.path.join(ROOT, "loop_closures.yaml")
 MESH_DIR = os.path.join(ROOT, "meshes")
 CONSTANTS_PATH = os.path.join(ROOT, VERSIONS[VERSION]["constants"])
