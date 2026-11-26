@@ -48,8 +48,8 @@ SPAWN_MARGIN = 0.006
 SIDES = ("left", "right")
 LEG_BOX_LINKS = ["%s_%s" % (s, n) for s in SIDES for n in (
     "hip_yaw_link", "hip_pitch_link", "hip_roll_link", "knee_link", "ankle_roll_link", "ankle_pitch_link")]
-OWN_MESH_BOX_LINKS = ["base_link"] + LEG_BOX_LINKS
-UNION_BOX_LINKS = ["neck_yaw_link", "neck_pitch_link", "head_link"] + ["%s_%s" % (s, n) for s in SIDES for n in (
+OWN_MESH_BOX_LINKS = LEG_BOX_LINKS
+UNION_BOX_LINKS = ["base_link", "neck_yaw_link", "neck_pitch_link", "head_link"] + ["%s_%s" % (s, n) for s in SIDES for n in (
     "shoulder_pitch_link", "shoulder_roll_link", "shoulder_yaw_link", "elbow_link", "wrist_roll_link")]
 PROVISIONAL_LIMITS_NOTE = (
     "robonex-common 2.5.0 limits by motor ID: legs = the Ver.2-4 command limits (common 2.4.0, 2026-11-18; the legs "
@@ -111,7 +111,12 @@ def collision_boxes():
     for link in OWN_MESH_BOX_LINKS:
         boxes[link] = box_of([os.path.join(MESH_DIR, link + ".stl")])
     for link in UNION_BOX_LINKS:
+        if link.startswith("right_"):
+            continue
         boxes[link] = box_of([os.path.join(MESH_DIR, mt.mesh_name(m[0]) + ".stl") for m in L[link]["meshes"]])
+        if link.startswith("left_"):
+            size, centre = boxes[link]
+            boxes[mirror(link)] = [list(size), [centre[0], round(-centre[1], 4) + 0.0, centre[2]]]
     return boxes
 
 
